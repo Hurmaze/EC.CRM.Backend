@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EC.CRM.Backend.Persistence"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EC.CRM.Backend.API", "EC.CRM.Backend.API\EC.CRM.Backend.API.csproj", "{062B3799-807B-4692-9285-D7A490BDD004}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CDB4E7FD-439D-4F22-AC86-E5DCDA451D5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EC.CRM.Backend.Application.Tests", "EC.CRM.Backend.Application.Tests\EC.CRM.Backend.Application.Tests.csproj", "{46718E67-C311-4B00-AE0A-5B30258BB6CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,10 @@ Global
 		{062B3799-807B-4692-9285-D7A490BDD004}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{062B3799-807B-4692-9285-D7A490BDD004}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{062B3799-807B-4692-9285-D7A490BDD004}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46718E67-C311-4B00-AE0A-5B30258BB6CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46718E67-C311-4B00-AE0A-5B30258BB6CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46718E67-C311-4B00-AE0A-5B30258BB6CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46718E67-C311-4B00-AE0A-5B30258BB6CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,6 +58,7 @@ Global
 		{2C7F7D57-2AD3-4478-A763-4D7C88255D1E} = {3AEB760B-10F5-4C48-A8A3-593892C67006}
 		{3E176044-C7B7-4831-B60E-46BD84ED9A69} = {2C7F7D57-2AD3-4478-A763-4D7C88255D1E}
 		{062B3799-807B-4692-9285-D7A490BDD004} = {2C7F7D57-2AD3-4478-A763-4D7C88255D1E}
+		{46718E67-C311-4B00-AE0A-5B30258BB6CF} = {CDB4E7FD-439D-4F22-AC86-E5DCDA451D5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70520E07-CB85-413B-A4C5-55E4BD81E940}

@@ -2,12 +2,12 @@
 {
     public class Job
     {
-        public Guid Uid { get; set; }
+        public Guid Uid { get; set; } = Guid.NewGuid();
         public required string CompanyName { get; set; }
         public required string PositionName { get; set; }
         public required decimal Salary { get; set; }
         public required DateTime StartTime { get; set; }
-        public required DateTime? EndTime { get; set; }
-        public required Guid OwnerUid { get; set; }
+        public DateTime? EndTime { get; set; }
+        public required UserInfo UserInfo { get; set; }
     }
 }

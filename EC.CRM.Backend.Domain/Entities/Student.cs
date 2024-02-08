@@ -2,18 +2,9 @@
 {
     public class Student
     {
-        public Guid Uid { get; set; }
-        public Guid MentorUid { get; set; }
-        public string? Name { get; set; }
-        public string? Surname { get; set; }
-        public string? Description { get; set; }
-        public string? PhoneNumber { get; set; }
-        public string? Email { get; set; }
-        public decimal? CurrentSalary { get; set; }
-        public DateTime JoinDate { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public decimal? PaidToClub { get; set; }
-        public List<Job>? Jobs { get; set; }
-        public Mentor? Mentor { get; set; }
+        public int Uid { get; set; }
+        public required UserInfo UserInfo { get; set; }
+        public required Mentor Mentor { get; set; }
+        public required State State { get; set; }
     }
 }

@@ -9,20 +9,15 @@ namespace EC.CRM.Backend.Application.Helpers
     {
         public AutomapperProfiles()
         {
-            CreateMap<Student, StudentResponse>()
-                .ForMember(sm => sm.Name, x => x.MapFrom(s => s.Name + " " + s.Surname));
-
-            CreateMap<StudentResponse, Student>()
-                .ForMember(s => s.Name, x => x.MapFrom(sm => sm.Name!.Split(' ', StringSplitOptions.None)[0]))
-                .ForMember(s => s.Surname, x => x.MapFrom(sm => sm.Name!.Split(' ', StringSplitOptions.None)[1]));
+            CreateMap<Student, StudentResponse>();
 
             CreateMap<StudentResponse, Student>();
 
+            CreateMap<StudentRequest, Student>();
+
             CreateMap<Mentor, MentorResponse>();
 
-            CreateMap<MentorResponse, Mentor>()
-                .ForMember(m => m.Name, x => x.MapFrom(mm => mm.Name!.Split(' ', StringSplitOptions.None)[0]))
-                .ForMember(m => m.Surname, x => x.MapFrom(mm => mm.Name!.Split(' ', StringSplitOptions.None)[1]));
+            CreateMap<MentorResponse, Mentor>();
 
             CreateMap<MentorRequest, Mentor>();
         }

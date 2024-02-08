@@ -13,5 +13,6 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
         Task DeleteAsync(Guid uid);
         Task<MentorResponse> GetStudentMentor(Guid studentUid);
         Task<List<Job>> GetJobs(Guid studentUid);
+        Task AddMentorsJob(Guid uid, Job job);
     }
 }

@@ -23,7 +23,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
             userInfo.HasKey(ui => ui.Uid);
             userInfo.HasMany(ui => ui.Jobs)
                 .WithOne(j => j.UserInfo);
-            userInfo.HasOne(ui => ui.Role);
+            userInfo.HasOne(ui => ui.Role)
+                .WithMany(r => r.UserInfos);
             userInfo.Property(ui => ui.Description).HasMaxLength(500);
             userInfo.Property(ui => ui.PhoneNumber).HasMaxLength(20);
             userInfo.Property(ui => ui.Name).HasMaxLength(100);
@@ -38,13 +39,21 @@ namespace EC.CRM.Backend.Persistence.DataContext
             var mentor = modelBuilder.Entity<Mentor>();
             mentor.HasKey(m => m.Uid);
             mentor.HasMany(m => m.Students)
-                .WithOne(s => s.Mentor);
-            mentor.HasOne(m => m.UserInfo);
+                .WithOne(s => s.Mentor)
+                .OnDelete(DeleteBehavior.NoAction);
+            mentor.HasOne(m => m.UserInfo)
+                .WithOne(ui => ui.MentorProperties)
+                .HasForeignKey<Mentor>(m => m.UserInfoUid)
+                .OnDelete(DeleteBehavior.NoAction);
 
             var student = modelBuilder.Entity<Student>();
             student.HasKey(s => s.Uid);
-            student.HasOne(s => s.UserInfo);
-            student.HasOne(s => s.State);
+            student.HasOne(s => s.UserInfo)
+                .WithOne(ui => ui.StudentProperties)
+                .HasForeignKey<Student>(s => s.UserInfoUid)
+                .OnDelete(DeleteBehavior.NoAction);
+            student.HasOne(s => s.State)
+                .WithMany(s => s.Students);
 
             var location = modelBuilder.Entity<Location>();
             location.HasKey(l => l.Uid);
@@ -61,8 +70,13 @@ namespace EC.CRM.Backend.Persistence.DataContext
                .HasPrecision(10, 3)
                .HasColumnType("decimal");
 
-            modelBuilder.Entity<State>().HasKey(s => s.Uid);
-            modelBuilder.Entity<Role>().HasKey(s => s.Uid);
+            var state = modelBuilder.Entity<State>();
+            state.HasKey(s => s.Uid);
+            state.Property(s => s.Name).HasMaxLength(100);
+
+            var role = modelBuilder.Entity<Role>();
+            role.HasKey(r => r.Uid);
+            role.Property(r => r.Name).HasMaxLength(100);
         }
     }
 }

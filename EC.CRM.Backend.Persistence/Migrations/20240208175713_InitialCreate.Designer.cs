@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.CRM.Backend.Persistence.Migrations
 {
     [DbContext(typeof(EngineeringClubDbContext))]
-    [Migration("20240208163008_UpdatePaidPrecision")]
-    partial class UpdatePaidPrecision
+    [Migration("20240208175713_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,7 +45,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 3)
+                        .HasColumnType("decimal");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -97,7 +98,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.HasIndex("UserInfoUid");
+                    b.HasIndex("UserInfoUid")
+                        .IsUnique();
 
                     b.ToTable("Mentors");
                 });
@@ -155,7 +157,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("StateUid");
 
-                    b.HasIndex("UserInfoUid");
+                    b.HasIndex("UserInfoUid")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -167,7 +170,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal?>("CurentSalary")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 3)
+                        .HasColumnType("decimal");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -190,8 +194,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Paid")
-                        .HasPrecision(3)
-                        .HasColumnType("decimal(3,2)");
+                        .HasPrecision(10, 3)
+                        .HasColumnType("decimal");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(20)
@@ -223,9 +227,9 @@ namespace EC.CRM.Backend.Persistence.Migrations
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
                 {
                     b.HasOne("EC.CRM.Backend.Domain.Entities.UserInfo", "UserInfo")
-                        .WithMany()
-                        .HasForeignKey("UserInfoUid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("MentorProperties")
+                        .HasForeignKey("EC.CRM.Backend.Domain.Entities.Mentor", "UserInfoUid")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("UserInfo");
@@ -236,19 +240,19 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Mentor", "Mentor")
                         .WithMany("Students")
                         .HasForeignKey("MentorUid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.State", "State")
-                        .WithMany()
+                        .WithMany("Students")
                         .HasForeignKey("StateUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.UserInfo", "UserInfo")
-                        .WithMany()
-                        .HasForeignKey("UserInfoUid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("StudentProperties")
+                        .HasForeignKey("EC.CRM.Backend.Domain.Entities.Student", "UserInfoUid")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Mentor");
@@ -265,7 +269,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasForeignKey("LocationUid");
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("UserInfos")
                         .HasForeignKey("RoleUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -285,9 +289,23 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Navigation("Students");
                 });
 
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("UserInfos");
+                });
+
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
+                {
+                    b.Navigation("Students");
+                });
+
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
                 {
                     b.Navigation("Jobs");
+
+                    b.Navigation("MentorProperties");
+
+                    b.Navigation("StudentProperties");
                 });
 #pragma warning restore 612, 618
         }

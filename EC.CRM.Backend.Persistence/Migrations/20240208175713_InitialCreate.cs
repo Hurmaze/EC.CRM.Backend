@@ -57,9 +57,9 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    CurentSalary = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CurentSalary = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: true),
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Paid = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Paid = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: false),
                     RoleUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     LocationUid = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -86,7 +86,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PositionName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Salary = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Salary = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserInfoUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
@@ -118,8 +118,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         name: "FK_Mentors_UserInfos_UserInfoUid",
                         column: x => x.UserInfoUid,
                         principalTable: "UserInfos",
-                        principalColumn: "Uid",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Uid");
                 });
 
             migrationBuilder.CreateTable(
@@ -139,8 +138,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         name: "FK_Students_Mentors_MentorUid",
                         column: x => x.MentorUid,
                         principalTable: "Mentors",
-                        principalColumn: "Uid",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Uid");
                     table.ForeignKey(
                         name: "FK_Students_States_StateUid",
                         column: x => x.StateUid,
@@ -151,8 +149,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         name: "FK_Students_UserInfos_UserInfoUid",
                         column: x => x.UserInfoUid,
                         principalTable: "UserInfos",
-                        principalColumn: "Uid",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Uid");
                 });
 
             migrationBuilder.CreateIndex(
@@ -163,7 +160,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Mentors_UserInfoUid",
                 table: "Mentors",
-                column: "UserInfoUid");
+                column: "UserInfoUid",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_MentorUid",
@@ -178,7 +176,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Students_UserInfoUid",
                 table: "Students",
-                column: "UserInfoUid");
+                column: "UserInfoUid",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserInfos_LocationUid",

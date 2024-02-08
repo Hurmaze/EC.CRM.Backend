@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.CRM.Backend.Persistence.Migrations
 {
     [DbContext(typeof(EngineeringClubDbContext))]
-    [Migration("20240208165011_UpdateConstraints")]
+    [Migration("20240208175851_UpdateConstraints")]
     partial class UpdateConstraints
     {
         /// <inheritdoc />
@@ -98,7 +98,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.HasIndex("UserInfoUid");
+                    b.HasIndex("UserInfoUid")
+                        .IsUnique();
 
                     b.ToTable("Mentors");
                 });
@@ -111,7 +112,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Uid");
 
@@ -126,7 +128,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Uid");
 
@@ -156,7 +159,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("StateUid");
 
-                    b.HasIndex("UserInfoUid");
+                    b.HasIndex("UserInfoUid")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -225,9 +229,9 @@ namespace EC.CRM.Backend.Persistence.Migrations
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
                 {
                     b.HasOne("EC.CRM.Backend.Domain.Entities.UserInfo", "UserInfo")
-                        .WithMany()
-                        .HasForeignKey("UserInfoUid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("MentorProperties")
+                        .HasForeignKey("EC.CRM.Backend.Domain.Entities.Mentor", "UserInfoUid")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("UserInfo");
@@ -238,19 +242,19 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Mentor", "Mentor")
                         .WithMany("Students")
                         .HasForeignKey("MentorUid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.State", "State")
-                        .WithMany()
+                        .WithMany("Students")
                         .HasForeignKey("StateUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.UserInfo", "UserInfo")
-                        .WithMany()
-                        .HasForeignKey("UserInfoUid")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("StudentProperties")
+                        .HasForeignKey("EC.CRM.Backend.Domain.Entities.Student", "UserInfoUid")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Mentor");
@@ -267,7 +271,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasForeignKey("LocationUid");
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("UserInfos")
                         .HasForeignKey("RoleUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -287,9 +291,23 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Navigation("Students");
                 });
 
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("UserInfos");
+                });
+
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
+                {
+                    b.Navigation("Students");
+                });
+
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
                 {
                     b.Navigation("Jobs");
+
+                    b.Navigation("MentorProperties");
+
+                    b.Navigation("StudentProperties");
                 });
 #pragma warning restore 612, 618
         }

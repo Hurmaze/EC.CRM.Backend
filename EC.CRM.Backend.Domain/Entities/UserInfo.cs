@@ -13,5 +13,7 @@
         public required Role Role { get; set; }
         public List<Job>? Jobs { get; set; }
         public Location? Location { get; set; }
+        public Mentor? MentorProperties { get; set; }
+        public Student? StudentProperties { get; set; }
     }
 }

@@ -5,13 +5,13 @@ namespace EC.CRM.Backend.Persistence.DataContext
 {
     public class EngineeringClubDbContext : DbContext
     {
-        DbSet<Job> Jobs { get; set; }
-        DbSet<Mentor> Mentors { get; set; }
-        DbSet<Student> Students { get; set; }
-        DbSet<State> States { get; set; }
-        DbSet<Location> Locations { get; set; }
-        DbSet<Role> Roles { get; set; }
-        DbSet<UserInfo> UserInfos { get; set; }
+        public DbSet<Job> Jobs { get; set; }
+        public DbSet<Mentor> Mentors { get; set; }
+        public DbSet<Student> Students { get; set; }
+        public DbSet<State> States { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserInfo> UserInfos { get; set; }
 
         public EngineeringClubDbContext(DbContextOptions<EngineeringClubDbContext> dbContextOptions) : base(dbContextOptions)
         {

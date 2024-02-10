@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using EC.CRM.Backend.Application.DTOs;
-using EC.CRM.Backend.Application.Models;
+using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Domain.Entities;
 
 namespace EC.CRM.Backend.Application.Helpers
@@ -9,17 +9,17 @@ namespace EC.CRM.Backend.Application.Helpers
     {
         public AutomapperProfiles()
         {
-            CreateMap<Student, StudentResponse>();
+            CreateMap<Student, StudentResponse>().PreserveReferences();
 
-            CreateMap<StudentResponse, Student>();
+            CreateMap<StudentResponse, Student>().PreserveReferences();
 
-            CreateMap<StudentRequest, Student>();
+            CreateMap<StudentRequest, Student>().PreserveReferences();
 
-            CreateMap<Mentor, MentorResponse>();
+            CreateMap<Mentor, MentorResponse>().PreserveReferences();
 
-            CreateMap<MentorResponse, Mentor>();
+            CreateMap<MentorResponse, Mentor>().PreserveReferences();
 
-            CreateMap<MentorRequest, Mentor>();
+            CreateMap<MentorRequest, Mentor>().PreserveReferences();
         }
     }
 }

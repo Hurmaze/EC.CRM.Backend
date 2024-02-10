@@ -1,6 +1,5 @@
 ﻿using EC.CRM.Backend.Application.DTOs;
-using EC.CRM.Backend.Application.Models;
-using EC.CRM.Backend.Domain.Entities;
+using EC.CRM.Backend.Application.DTOs.Response;
 
 namespace EC.CRM.Backend.Application.Services.Interfaces
 {
@@ -12,7 +11,5 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
         Task UpdateAsync(Guid uid, MentorResponse mentor);
         Task DeleteAsync(Guid uid);
         Task<List<StudentResponse>> GetMentorStudents(Guid mentorUid);
-        Task<List<Job>> GetJobs(Guid mentorUid);
-        Task AddMentorsJob(Guid uid, Job job);
     }
 }

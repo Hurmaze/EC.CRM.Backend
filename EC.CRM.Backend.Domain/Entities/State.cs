@@ -4,6 +4,7 @@
     {
         public Guid Uid { get; set; }
         public required string Name { get; set; }
+        public int OrderId { get; set; }
         public List<Student>? Students { get; set; }
     }
 }

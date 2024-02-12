@@ -21,6 +21,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
         {
             var userInfo = modelBuilder.Entity<UserInfo>();
             userInfo.HasKey(ui => ui.Uid);
+            userInfo.Property(ui => ui.Uid)
+                .HasDefaultValue(Guid.NewGuid());
             userInfo.HasMany(ui => ui.Jobs)
                 .WithOne(j => j.UserInfo);
             userInfo.HasOne(ui => ui.Role)
@@ -37,7 +39,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
                .HasColumnType("decimal");
 
             var mentor = modelBuilder.Entity<Mentor>();
-            mentor.HasKey(m => m.Uid);
+            mentor.HasKey(m => m.Id);
             mentor.HasMany(m => m.Students)
                 .WithOne(s => s.Mentor)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -47,7 +49,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
                 .OnDelete(DeleteBehavior.NoAction);
 
             var student = modelBuilder.Entity<Student>();
-            student.HasKey(s => s.Uid);
+            student.HasKey(s => s.Id);
             student.HasOne(s => s.UserInfo)
                 .WithOne(ui => ui.StudentProperties)
                 .HasForeignKey<Student>(s => s.UserInfoUid)
@@ -57,6 +59,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
             var location = modelBuilder.Entity<Location>();
             location.HasKey(l => l.Uid);
+            location.Property(ui => ui.Uid)
+                .HasDefaultValue(Guid.NewGuid());
             location.HasMany(l => l.Users)
                 .WithOne(ui => ui.Location);
             location.Property(l => l.City).HasMaxLength(50);
@@ -64,6 +68,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
             var job = modelBuilder.Entity<Job>();
             job.HasKey(j => j.Uid);
+            job.Property(ui => ui.Uid)
+                .HasDefaultValue(Guid.NewGuid());
             job.Property(j => j.CompanyName).HasMaxLength(100);
             job.Property(j => j.PositionName).HasMaxLength(100);
             job.Property(j => j.Salary)
@@ -72,10 +78,14 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
             var state = modelBuilder.Entity<State>();
             state.HasKey(s => s.Uid);
+            state.Property(ui => ui.Uid)
+                .HasDefaultValue(Guid.NewGuid());
             state.Property(s => s.Name).HasMaxLength(100);
 
             var role = modelBuilder.Entity<Role>();
             role.HasKey(r => r.Uid);
+            role.Property(ui => ui.Uid)
+                .HasDefaultValue(Guid.NewGuid());
             role.Property(r => r.Name).HasMaxLength(100);
         }
     }

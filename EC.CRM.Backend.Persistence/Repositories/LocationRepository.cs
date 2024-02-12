@@ -32,6 +32,8 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
 
             _dbContext.Locations.Entry(location).State = EntityState.Deleted;
+
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Location>> GetAllAsync()
@@ -39,6 +41,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                 .Locations
                 .AsNoTracking()
+                .OrderBy(x => x.City)
                 .ToListAsync();
         }
 
@@ -49,17 +52,16 @@ namespace EC.CRM.Backend.Persistence.Repositories
                 .FindAsync(uid);
         }
 
-        public async Task UpdateAsync(Guid uid, Location location)
+        public async Task UpdateAsync(Location location)
         {
-            if (await _dbContext.Locations.FindAsync(uid) is Location found)
+            if (await _dbContext.Locations.FindAsync(location.Uid) is Location found)
             {
-                _dbContext.Locations.Entry(found).State = EntityState.Detached;
-                _dbContext.Locations.Update(location);
+                _dbContext.Locations.Entry(found).CurrentValues.SetValues(location);
                 await _dbContext.SaveChangesAsync();
             }
             else
             {
-                throw new NotFoundException(uid);
+                throw new NotFoundException(location.Uid);
             }
         }
     }

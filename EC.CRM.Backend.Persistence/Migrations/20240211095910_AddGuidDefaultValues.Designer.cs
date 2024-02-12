@@ -4,6 +4,7 @@ using EC.CRM.Backend.Persistence.DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.CRM.Backend.Persistence.Migrations
 {
     [DbContext(typeof(EngineeringClubDbContext))]
-    partial class EngineeringClubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240211095910_AddGuidDefaultValues")]
+    partial class AddGuidDefaultValues
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +30,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValue(new Guid("9132b8a0-071c-467f-a146-becf9256dde4"));
+                        .HasDefaultValue(new Guid("bdcba20a-8834-4f40-bd59-760692f3b4ee"));
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
@@ -64,7 +67,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValue(new Guid("6fce367f-9c02-4b7e-9604-6f0004afd83f"));
+                        .HasDefaultValue(new Guid("9311b2ec-5c93-4de7-82ee-47b48c575f82"));
 
                     b.Property<string>("Address")
                         .IsRequired()
@@ -83,11 +86,10 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("4c887ca2-9632-4f2b-8921-00a6c4bc194b"));
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -95,7 +97,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("UserInfoUid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("Uid");
 
                     b.HasIndex("UserInfoUid")
                         .IsUnique();
@@ -108,7 +110,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValue(new Guid("940c8245-661d-4d10-b948-a5edbe18dee4"));
+                        .HasDefaultValue(new Guid("ac2ff5c7-6f17-4513-966c-3d6452df2072"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -125,15 +127,12 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValue(new Guid("14f705dc-a2af-437e-88a2-c6b6a90c1d2a"));
+                        .HasDefaultValue(new Guid("4225857e-fb08-45fe-97b9-246490b8bf16"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
 
                     b.HasKey("Uid");
 
@@ -142,14 +141,13 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Student", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("264ed747-09ff-4b1c-ac70-928131d1e079"));
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MentorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("MentorUid")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StateUid")
                         .HasColumnType("uniqueidentifier");
@@ -157,9 +155,9 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("UserInfoUid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("Uid");
 
-                    b.HasIndex("MentorId");
+                    b.HasIndex("MentorUid");
 
                     b.HasIndex("StateUid");
 
@@ -174,7 +172,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
-                        .HasDefaultValue(new Guid("73f8447e-8b35-4f32-adac-9fe9876529cf"));
+                        .HasDefaultValue(new Guid("9160c3e3-1e03-437b-80e4-6f2a6969bac5"));
 
                     b.Property<decimal?>("CurentSalary")
                         .HasPrecision(10, 3)
@@ -246,7 +244,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 {
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Mentor", "Mentor")
                         .WithMany("Students")
-                        .HasForeignKey("MentorId")
+                        .HasForeignKey("MentorUid")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 

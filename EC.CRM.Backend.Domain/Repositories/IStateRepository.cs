@@ -7,7 +7,7 @@ namespace EC.CRM.Backend.Domain.Repositories
         Task<State?> GetAsync(Guid uid);
         Task<List<State>> GetAllAsync();
         Task<State> CreateAsync(State state);
-        Task UpdateAsync(Guid uid, State state);
+        Task UpdateAsync(State state);
         Task DeleteAsync(Guid uid);
     }
 }

@@ -39,6 +39,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                 .States
                 .AsNoTracking()
+                .OrderBy(x => x.OrderId)
                 .ToListAsync();
         }
 
@@ -49,17 +50,16 @@ namespace EC.CRM.Backend.Persistence.Repositories
                 .FindAsync(uid);
         }
 
-        public async Task UpdateAsync(Guid uid, State state)
+        public async Task UpdateAsync(State state)
         {
-            if (await _dbContext.States.FindAsync(uid) is State found)
+            if (await _dbContext.States.FindAsync(state.Uid) is State found)
             {
-                _dbContext.States.Entry(found).State = EntityState.Detached;
-                _dbContext.States.Update(state);
+                _dbContext.States.Entry(found).CurrentValues.SetValues(state);
                 await _dbContext.SaveChangesAsync();
             }
             else
             {
-                throw new NotFoundException(uid);
+                throw new NotFoundException(state.Uid);
             }
         }
     }

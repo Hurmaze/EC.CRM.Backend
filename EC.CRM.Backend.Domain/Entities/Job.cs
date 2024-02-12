@@ -2,7 +2,7 @@
 {
     public class Job
     {
-        public Guid Uid { get; set; } = Guid.NewGuid();
+        public Guid Uid { get; set; }
         public required string CompanyName { get; set; }
         public required string PositionName { get; set; }
         public required decimal Salary { get; set; }

@@ -22,6 +22,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                 .Roles
                 .AsNoTracking()
+                .OrderBy(x => x.Name)
                 .ToListAsync();
         }
     }

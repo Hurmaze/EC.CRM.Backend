@@ -7,7 +7,7 @@ namespace EC.CRM.Backend.Domain.Repositories
         Task<Location?> GetAsync(Guid uid);
         Task<List<Location>> GetAllAsync();
         Task<Location> CreateAsync(Location location);
-        Task UpdateAsync(Guid uid, Location location);
+        Task UpdateAsync(Location location);
         Task DeleteAsync(Guid uid);
     }
 }

@@ -1,12 +1,13 @@
-﻿using EC.CRM.Backend.Domain.Entities;
+﻿using System.Linq.Expressions;
+using EC.CRM.Backend.Domain.Entities;
 
 namespace EC.CRM.Backend.Domain.Repositories
 {
     public interface IJobRepository
     {
-        Task<List<Job>> GetAllAsync(Guid userUid);
-        Task<Job> CreateAsync(Guid userId, Job job);
-        Task UpdateAsync(Guid userId, Job job);
+        Task<List<Job>> GetAllAsync(Expression<Func<Job, bool>>? predicate = null);
+        Task<Job> CreateAsync(Guid userUid, Job job);
+        Task UpdateAsync(Job job);
         Task DeleteAsync(Guid uid);
     }
 }

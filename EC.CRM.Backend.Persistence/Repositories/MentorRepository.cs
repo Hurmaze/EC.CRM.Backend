@@ -29,7 +29,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
             if (location == null)
             {
-                throw new NotFoundException(uid);
+                throw new NotFoundException("mentor", uid);
             }
 
             _dbContext.Mentors.Entry(location).State = EntityState.Deleted;
@@ -67,7 +67,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
             else
             {
-                throw new NotFoundException(mentor.UserInfoUid);
+                throw new NotFoundException(nameof(mentor), mentor.UserInfoUid);
             }
         }
     }

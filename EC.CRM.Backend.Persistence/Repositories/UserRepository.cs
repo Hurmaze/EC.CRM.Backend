@@ -29,7 +29,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
             if (location == null)
             {
-                throw new NotFoundException(uid);
+                throw new NotFoundException("user", uid);
             }
 
             _dbContext.UserInfos.Entry(location).State = EntityState.Deleted;
@@ -69,7 +69,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
             else
             {
-                throw new NotFoundException(user.Uid);
+                throw new NotFoundException(nameof(user), user.Uid);
             }
         }
     }

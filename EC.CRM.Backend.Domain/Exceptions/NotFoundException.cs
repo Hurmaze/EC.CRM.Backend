@@ -2,8 +2,8 @@
 {
     public class NotFoundException : ApplicationException
     {
-        public NotFoundException(Guid requestedUid)
-            : base(String.Format("Entity with uid {0} does not exist.", requestedUid))
+        public NotFoundException(string enitityName, Guid requestedUid)
+            : base(String.Format("{0} with uid {1} does not exist.", enitityName, requestedUid))
         {
         }
     }

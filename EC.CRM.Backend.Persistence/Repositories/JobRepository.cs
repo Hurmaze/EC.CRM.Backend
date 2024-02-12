@@ -25,7 +25,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
             else
             {
-                throw new NotFoundException(job.Uid);
+                throw new NotFoundException(nameof(job), job.Uid);
             }
         }
 
@@ -35,7 +35,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
             if (job == null)
             {
-                throw new NotFoundException(uid);
+                throw new NotFoundException("job", uid);
             }
 
             _dbContext.Jobs.Entry(job).State = EntityState.Deleted;
@@ -71,7 +71,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
             else
             {
-                throw new NotFoundException(job.Uid);
+                throw new NotFoundException(nameof(job), job.Uid);
             }
         }
     }

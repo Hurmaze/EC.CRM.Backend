@@ -2,6 +2,6 @@
 {
     public class WrongPasswordException : ApplicationException
     {
-        public WrongPasswordException() : base("Inputed password did not match for with existing.") { }
+        public WrongPasswordException() : base("Inputed password did not match with existing.") { }
     }
 }

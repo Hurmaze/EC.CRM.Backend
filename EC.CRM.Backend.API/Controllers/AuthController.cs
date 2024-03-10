@@ -13,6 +13,7 @@ namespace EC.CRM.Backend.API.Controllers
         {
             this.authService = authService;
         }
+
         [HttpPost("login")]
         public async Task<ActionResult<string>> GetToken(LoginRequest loginRequest)
         {

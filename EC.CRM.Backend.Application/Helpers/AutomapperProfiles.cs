@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EC.CRM.Backend.Application.DTOs.Request;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Domain.Entities;
 
@@ -12,13 +13,13 @@ namespace EC.CRM.Backend.Application.Helpers
 
             CreateMap<StudentResponse, Student>().PreserveReferences();
 
-            CreateMap<StudentRequest, Student>().PreserveReferences();
+            CreateMap<CreateStudentRequest, Student>().PreserveReferences();
 
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
 
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
 
-            CreateMap<MentorRequest, Mentor>().PreserveReferences();
+            CreateMap<CreateMentorRequest, Mentor>().PreserveReferences();
         }
     }
 }

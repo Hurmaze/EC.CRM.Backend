@@ -60,6 +60,17 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .SingleAsync(x => x.Uid == uid);
         }
 
+        public async Task<UserInfo> GetAsync(string email)
+        {
+            return await _dbContext
+               .UserInfos
+               .Include(x => x.MentorProperties)
+               .Include(x => x.StudentProperties)
+               .Include(x => x.Jobs)
+               .Include(x => x.Location)
+               .SingleAsync(x => x.Email == email);
+        }
+
         public async Task UpdateAsync(UserInfo user)
         {
             if (await _dbContext.UserInfos.FindAsync(user.Uid) is UserInfo found)

@@ -12,6 +12,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
         public DbSet<Location> Locations { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
+        public DbSet<Credentials> Credentials { get; set; }
 
         public EngineeringClubDbContext(DbContextOptions<EngineeringClubDbContext> dbContextOptions) : base(dbContextOptions)
         {
@@ -27,6 +28,16 @@ namespace EC.CRM.Backend.Persistence.DataContext
                 .WithOne(j => j.UserInfo);
             userInfo.HasOne(ui => ui.Role)
                 .WithMany(r => r.UserInfos);
+            userInfo.HasOne(ui => ui.Credentials)
+                .WithOne(c => c.User)
+                .HasForeignKey<Credentials>(c => c.UserInfoUid)
+                .OnDelete(DeleteBehavior.Cascade);
+            userInfo.HasMany(ui => ui.NonProfessionalInterests)
+                .WithMany(npi => npi.Users);
+            userInfo.HasMany(ui => ui.Skills)
+                .WithMany(npi => npi.Users);
+            userInfo.HasMany(ui => ui.StudyFields)
+                .WithMany(npi => npi.Users);
             userInfo.Property(ui => ui.Description).HasMaxLength(500);
             userInfo.Property(ui => ui.PhoneNumber).HasMaxLength(20);
             userInfo.Property(ui => ui.Name).HasMaxLength(100);
@@ -87,6 +98,23 @@ namespace EC.CRM.Backend.Persistence.DataContext
             role.Property(ui => ui.Uid)
                 .HasDefaultValue(Guid.NewGuid());
             role.Property(r => r.Name).HasMaxLength(100);
+
+            var credentials = modelBuilder.Entity<Credentials>();
+            credentials.HasKey(c => c.UserInfoUid);
+            credentials.Property(p => p.PasswordSalt).IsRequired();
+            credentials.Property(p => p.PasswordHash).IsRequired();
+
+            var skills = modelBuilder.Entity<Skill>();
+            skills.HasKey(skill => skill.Uid);
+            skills.Property(p => p.Name).HasMaxLength(100).IsRequired();
+
+            var interests = modelBuilder.Entity<NonProfessionalInterest>();
+            interests.HasKey(skill => skill.Uid);
+            interests.Property(p => p.Name).HasMaxLength(100).IsRequired();
+
+            var studyfield = modelBuilder.Entity<StudyField>();
+            studyfield.HasKey(skill => skill.Uid);
+            studyfield.Property(p => p.Name).HasMaxLength(100).IsRequired();
         }
     }
 }

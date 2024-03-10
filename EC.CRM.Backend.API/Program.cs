@@ -1,4 +1,6 @@
+using EC.CRM.Backend.Application;
 using EC.CRM.Backend.Persistence.DataContext;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -6,6 +8,30 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+var authOptions = builder.Configuration.GetSection("Auth");
+builder.Services.Configure<JwtOptions>(authOptions);
+var auth = authOptions.Get<JwtOptions>()!;
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+
+        ValidateIssuer = true,
+        ValidIssuer = auth.Issuer,
+
+        ValidateAudience = true,
+        ValidAudience = auth.Audience,
+
+        ValidateLifetime = true,
+
+        IssuerSigningKey = auth.GetSymmetricSecurityKey(),
+        ValidateIssuerSigningKey = true,
+
+    };
+});
 
 builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub")));

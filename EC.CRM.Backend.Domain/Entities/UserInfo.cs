@@ -11,8 +11,11 @@
         public DateTime DateOfBirth { get; set; }
         public decimal Paid { get; set; }
         public required Role Role { get; set; }
-        public required List<Job> Jobs { get; set; }
+        public List<Job>? Jobs { get; set; }
+        public required List<Skill> Skills { get; set; }
+        public List<NonProfessionalInterest>? NonProfessionalInterests { get; set; }
         public Location? Location { get; set; }
+        public required List<StudyField> StudyFields { get; set; }
         public Mentor? MentorProperties { get; set; }
         public Student? StudentProperties { get; set; }
         public required Credentials Credentials { get; set; }

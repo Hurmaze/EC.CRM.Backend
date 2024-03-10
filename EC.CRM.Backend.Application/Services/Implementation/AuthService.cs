@@ -88,7 +88,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             List<Claim> userClaims = new()
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Credentials.Role!.Name)
+                new Claim(ClaimTypes.Role, user.Role!.Name)
             };
 
             userClaims.Add(new Claim("uid", user.Uid.ToString()));

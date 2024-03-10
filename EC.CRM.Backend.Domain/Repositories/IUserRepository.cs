@@ -6,6 +6,7 @@ namespace EC.CRM.Backend.Domain.Repositories
     public interface IUserRepository
     {
         Task<UserInfo> GetAsync(Guid uid);
+        Task<UserInfo> GetAsync(string email);
         Task<List<UserInfo>> GetAllAsync(Expression<Func<UserInfo, bool>>? predicate = null);
         Task<UserInfo> CreateAsync(UserInfo user);
         Task UpdateAsync(UserInfo user);

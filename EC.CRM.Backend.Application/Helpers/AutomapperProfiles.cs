@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using EC.CRM.Backend.Application.DTOs;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Domain.Entities;
 

@@ -15,5 +15,6 @@
         public Location? Location { get; set; }
         public Mentor? MentorProperties { get; set; }
         public Student? StudentProperties { get; set; }
+        public required Credentials Credentials { get; set; }
     }
 }

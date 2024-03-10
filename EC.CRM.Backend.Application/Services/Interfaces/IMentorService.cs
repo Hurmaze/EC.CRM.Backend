@@ -1,4 +1,4 @@
-﻿using EC.CRM.Backend.Application.DTOs;
+﻿using EC.CRM.Backend.Application.DTOs.Request;
 using EC.CRM.Backend.Application.DTOs.Response;
 
 namespace EC.CRM.Backend.Application.Services.Interfaces
@@ -7,7 +7,7 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
     {
         Task<MentorResponse> GetAsync(Guid uid);
         Task<List<MentorResponse>> GetAllAsync();
-        Task<MentorResponse> CreateAsync(MentorRequest mentor);
+        Task<MentorResponse> CreateAsync(CreateMentorRequest mentor);
         Task UpdateAsync(Guid uid, MentorResponse mentor);
         Task DeleteAsync(Guid uid);
         Task<List<StudentResponse>> GetMentorStudents(Guid mentorUid);

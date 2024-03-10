@@ -15,8 +15,4 @@
     <ProjectReference Include="..\EC.CRM.Backend.Domain\EC.CRM.Backend.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Request\" />
-  </ItemGroup>
-
 </Project>

@@ -1,4 +1,4 @@
-﻿using EC.CRM.Backend.Application.DTOs.Response;
+﻿/*using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
@@ -71,3 +71,4 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
         // private async Task<()>
     }
 }
+*/

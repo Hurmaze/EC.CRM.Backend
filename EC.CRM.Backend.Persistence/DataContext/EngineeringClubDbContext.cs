@@ -23,7 +23,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
             var userInfo = modelBuilder.Entity<UserInfo>();
             userInfo.HasKey(ui => ui.Uid);
             userInfo.Property(ui => ui.Uid)
-                .HasDefaultValue(Guid.NewGuid());
+                .HasDefaultValueSql("newsequentialid()");
             userInfo.HasMany(ui => ui.Jobs)
                 .WithOne(j => j.UserInfo);
             userInfo.HasOne(ui => ui.Role)
@@ -71,7 +71,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
             var location = modelBuilder.Entity<Location>();
             location.HasKey(l => l.Uid);
             location.Property(ui => ui.Uid)
-                .HasDefaultValue(Guid.NewGuid());
+                .HasDefaultValueSql("newsequentialid()");
             location.HasMany(l => l.Users)
                 .WithMany(ui => ui.Locations);
             location.Property(l => l.City).HasMaxLength(50);
@@ -80,7 +80,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
             var job = modelBuilder.Entity<Job>();
             job.HasKey(j => j.Uid);
             job.Property(ui => ui.Uid)
-                .HasDefaultValue(Guid.NewGuid());
+                .HasDefaultValueSql("newsequentialid()");
             job.Property(j => j.CompanyName).HasMaxLength(100);
             job.Property(j => j.PositionName).HasMaxLength(100);
             job.Property(j => j.Salary)
@@ -90,13 +90,13 @@ namespace EC.CRM.Backend.Persistence.DataContext
             var state = modelBuilder.Entity<State>();
             state.HasKey(s => s.Uid);
             state.Property(ui => ui.Uid)
-                .HasDefaultValue(Guid.NewGuid());
+                .HasDefaultValueSql("newsequentialid()");
             state.Property(s => s.Name).HasMaxLength(100);
 
             var role = modelBuilder.Entity<Role>();
             role.HasKey(r => r.Uid);
             role.Property(ui => ui.Uid)
-                .HasDefaultValue(Guid.NewGuid());
+                .HasDefaultValueSql("newsequentialid()");
             role.Property(r => r.Name).HasMaxLength(100);
 
             var credentials = modelBuilder.Entity<Credentials>();
@@ -104,16 +104,22 @@ namespace EC.CRM.Backend.Persistence.DataContext
             credentials.Property(p => p.PasswordSalt).IsRequired();
             credentials.Property(p => p.PasswordHash).IsRequired();
 
-            var skills = modelBuilder.Entity<Skill>();
-            skills.HasKey(skill => skill.Uid);
-            skills.Property(p => p.Name).HasMaxLength(100).IsRequired();
+            var skill = modelBuilder.Entity<Skill>();
+            skill.HasKey(s => s.Uid);
+            skill.Property(s => s.Uid)
+                .HasDefaultValueSql("newsequentialid()");
+            skill.Property(p => p.Name).HasMaxLength(100).IsRequired();
 
-            var interests = modelBuilder.Entity<NonProfessionalInterest>();
-            interests.HasKey(skill => skill.Uid);
-            interests.Property(p => p.Name).HasMaxLength(100).IsRequired();
+            var interest = modelBuilder.Entity<NonProfessionalInterest>();
+            interest.HasKey(i => i.Uid);
+            interest.Property(i => i.Uid)
+                .HasDefaultValueSql("newsequentialid()");
+            interest.Property(p => p.Name).HasMaxLength(100).IsRequired();
 
             var studyfield = modelBuilder.Entity<StudyField>();
-            studyfield.HasKey(skill => skill.Uid);
+            studyfield.HasKey(s => s.Uid);
+            studyfield.Property(s => s.Uid)
+                .HasDefaultValueSql("newsequentialid()");
             studyfield.Property(p => p.Name).HasMaxLength(100).IsRequired();
         }
     }

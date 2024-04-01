@@ -14,7 +14,7 @@
         public List<Job>? Jobs { get; set; }
         public required List<Skill> Skills { get; set; }
         public List<NonProfessionalInterest>? NonProfessionalInterests { get; set; }
-        public Location? Location { get; set; }
+        public required List<Location> Locations { get; set; }
         public required List<StudyField> StudyFields { get; set; }
         public Mentor? MentorProperties { get; set; }
         public Student? StudentProperties { get; set; }

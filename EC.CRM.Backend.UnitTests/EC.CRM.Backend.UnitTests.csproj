@@ -19,10 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\EC.CRM.Backend.Application\EC.CRM.Backend.Application.csproj" />
     <ProjectReference Include="..\EC.CRM.Backend.Persistence\EC.CRM.Backend.Persistence.csproj" />
   </ItemGroup>

@@ -73,7 +73,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
             location.Property(ui => ui.Uid)
                 .HasDefaultValue(Guid.NewGuid());
             location.HasMany(l => l.Users)
-                .WithOne(ui => ui.Location);
+                .WithMany(ui => ui.Locations);
             location.Property(l => l.City).HasMaxLength(50);
             location.Property(l => l.Address).HasMaxLength(100);
 

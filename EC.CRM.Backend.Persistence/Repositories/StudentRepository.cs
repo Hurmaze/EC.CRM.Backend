@@ -51,11 +51,18 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
         public async Task<Student> GetAsync(Guid uid)
         {
-            return await _dbContext
+            var student = await _dbContext
                .Students
                .Include(x => x.UserInfo)
                .ThenInclude(x => x.Jobs)
                .SingleAsync(x => x.UserInfoUid == uid);
+
+            if (student is null)
+            {
+                throw new NotFoundException(nameof(student), uid);
+            }
+
+            return student;
         }
 
         public async Task UpdateAsync(Student student)

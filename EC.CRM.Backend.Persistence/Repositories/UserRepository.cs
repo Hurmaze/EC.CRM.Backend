@@ -43,7 +43,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
             return await _dbContext
                .UserInfos
-               .Include(x => x.Location)
+               .Include(x => x.Locations)
                .AsNoTracking()
                .Where(predicate)
                .ToListAsync();
@@ -51,24 +51,38 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
         public async Task<UserInfo> GetAsync(Guid uid)
         {
-            return await _dbContext
+            var user = await _dbContext
                .UserInfos
                .Include(x => x.MentorProperties)
                .Include(x => x.StudentProperties)
                .Include(x => x.Jobs)
-               .Include(x => x.Location)
+               .Include(x => x.Locations)
                .SingleAsync(x => x.Uid == uid);
+
+            if (user is null)
+            {
+                throw new NotFoundException(nameof(user), uid);
+            }
+
+            return user;
         }
 
         public async Task<UserInfo> GetAsync(string email)
         {
-            return await _dbContext
+            var user = await _dbContext
                .UserInfos
                .Include(x => x.MentorProperties)
                .Include(x => x.StudentProperties)
                .Include(x => x.Jobs)
-               .Include(x => x.Location)
-               .SingleAsync(x => x.Email == email);
+               .Include(x => x.Locations)
+               .SingleOrDefaultAsync(x => x.Email == email);
+
+            if (user is null)
+            {
+                throw new NotFoundException(nameof(user), email);
+            }
+
+            return user;
         }
 
         public async Task UpdateAsync(UserInfo user)

@@ -5,7 +5,7 @@
         string Email,
         string PhoneNumber,
         List<Guid>? SkillsUids,
-        Guid desiredStudyFieldUid)
+        Guid DesiredStudyFieldUid)
     {
     }
 }

@@ -17,8 +17,8 @@ namespace EC.CRM.Backend.Persistence.Repositories
             // NOTE: Here we do not Include() List<UserInfo> just because we won't need it.
             // So in that case this property will be null.
             // If it will be a problem in the future consider add DTO for this layer 
-            // Similiar to existing one in Damain project. 
-            // And then remove from domain entities redundant propersties such as List<UserInfo> in this case.
+            // Similiar to existing one in Domain project. 
+            // And then remove from domain entities redundant properties such as List<UserInfo> in this case.
             return await _dbContext
                 .Roles
                 .AsNoTracking()

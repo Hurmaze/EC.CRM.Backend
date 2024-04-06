@@ -128,7 +128,9 @@
         {
             var alternativesCount = closenessCoefficients.Length;
 
-            return closenessCoefficients.ToDictionary(i => Array.IndexOf(closenessCoefficients, i));
+            return closenessCoefficients.ToDictionary(i => Array.IndexOf(closenessCoefficients, i))
+                .OrderBy(c => c.Value)
+                .ToDictionary(c => c.Key, c => c.Value);
         }
     }
 }

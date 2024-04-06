@@ -21,7 +21,7 @@ namespace EC.CRM.Backend.UnitTests.Application
 
             var topsis = new TopsisAlgorithm();
 
-            var expectedKeys = new[] { 3, 2, 1, 4 };
+            var expectedKeys = new[] { 2, 1, 0, 3 };
             var expectedValues = new[]
             {
                 0.7482486599406238,
@@ -32,12 +32,13 @@ namespace EC.CRM.Backend.UnitTests.Application
 
             // Act
             var actualResult = topsis.Calculate(decisionMatrix, weights, isBeneficial);
+            actualResult = actualResult.OrderByDescending(x => x.Value).ToDictionary();
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.Equals(actualResult.Keys.OrderDescending(), expectedKeys);
-                Assert.Equals(actualResult.Values, expectedValues);
+                Assert.That(actualResult.Keys, Is.EqualTo(expectedKeys));
+                Assert.That(actualResult.Values, Is.EqualTo(expectedValues));
             });
         }
     }

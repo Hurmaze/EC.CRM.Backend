@@ -1,8 +1,9 @@
-﻿/*using EC.CRM.Backend.Application.DTOs.Response;
+﻿using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
-using MathNet.Numerics.LinearAlgebra;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {
@@ -11,15 +12,21 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
         private readonly ICriteriasRepository criteriasRepository;
         private readonly IMentorRepository mentorRepository;
         private readonly IStudentRepository studentRepository;
+        private readonly TopsisAlgorithm topsisAlgorithm;
+
+        private Student student;
+        private List<Mentor> mentors;
 
         public MatchingService(
             IStudentRepository studentRepository,
             IMentorRepository mentorRepository,
-            ICriteriasRepository criteriasRepository)
+            ICriteriasRepository criteriasRepository,
+            TopsisAlgorithm topsisAlgorithm)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
             this.criteriasRepository = criteriasRepository;
+            this.topsisAlgorithm = topsisAlgorithm;
         }
 
         public async Task AddOrUpdateAlternativeAsync(Alternative alternative)
@@ -29,46 +36,104 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
         {
-            var student = await studentRepository.GetAsync(studentUid);
+            student = await studentRepository.GetAsync(studentUid);
 
-            var alternatives = GetAlternativesAsync(
+            var alternatives = await GetAlternativesAsync(
                 student.UserInfo.StudyFields.First().Uid,
                 student.UserInfo.Locations.First().Uid);
+
+            var criterias = await criteriasRepository.GetCriteriasAsync();
+
+            var topsisResult = topsisAlgorithm.Calculate(
+                alternatives,
+                criterias.Select(c => c.Weight).ToArray(),
+                criterias.Select(c => c.IsBeneficial).ToArray());
+
+            return new MatchingResponse
+            {
+                MenthorUid = mentors[topsisResult.Keys.First()].UserInfoUid,
+                MatchingCoefficient = topsisResult.First().Value,
+                OtherResults = topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
+            };
         }
 
-        private async Task<List<Matrix<double>>> GetAlternativesAsync(Guid studyFieldUid, Guid locationUid)
+        private async Task<double[,]> GetAlternativesAsync(Guid studyFieldUid, Guid locationUid)
         {
-            var alternatives = await criteriasRepository.GetAlternativesAsync();
+            var criteriasCount = await criteriasRepository.GetCriteriasCountAsync();
 
-            if (alternatives.Sum(a => a.Weight) != 1)
-            {
-                // normalize weight values
-            }
-
-            var mentors = await mentorRepository.GetAllAsync(
+            mentors = await mentorRepository.GetAllAsync(
                 m => m.UserInfo.StudyFields.Select(sf => sf.Uid).Contains(studyFieldUid)
                   && m.UserInfo.Locations.Select(sf => sf.Uid).Contains(locationUid));
 
-            var alternativeMatrix = new double[alternatives.Count, mentors.Count];
+            var mentorsValuations = await criteriasRepository.GetMentorsValuations(student.UserInfoUid);
 
-            for (var i = 0; i < alternatives.Count; i++)
-            {
-                var alternativeValues =
+            var alternativeMatrix = new double[criteriasCount, mentors.Count];
 
-                for (var j = 0; j < mentors.Count; j++)
-                {
+            alternativeMatrix.SetRow(0, mentorsValuations.Select(mv => mv.Valuation)!);
+            alternativeMatrix.SetRow(1, GetSkillsMatchingValuations(mentors));
+            alternativeMatrix.SetRow(2, GetMentorsWorkloadEstimations(mentors));
+            alternativeMatrix.SetRow(3, GetMentorSuccessEstimations(mentors));
+            alternativeMatrix.SetRow(4, GetNonProffesionalInterestsMatching(mentors));
 
-                }
-            }
+            return alternativeMatrix;
         }
 
-        private double NormalizeValuation(double value, List<double> allAlternativeValues) => value / allAlternativeValues.Sum();
-
-        private double[] GetCriteriaAlternatives(string criteriaName)
+        private double[] GetSkillsMatchingValuations(List<Mentor> mentors)
         {
+            double[] skillsMatchingCount = new double[mentors.Count];
+            var studentSkills = student.UserInfo.Skills;
+            for (int i = 0; i < mentors.Count; i++)
+            {
+                skillsMatchingCount[i] = mentors[i].UserInfo.Skills.Join(
+                    studentSkills,
+                    mSkill => mSkill.Uid,
+                    sSkill => sSkill.Uid,
+                    (mSkill, sSkill) => mSkill.Uid == sSkill.Uid).Count();
+            }
 
+            return skillsMatchingCount;
         }
-        // private async Task<()>
+
+        private double[] GetMentorsWorkloadEstimations(List<Mentor> mentors)
+        {
+            const double workloadWeightCoefficient = 1.2;
+            double[] skillsMatchingCount = new double[mentors.Count];
+
+            for (int i = 0; i < mentors.Count; i++)
+            {
+                skillsMatchingCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Count * workloadWeightCoefficient;
+            }
+
+            return skillsMatchingCount;
+        }
+
+        private double[] GetMentorSuccessEstimations(List<Mentor> mentors)
+        {
+            double[] studentsWithWorkCount = new double[mentors.Count];
+
+            for (int i = 0; i < mentors.Count; i++)
+            {
+                studentsWithWorkCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Where(s => s.UserInfo.CurentSalary is not null).Count();
+            }
+
+            return studentsWithWorkCount;
+        }
+
+        private double[] GetNonProffesionalInterestsMatching(List<Mentor> mentors)
+        {
+            double[] interestsMatchingCount = new double[mentors.Count];
+            var studentInterests = student.UserInfo.NonProfessionalInterests is null ? new() : student.UserInfo.NonProfessionalInterests;
+            for (int i = 0; i < mentors.Count; i++)
+            {
+                interestsMatchingCount[i] = mentors[i].UserInfo.NonProfessionalInterests.IsNullOrEmpty() ? 0 :
+                    mentors[i].UserInfo!.NonProfessionalInterests!.Join(
+                    studentInterests,
+                    mSkill => mSkill.Uid,
+                    sSkill => sSkill.Uid,
+                    (mSkill, sSkill) => mSkill.Uid == sSkill.Uid).Count();
+            }
+
+            return interestsMatchingCount;
+        }
     }
 }
-*/

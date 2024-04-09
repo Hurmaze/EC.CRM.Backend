@@ -6,6 +6,6 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
     public interface IMatchingService
     {
         Task<MatchingResponse> ChooseMentorAsync(Guid studentUid);
-        Task AddOrUpdateAlternativeAsync(Alternative alternative);
+        Task UpdateCriteriaAsync(Criteria alternative);
     }
 }

@@ -9,18 +9,18 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {
     public class MatchingService : IMatchingService
     {
-        private readonly ICriteriasRepository criteriasRepository;
+        private readonly ICriteriaRepository criteriasRepository;
         private readonly IMentorRepository mentorRepository;
         private readonly IStudentRepository studentRepository;
         private readonly TopsisAlgorithm topsisAlgorithm;
 
-        private Student student;
-        private List<Mentor> mentors;
+        private Student? student;
+        private List<Mentor>? mentors;
 
         public MatchingService(
             IStudentRepository studentRepository,
             IMentorRepository mentorRepository,
-            ICriteriasRepository criteriasRepository,
+            ICriteriaRepository criteriasRepository,
             TopsisAlgorithm topsisAlgorithm)
         {
             this.studentRepository = studentRepository;
@@ -29,9 +29,9 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             this.topsisAlgorithm = topsisAlgorithm;
         }
 
-        public async Task AddOrUpdateAlternativeAsync(Alternative alternative)
+        public async Task UpdateCriteriaAsync(Criteria criteria)
         {
-            throw new NotImplementedException();
+            await criteriasRepository.AddOrUpdateCriteriaAsync(criteria);
         }
 
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
@@ -51,12 +51,13 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 
             return new MatchingResponse
             {
-                MenthorUid = mentors[topsisResult.Keys.First()].UserInfoUid,
+                MenthorUid = mentors![topsisResult.Keys.First()].UserInfoUid,
                 MatchingCoefficient = topsisResult.First().Value,
                 OtherResults = topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
             };
         }
 
+        #region private
         private async Task<double[,]> GetAlternativesAsync(Guid studyFieldUid, Guid locationUid)
         {
             var criteriasCount = await criteriasRepository.GetCriteriasCountAsync();
@@ -65,7 +66,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
                 m => m.UserInfo.StudyFields.Select(sf => sf.Uid).Contains(studyFieldUid)
                   && m.UserInfo.Locations.Select(sf => sf.Uid).Contains(locationUid));
 
-            var mentorsValuations = await criteriasRepository.GetMentorsValuations(student.UserInfoUid);
+            var mentorsValuations = await criteriasRepository.GetMentorsValuations(student!.UserInfoUid);
 
             var alternativeMatrix = new double[criteriasCount, mentors.Count];
 
@@ -81,7 +82,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
         private double[] GetSkillsMatchingValuations(List<Mentor> mentors)
         {
             double[] skillsMatchingCount = new double[mentors.Count];
-            var studentSkills = student.UserInfo.Skills;
+            var studentSkills = student!.UserInfo.Skills;
             for (int i = 0; i < mentors.Count; i++)
             {
                 skillsMatchingCount[i] = mentors[i].UserInfo.Skills.Join(
@@ -122,7 +123,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
         private double[] GetNonProffesionalInterestsMatching(List<Mentor> mentors)
         {
             double[] interestsMatchingCount = new double[mentors.Count];
-            var studentInterests = student.UserInfo.NonProfessionalInterests is null ? new() : student.UserInfo.NonProfessionalInterests;
+            var studentInterests = student!.UserInfo.NonProfessionalInterests is null ? new() : student.UserInfo.NonProfessionalInterests;
             for (int i = 0; i < mentors.Count; i++)
             {
                 interestsMatchingCount[i] = mentors[i].UserInfo.NonProfessionalInterests.IsNullOrEmpty() ? 0 :
@@ -136,4 +137,5 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             return interestsMatchingCount;
         }
     }
+    #endregion private
 }

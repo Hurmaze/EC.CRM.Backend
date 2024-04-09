@@ -23,4 +23,8 @@
     <ProjectReference Include="..\EC.CRM.Backend.Persistence\EC.CRM.Backend.Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\" />
+  </ItemGroup>
+
 </Project>

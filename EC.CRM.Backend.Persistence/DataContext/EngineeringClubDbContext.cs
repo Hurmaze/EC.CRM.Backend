@@ -1,4 +1,5 @@
 ﻿using EC.CRM.Backend.Domain.Entities;
+using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using Microsoft.EntityFrameworkCore;
 
 namespace EC.CRM.Backend.Persistence.DataContext
@@ -13,6 +14,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Credentials> Credentials { get; set; }
+        public DbSet<Criteria> Criterias { get; set; }
+        public DbSet<MentorValuation> MentorValuations { get; set; }
 
         public EngineeringClubDbContext(DbContextOptions<EngineeringClubDbContext> dbContextOptions) : base(dbContextOptions)
         {
@@ -121,6 +124,14 @@ namespace EC.CRM.Backend.Persistence.DataContext
             studyfield.Property(s => s.Uid)
                 .HasDefaultValueSql("newsequentialid()");
             studyfield.Property(p => p.Name).HasMaxLength(100).IsRequired();
+
+            var criteria = modelBuilder.Entity<Criteria>();
+            criteria.HasKey(c => c.Name);
+            criteria.Property(c => c.Name)
+                .HasMaxLength(100);
+
+            var mentorValuation = modelBuilder.Entity<MentorValuation>();
+            mentorValuation.HasNoKey();
         }
     }
 }

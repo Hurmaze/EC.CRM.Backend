@@ -54,7 +54,13 @@ app.UseHttpsRedirection();
 
 app.UseSerilogRequestLogging();
 
-app.UseAuthorization();
+// TODO: use Options pattern
+if (bool.Parse(builder.Configuration.GetSection("Features")["EnableAuth"]!))
+{
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+}
 
 app.MapControllers();
 

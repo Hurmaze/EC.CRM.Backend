@@ -5,9 +5,9 @@ using EC.CRM.Backend.Domain.Entities;
 
 namespace EC.CRM.Backend.Application.Helpers
 {
-    internal class AutomapperProfiles : Profile
+    public class AutomapperProfile : Profile
     {
-        public AutomapperProfiles()
+        public AutomapperProfile()
         {
             CreateMap<Student, StudentResponse>().PreserveReferences();
 

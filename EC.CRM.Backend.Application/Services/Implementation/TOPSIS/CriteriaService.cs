@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using EC.CRM.Backend.Application.DTOs.Models;
+using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
 using MathNet.Numerics.LinearAlgebra;
@@ -8,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {
-    public class CriteriaService
+    public class CriteriaService : ICriteriaService
     {
 
         private static readonly double[] CIS = [0, 0, 0.52, 0.89, 1.11, 1.25, 1.35, 1.4, 1.45, 1.49];
@@ -21,10 +22,10 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             this.criteriaRepository = criteriaRepository;
         }
 
-        public async Task RegisterCriteriasAsync(Stream criteriasStream)
+        public async Task RegisterCriteriasAsync(int criteriasCount, Stream criteriasStream)
         {
             // TODO: Make it mice
-            var criterias = await ParseMatrixFileAsync(criteriasStream);
+            var criterias = await ParseMatrixFileAsync(criteriasCount, criteriasStream);
 
             var weights = CalculateCriteriaWeights(criterias.CriteriaValuations);
 
@@ -64,11 +65,9 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             return resultWeights;
         }
 
-        private async Task<CriteriasValuationResult> ParseMatrixFileAsync(Stream criteriasStream)
+        private async Task<CriteriasValuationResult> ParseMatrixFileAsync(int criteriasCount, Stream criteriasStream)
         {
             List<CriteriaValuation> criteriasValuations = new();
-            var criteriasCounts = await criteriaRepository.GetCriteriasCountAsync();
-            var criteriasCount = 5;
 
             bool wasInitialized = false;
             bool[] isBeneficial = new bool[criteriasCount];

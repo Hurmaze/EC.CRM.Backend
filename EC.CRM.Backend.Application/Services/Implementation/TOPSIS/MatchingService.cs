@@ -12,7 +12,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
         private readonly ICriteriaRepository criteriasRepository;
         private readonly IMentorRepository mentorRepository;
         private readonly IStudentRepository studentRepository;
-        private readonly TopsisAlgorithm topsisAlgorithm;
+        private readonly ITopsisAlgorithm topsisAlgorithm;
 
         private Student? student;
         private List<Mentor>? mentors;
@@ -21,7 +21,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             IStudentRepository studentRepository,
             IMentorRepository mentorRepository,
             ICriteriaRepository criteriasRepository,
-            TopsisAlgorithm topsisAlgorithm)
+            ITopsisAlgorithm topsisAlgorithm)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
@@ -44,6 +44,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 
             var criterias = await criteriasRepository.GetCriteriasAsync();
 
+            // TODO: Make sure it indexes are right
             var topsisResult = topsisAlgorithm.Calculate(
                 alternatives,
                 criterias.Select(c => c.Weight).ToArray(),

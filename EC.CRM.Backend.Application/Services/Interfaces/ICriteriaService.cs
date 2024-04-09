@@ -2,6 +2,6 @@
 {
     public interface ICriteriaService
     {
-        Task RegisterCriterias(Stream criteriasStream);
+        Task RegisterCriteriasAsync(int criteriasCount, Stream criteriasStream);
     }
 }

@@ -1,3 +1,4 @@
+using EC.CRM.Backend.API.Extensions;
 using EC.CRM.Backend.Application;
 using EC.CRM.Backend.Persistence.DataContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,6 +36,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub")));
+
+builder.Services.RegisterServices();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

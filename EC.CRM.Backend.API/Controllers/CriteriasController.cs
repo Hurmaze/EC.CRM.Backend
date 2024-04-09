@@ -14,16 +14,17 @@ namespace EC.CRM.Backend.API.Controllers
             this.criteriaService = criteriaService;
         }
 
-        public async Task<ActionResult> RegisterCriterias(IFormFile criteriasCsv)
+        [HttpPost("register-criterias")]
+        public async Task<ActionResult> RegisterCriterias(int criteriasCount, IFormFile criteriasCsv)
         {
             using (var memoryStream = new MemoryStream())
             {
                 criteriasCsv.CopyTo(memoryStream);
                 memoryStream.Position = 0;
 
-                var parsedData = criteriaService.RegisterCriterias(memoryStream);
+                await criteriaService.RegisterCriteriasAsync(criteriasCount, memoryStream);
                 // Do something with the parsed data, such as saving to a database
-                return Ok(parsedData);
+                return Ok();
             }
         }
     }

@@ -1,6 +1,8 @@
-﻿namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
+﻿using EC.CRM.Backend.Application.Services.Interfaces;
+
+namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {
-    public class TopsisAlgorithm
+    public class TopsisAlgorithm : ITopsisAlgorithm
     {
         public TopsisAlgorithm() { }
 

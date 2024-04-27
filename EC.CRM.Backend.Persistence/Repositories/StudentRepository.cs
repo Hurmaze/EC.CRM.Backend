@@ -16,7 +16,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
         }
         public async Task<Student> CreateAsync(Student student)
         {
-            await _dbContext.AddAsync(student);
+            await _dbContext.Students.AddAsync(student);
 
             await _dbContext.SaveChangesAsync();
 

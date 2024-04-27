@@ -15,7 +15,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
         }
         public async Task<Location> CreateAsync(Location location)
         {
-            await _dbContext.AddAsync(location);
+            await _dbContext.Locations.AddAsync(location);
 
             await _dbContext.SaveChangesAsync();
 

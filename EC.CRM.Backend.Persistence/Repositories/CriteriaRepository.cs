@@ -1,5 +1,4 @@
 ﻿using EC.CRM.Backend.Domain.Entities.TOPSIS;
-using EC.CRM.Backend.Domain.Exceptions;
 using EC.CRM.Backend.Domain.Repositories;
 using EC.CRM.Backend.Persistence.DataContext;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +12,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             _dbContext = dbContext;
         }
+
         public async Task<List<Criteria>> GetCriteriasAsync()
         {
             return await _dbContext
@@ -45,7 +45,24 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
             else
             {
-                throw new NotFoundException(nameof(criteria), criteria.Name);
+                await _dbContext.Criterias.AddAsync(criteria);
+
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task AddOrUpdateMentorsValuationsAsync(MentorValuation mentorValuation)
+        {
+            if (await _dbContext.MentorValuations.FindAsync(mentorValuation.Id) is MentorValuation found)
+            {
+                _dbContext.MentorValuations.Entry(found).CurrentValues.SetValues(mentorValuation);
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                await _dbContext.MentorValuations.AddAsync(mentorValuation);
+
+                await _dbContext.SaveChangesAsync();
             }
         }
     }

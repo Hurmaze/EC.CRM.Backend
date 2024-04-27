@@ -1,173 +1,118 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace EC.CRM.Backend.Persistence.Migrations
 {
+    // Change this migration to firstly drop identity columns and then add newsequentialid() default values
+
     /// <inheritdoc />
     public partial class updatedefaultvaluesforguids : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<Guid>(
+            /*migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "UserInfos");
+
+            // Recreate the column with the new default value
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "UserInfos",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("8c1069ef-cc09-42ba-b13f-f0e57a144e38"));
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // StudyField
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "StudyField");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "StudyField",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier");
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // States
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "States");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "States",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("d32bd883-7889-41aa-98fc-797045b3c4c6"));
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // Skill
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "Skill");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "Skill",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier");
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // Roles
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "Roles");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "Roles",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("f87a9f76-708c-4c23-aff4-0ea5578b3bd4"));
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // NonProfessionalInterest
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "NonProfessionalInterest");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "NonProfessionalInterest",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier");
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // Locations
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "Locations");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "Locations",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("f850026e-f962-4a69-adfe-95271a24d246"));
+                defaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
+            // Jobs
+            migrationBuilder.DropColumn(
+                name: "Uid",
+                table: "Jobs");
+
+            migrationBuilder.AddColumn<Guid>(
                 name: "Uid",
                 table: "Jobs",
                 type: "uniqueidentifier",
                 nullable: false,
-                defaultValueSql: "newsequentialid()",
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("cd5e6fe9-4844-45c0-8616-10cee274f89e"));
+                defaultValueSql: "newsequentialid()");*/
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "UserInfos",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("8c1069ef-cc09-42ba-b13f-f0e57a144e38"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
 
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "StudyField",
-                type: "uniqueidentifier",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "States",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("d32bd883-7889-41aa-98fc-797045b3c4c6"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Skill",
-                type: "uniqueidentifier",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Roles",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("f87a9f76-708c-4c23-aff4-0ea5578b3bd4"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "NonProfessionalInterest",
-                type: "uniqueidentifier",
-                nullable: false,
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Locations",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("f850026e-f962-4a69-adfe-95271a24d246"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Jobs",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("cd5e6fe9-4844-45c0-8616-10cee274f89e"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValueSql: "newsequentialid()");
         }
     }
 }

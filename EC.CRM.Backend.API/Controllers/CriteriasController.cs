@@ -23,9 +23,17 @@ namespace EC.CRM.Backend.API.Controllers
                 memoryStream.Position = 0;
 
                 await criteriaService.RegisterCriteriasAsync(criteriasCount, memoryStream);
-                // Do something with the parsed data, such as saving to a database
+
                 return Ok();
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetCriterias()
+        {
+            var criterias = await criteriaService.GetCriteriasAsync();
+
+            return Ok(criterias);
         }
     }
 }

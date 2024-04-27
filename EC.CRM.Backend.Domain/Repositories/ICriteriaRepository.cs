@@ -7,6 +7,7 @@ namespace EC.CRM.Backend.Domain.Repositories
         Task<List<Criteria>> GetCriteriasAsync();
         Task<int> GetCriteriasCountAsync();
         Task<List<MentorValuation>> GetMentorsValuations(Guid studentId);
+        Task AddOrUpdateMentorsValuationsAsync(MentorValuation mentorValuation);
         Task AddOrUpdateCriteriaAsync(Criteria alternative);
     }
 }

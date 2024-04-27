@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,7 +10,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
+            /*migrationBuilder.DropForeignKey(
                 name: "FK_UserInfos_Locations_LocationUid",
                 table: "UserInfos");
 
@@ -71,7 +70,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 defaultValue: new Guid("cd5e6fe9-4844-45c0-8616-10cee274f89e"),
                 oldClrType: typeof(Guid),
                 oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("78f720ca-9212-470c-87ae-f9acef45c523"));
+                oldDefaultValue: new Guid("78f720ca-9212-470c-87ae-f9acef45c523"));*/
 
             migrationBuilder.CreateTable(
                 name: "LocationUserInfo",
@@ -109,7 +108,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "LocationUserInfo");
 
-            migrationBuilder.AlterColumn<Guid>(
+            /*migrationBuilder.AlterColumn<Guid>(
                 name: "Uid",
                 table: "UserInfos",
                 type: "uniqueidentifier",
@@ -175,7 +174,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 table: "UserInfos",
                 column: "LocationUid",
                 principalTable: "Locations",
-                principalColumn: "Uid");
+                principalColumn: "Uid");*/
         }
     }
 }

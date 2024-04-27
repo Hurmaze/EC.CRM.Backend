@@ -11,7 +11,6 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {
     public class CriteriaService : ICriteriaService
     {
-
         private static readonly double[] CIS = [0, 0, 0.52, 0.89, 1.11, 1.25, 1.35, 1.4, 1.45, 1.49];
         private static Random random = new Random();
 
@@ -22,10 +21,15 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             this.criteriaRepository = criteriaRepository;
         }
 
+        public async Task<List<Criteria>> GetCriteriasAsync()
+        {
+            return await criteriaRepository.GetCriteriasAsync();
+        }
+
         public async Task RegisterCriteriasAsync(int criteriasCount, Stream criteriasStream)
         {
             // TODO: Make it mice
-            var criterias = await ParseMatrixFileAsync(criteriasCount, criteriasStream);
+            var criterias = ParseMatrixFile(criteriasCount, criteriasStream);
 
             var weights = CalculateCriteriaWeights(criterias.CriteriaValuations);
 
@@ -65,7 +69,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             return resultWeights;
         }
 
-        private async Task<CriteriasValuationResult> ParseMatrixFileAsync(int criteriasCount, Stream criteriasStream)
+        private CriteriasValuationResult ParseMatrixFile(int criteriasCount, Stream criteriasStream)
         {
             List<CriteriaValuation> criteriasValuations = new();
 

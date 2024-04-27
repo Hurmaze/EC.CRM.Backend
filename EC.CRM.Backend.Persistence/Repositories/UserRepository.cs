@@ -16,7 +16,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
         }
         public async Task<UserInfo> CreateAsync(UserInfo user)
         {
-            await _dbContext.AddAsync(user);
+            await _dbContext.UserInfos.AddAsync(user);
 
             await _dbContext.SaveChangesAsync();
 

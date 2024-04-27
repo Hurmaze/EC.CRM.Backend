@@ -15,7 +15,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
         }
         public async Task<State> CreateAsync(State state)
         {
-            await _dbContext.AddAsync(state);
+            await _dbContext.States.AddAsync(state);
 
             await _dbContext.SaveChangesAsync();
 

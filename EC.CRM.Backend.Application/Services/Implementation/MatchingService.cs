@@ -1,11 +1,12 @@
 ﻿using EC.CRM.Backend.Application.DTOs.Response;
+using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
 using Microsoft.IdentityModel.Tokens;
 
-namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
+namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public class MatchingService : IMatchingService
     {
@@ -29,9 +30,12 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             this.topsisAlgorithm = topsisAlgorithm;
         }
 
-        public async Task UpdateCriteriaAsync(Criteria criteria)
+        public async Task SetMentorValuation(List<MentorValuation> valuations)
         {
-            await criteriasRepository.AddOrUpdateCriteriaAsync(criteria);
+            foreach (var valuation in valuations)
+            {
+                await criteriasRepository.AddOrUpdateMentorsValuationsAsync(valuation);
+            }
         }
 
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
@@ -68,6 +72,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
                   && m.UserInfo.Locations.Select(sf => sf.Uid).Contains(locationUid));
 
             var mentorsValuations = await criteriasRepository.GetMentorsValuations(student!.UserInfoUid);
+
+            if (mentorsValuations.Count != mentors.Count)
+            {
+                throw new Exception("Mentors valuations count is not equal to mentors count. Someone has not voted.");
+            }
 
             var alternativeMatrix = new double[criteriasCount, mentors.Count];
 

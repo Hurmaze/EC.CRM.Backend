@@ -14,7 +14,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "Locations",
                 columns: table => new
                 {
-                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
@@ -27,7 +27,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -39,7 +39,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "States",
                 columns: table => new
                 {
-                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -51,7 +51,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "UserInfos",
                 columns: table => new
                 {
-                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     PhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
@@ -82,7 +82,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "Jobs",
                 columns: table => new
                 {
-                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     CompanyName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     PositionName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Salary = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: false),
@@ -105,8 +105,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "Mentors",
                 columns: table => new
                 {
-                    Uid = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     UserInfoUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -124,10 +123,9 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    Uid = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Uid = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     UserInfoUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MentorUid = table.Column<int>(type: "int", nullable: false),
+                    MentorUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StateUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>

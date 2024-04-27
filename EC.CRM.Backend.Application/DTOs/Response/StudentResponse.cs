@@ -1,6 +1,6 @@
-﻿namespace EC.CRM.Backend.Application.Models
+﻿namespace EC.CRM.Backend.Application.DTOs.Response
 {
-    public class StudentModel
+    public class StudentResponse
     {
         public Guid Uid { get; set; }
         public Guid MentorUid { get; set; }

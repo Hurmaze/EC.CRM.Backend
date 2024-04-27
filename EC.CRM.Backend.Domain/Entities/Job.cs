@@ -7,6 +7,7 @@
         public required string PositionName { get; set; }
         public required decimal Salary { get; set; }
         public required DateTime StartTime { get; set; }
-        public required DateTime? EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
+        public required UserInfo UserInfo { get; set; }
     }
 }

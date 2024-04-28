@@ -1,4 +1,4 @@
-﻿using EC.CRM.Backend.Application.DTOs.Request;
+﻿using EC.CRM.Backend.Application.DTOs.Request.Auth;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +20,14 @@ namespace EC.CRM.Backend.API.Controllers
             var token = await authService.GetTokenAsync(loginRequest);
 
             return Ok(new { token = token });
+        }
+
+        [HttpPost("change-password")]
+        public async Task<ActionResult> ChangePassword(ChangePasswordRequest changePasswordRequest)
+        {
+            await authService.ChangePasswordAsync(changePasswordRequest);
+
+            return Ok();
         }
     }
 }

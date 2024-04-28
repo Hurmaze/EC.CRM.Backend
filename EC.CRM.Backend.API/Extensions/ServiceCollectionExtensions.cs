@@ -26,7 +26,7 @@ namespace EC.CRM.Backend.API.Extensions
             services.AddTransient<IMatchingService, MatchingService>();
             services.AddTransient<IMentorService, MentorService>();
             services.AddTransient<IStudentService, StudentService>();
-            services.AddTransient<IUserInfoService, UserService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITopsisAlgorithm, TopsisAlgorithm>();
 
             var mapperConfig = new MapperConfiguration(mc =>

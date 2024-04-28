@@ -30,11 +30,18 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             this.topsisAlgorithm = topsisAlgorithm;
         }
 
-        public async Task SetMentorValuation(List<MentorValuation> valuations)
+        public async Task SetMentorValuation(Guid studentUid, Dictionary<Guid, double> valuations)
         {
             foreach (var valuation in valuations)
             {
-                await criteriasRepository.AddOrUpdateMentorsValuationsAsync(valuation);
+                var mentorValuation = new MentorValuation
+                {
+                    MentorUid = valuation.Key,
+                    StudentUid = studentUid,
+                    Valuation = valuation.Value
+                };
+
+                await criteriasRepository.AddOrUpdateMentorsValuationsAsync(mentorValuation);
             }
         }
 

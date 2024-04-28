@@ -1,8 +1,11 @@
 ﻿using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain.Entities.TOPSIS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EC.CRM.Backend.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CriteriasController : ControllerBase
@@ -29,7 +32,7 @@ namespace EC.CRM.Backend.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCriterias()
+        public async Task<ActionResult<List<Criteria>>> GetCriterias()
         {
             var criterias = await criteriaService.GetCriteriasAsync();
 

@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using AutoMapper;
-using EC.CRM.Backend.Application.DTOs.Request;
+using EC.CRM.Backend.Application.DTOs.Request.Auth;
 using EC.CRM.Backend.Application.Exceptions;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
@@ -88,10 +88,9 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             List<Claim> userClaims = new()
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role!.Name)
+                new Claim(ClaimTypes.Role, user.Role!.Name),
+                new Claim("uid", user.Uid.ToString()),
             };
-
-            userClaims.Add(new Claim("uid", user.Uid.ToString()));
 
             var key = authParams.GetSymmetricSecurityKey();
             var credantials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
@@ -106,6 +105,24 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             logger.LogInformation("JWT token for {email} generated.", user.Email);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task ChangePasswordAsync(Guid userUid, ChangePasswordRequest changePasswordRequest)
+        {
+            byte[] passwordHash;
+            byte[] passwordSalt;
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(changePasswordRequest.NewPassword));
+            }
+
+            var user = await userRepository.GetAsync(userUid);
+
+            user.Credentials.PasswordHash = passwordHash;
+            user.Credentials.PasswordSalt = passwordSalt;
+
+            await userRepository.UpdateAsync(user);
         }
     }
 }

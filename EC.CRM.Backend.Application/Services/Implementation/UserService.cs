@@ -37,9 +37,9 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             var userEntity = mapper.Map<UserInfo>(user);
 
-            var createdResponse = userRepository.CreateAsync(userEntity);
+            var createdUser = userRepository.CreateAsync(userEntity);
 
-            return mapper.Map<UserInfoResponse>(createdResponse);
+            return mapper.Map<UserInfoResponse>(createdUser);
         }
 
         public Task<List<Job>> GetJobsAsync(Guid userUid)

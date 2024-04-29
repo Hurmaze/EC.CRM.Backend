@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using AutoMapper;
 using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Request.Auth;
 using EC.CRM.Backend.Application.Exceptions;
@@ -18,18 +17,15 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     public sealed class AuthService : IAuthService
     {
         private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
         private readonly IOptions<JwtOptions> authOptions;
         private readonly ILogger<UserService> logger;
 
         public AuthService(
             IUserRepository userRepository,
-            IMapper mapper,
             IOptions<JwtOptions> authOptions,
             ILogger<UserService> logger)
         {
             this.userRepository = userRepository;
-            this.mapper = mapper;
             this.authOptions = authOptions;
             this.logger = logger;
         }
@@ -46,11 +42,6 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         public async Task<string> GetTokenAsync(LoginRequest loginRequest)
         {
             var user = await userRepository.GetAsync(loginRequest.Email);
-
-            if (user == null)
-            {
-                throw new NotFoundException(nameof(user), loginRequest.Email);
-            }
 
             if (!VerifyPassword(loginRequest.Password, user.Credentials.PasswordHash, user.Credentials.PasswordSalt))
             {

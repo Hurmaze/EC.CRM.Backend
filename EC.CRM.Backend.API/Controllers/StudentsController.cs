@@ -24,7 +24,7 @@ namespace EC.CRM.Backend.API.Controllers
             this.claimsHelper = claimsHelper;
         }
 
-        [HttpPatch("/{studentUid: Guid}")]
+        [HttpPatch("/{studentUid:guid}")]
         [Authorize(Roles = Roles.Director)]
         public async Task<ActionResult<MatchingResponse>> ChooseMentor(Guid studentUid, [FromBody] bool assign)
         {
@@ -38,7 +38,7 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok(matchingResponse);
         }
 
-        [HttpPost("/{studentUid: Guid}")]
+        [HttpPost("/{studentUid:guid}")]
         [Authorize(Roles = $"{Roles.Mentor}, {Roles.Director}")]
         public async Task<ActionResult> SetMentorValuation(Guid studentUid, Dictionary<Guid, double> mentorsValuations)
         {
@@ -65,7 +65,7 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok();
         }
 
-        [HttpGet("/{studentUid: Guid}/valuations")]
+        [HttpGet("/{studentUid:guid}/valuations")]
         public async Task<ActionResult> GetStudentValuations(Guid studentUid)
         {
             await matchingService.GetStudentValuations(studentUid);

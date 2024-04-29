@@ -1,4 +1,5 @@
-﻿using EC.CRM.Backend.Domain.Entities;
+﻿using System.Linq.Expressions;
+using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Repositories;
 using EC.CRM.Backend.Persistence.DataContext;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,10 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             _dbContext = engineeringClubDbContext;
         }
-        public async Task<List<Role>> GetAllAsync()
+        public async Task<List<Role>> GetAllAsync(Expression<Func<Role, bool>>? predicate = null)
         {
+            if (predicate == null) predicate = (x) => true;
+
             // NOTE: Here we do not Include() List<UserInfo> just because we won't need it.
             // So in that case this property will be null.
             // If it will be a problem in the future consider add DTO for this layer 
@@ -22,6 +25,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                 .Roles
                 .AsNoTracking()
+                .Where(predicate)
                 .OrderBy(x => x.Name)
                 .ToListAsync();
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EC.CRM.Backend.API.Utils;
 using EC.CRM.Backend.Application.Helpers;
 using EC.CRM.Backend.Application.Services.Implementation;
 using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
@@ -28,6 +29,8 @@ namespace EC.CRM.Backend.API.Extensions
             services.AddTransient<IStudentService, StudentService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ITopsisAlgorithm, TopsisAlgorithm>();
+
+            services.AddTransient<ClaimsHelper>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {

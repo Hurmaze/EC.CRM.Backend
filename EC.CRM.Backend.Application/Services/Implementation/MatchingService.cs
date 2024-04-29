@@ -45,6 +45,13 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             }
         }
 
+        public async Task<Dictionary<Guid, double>> GetStudentValuations(Guid studentUid)
+        {
+            var valuations = await criteriasRepository.GetMentorsValuations(studentUid);
+
+            return valuations.ToDictionary(v => v.MentorUid, v => v.Valuation);
+        }
+
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
         {
             student = await studentRepository.GetAsync(studentUid);

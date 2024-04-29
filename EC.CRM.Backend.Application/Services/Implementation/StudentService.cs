@@ -1,4 +1,4 @@
-﻿using EC.CRM.Backend.Application.DTOs.Request.Users;
+﻿using EC.CRM.Backend.Application.DTOs.Request.Students;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
@@ -7,7 +7,12 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public class StudentService : IStudentService
     {
-        public Task<StudentResponse> CreateAsync(CreateUserRequest student)
+        public Task AssignMentorAsync(Guid studentUid, Guid mentorUid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<StudentResponse> CreateAsync(StudentApplicationRequest studentApplicationRequest)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
-﻿using EC.CRM.Backend.Application.DTOs.Request.Auth;
+﻿using EC.CRM.Backend.API.Utils;
+using EC.CRM.Backend.Application.DTOs.Request.Auth;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,11 @@ namespace EC.CRM.Backend.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
-        public AuthController(IAuthService authService)
+        private readonly ClaimsHelper claimsHelper;
+        public AuthController(IAuthService authService, ClaimsHelper claimsHelper)
         {
             this.authService = authService;
+            this.claimsHelper = claimsHelper;
         }
 
         [HttpPost("login")]
@@ -22,10 +25,13 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok(new { token = token });
         }
 
-        [HttpPost("change-password")]
+        [HttpPatch("change-password")]
         public async Task<ActionResult> ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
-            await authService.ChangePasswordAsync(changePasswordRequest);
+
+            var userId = claimsHelper.GetUserUid(HttpContext);
+
+            await authService.ChangePasswordAsync(userId, changePasswordRequest);
 
             return Ok();
         }

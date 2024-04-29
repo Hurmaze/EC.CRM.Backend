@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using AutoMapper;
+using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Request.Auth;
 using EC.CRM.Backend.Application.Exceptions;
 using EC.CRM.Backend.Application.Services.Interfaces;
@@ -89,7 +90,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role!.Name),
-                new Claim("uid", user.Uid.ToString()),
+                new Claim(CustomClaimTypes.Uid, user.Uid.ToString()),
             };
 
             var key = authParams.GetSymmetricSecurityKey();

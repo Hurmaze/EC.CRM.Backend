@@ -1,12 +1,11 @@
-﻿using EC.CRM.Backend.Application.DTOs.Request;
-using EC.CRM.Backend.Application.DTOs.Response;
+﻿using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public class MentorService : IMentorService
     {
-        public Task<MentorResponse> CreateAsync(CreateMentorRequest mentor)
+        public Task CreateAsync(Guid userInfoUid)
         {
             throw new NotImplementedException();
         }

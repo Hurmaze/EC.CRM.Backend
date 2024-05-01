@@ -142,7 +142,9 @@ namespace EC.CRM.Backend.Persistence.DataContext
             #endregion
 
             #region data seeding
+
             SeedData(modelBuilder);
+
             #endregion
         }
 
@@ -161,11 +163,10 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
                 if (seedingOptions.SeedTestData)
                 {
-                    /* modelBuilder.Entity<UserInfo>().HasData(dBseeder.UserInfos);
-                     modelBuilder.Entity<Credentials>().HasData(dBseeder.Credentials);
-                     modelBuilder.Entity<Mentor>().HasData(dBseeder.Mentors);
-                     modelBuilder.Entity<Student>().HasData(dBseeder.Students);
-                     modelBuilder.Entity<Job>().HasData(dBseeder.Jobs);*/
+                    modelBuilder.Entity<UserInfo>().HasData(dBseeder.UserInfos);
+                    //modelBuilder.Entity<Credentials>().HasData(dBseeder.Credentials);
+                    modelBuilder.Entity<Mentor>().HasData(dBseeder.Mentors);
+                    modelBuilder.Entity<Student>().HasData(dBseeder.Students);
                 }
             }
         }

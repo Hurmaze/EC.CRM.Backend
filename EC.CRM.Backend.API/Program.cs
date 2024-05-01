@@ -37,9 +37,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.RegisterServices();
 
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddConsole()
+        .AddFilter(DbLoggerCategory.Database.Command.Name, LogLevel.Information);
+    loggingBuilder.AddDebug();
+});
+
 builder.Services.Configure<DbContextSeedingOptions>(builder.Configuration.GetSection(DbContextSeedingOptions.Name));
 builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub")));
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub"));
+    options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
+}
+    );
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

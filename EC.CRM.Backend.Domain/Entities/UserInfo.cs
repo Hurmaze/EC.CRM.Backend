@@ -16,7 +16,9 @@
         public List<NonProfessionalInterest>? NonProfessionalInterests { get; set; }
         public required List<Location> Locations { get; set; }
         public required List<StudyField> StudyFields { get; set; }
+        public Guid? MentorPropertiesUid { get; set; }
         public Mentor? MentorProperties { get; set; }
+        public Guid? StudentPropertiesUid { get; set; }
         public Student? StudentProperties { get; set; }
         public required Credentials Credentials { get; set; }
     }

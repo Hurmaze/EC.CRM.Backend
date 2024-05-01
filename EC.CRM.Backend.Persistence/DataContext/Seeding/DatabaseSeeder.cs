@@ -1,9 +1,12 @@
-﻿using EC.CRM.Backend.Domain.Entities;
+﻿using Bogus;
+using EC.CRM.Backend.Domain.Entities;
 
 namespace EC.CRM.Backend.Persistence.DataContext.Seeding
 {
     public class DatabaseSeeder
     {
+        private string randomString => new Faker().Random.String(0, 6);
+
         #region Basic Data
         public List<Location> Locations { get; } = [];
         public List<Role> Roles { get; } = [];
@@ -29,52 +32,52 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
             States = GenerateStates();
             StudyFields = GenerateStudyFields();
 
-            /*Products = GenerateProducts(amount: 1000);
-            ProductCategories = GenerateProductCategories(amount: 50);
-            ProductProductCategories = GenerateProductProductCategories(amount: 1000, Products, ProductCategories);*/
+            UserInfos = GenerateUserInfos(amount: 1000);
+            Students = GenerateStudents();
+            Mentors = GenerateMentors();
         }
 
         private List<Skill> GenerateSkills()
         {
             return new List<Skill>
             {
-                new Skill { Name = "C#" },
-                new Skill { Name = "Java" },
-                new Skill { Name = "Python" },
-                new Skill { Name = "JavaScript/TypeScript" },
-                new Skill { Name = "Powershell" },
-                new Skill { Name = "Bash" },
-                new Skill { Name = "CMD" },
-                new Skill { Name = "Linux" },
-                new Skill { Name = "CSS" },
-                new Skill { Name = "Html" },
-                new Skill { Name = "Other programming languages" },
-                new Skill { Name = "SQL" },
-                new Skill { Name = "MsSQL" },
-                new Skill { Name = "Postgres" },
-                new Skill { Name = "MySql" },
-                new Skill { Name = "AWS" },
-                new Skill { Name = "Azure services" },
-                new Skill { Name = "Git" },
-                new Skill { Name = "GitHub CI" },
-                new Skill { Name = "GitLab CI" },
-                new Skill { Name = "Azure Devops Ci" },
-                new Skill { Name = "Jenkins" },
-                new Skill { Name = "Allure" },
-                new Skill { Name = "React" },
-                new Skill { Name = "Angular" },
-                new Skill { Name = "ASP.NET" },
-                new Skill { Name = "Spring Boot" },
-                new Skill { Name = "Junit" },
-                new Skill { Name = "TestNG" },
-                new Skill { Name = "NUnit" },
-                new Skill { Name = "XUnit" },
-                new Skill { Name = "Mocha" },
-                new Skill { Name = "Pytest" },
-                new Skill { Name = "Playwright" },
-                new Skill { Name = "Selenium" },
-                new Skill { Name = "Selenide" },
-                new Skill { Name = "Selenoid" },
+                new Skill { Name = "C#", Uid = Guid.Parse("00000000-0000-0000-0000-000000000092") },
+                new Skill { Name = "Java", Uid = Guid.Parse("00000000-0000-0000-0000-000000000061") },
+                new Skill { Name = "Python", Uid = Guid.Parse("00000000-0000-0000-0000-000000000062") },
+                new Skill { Name = "JavaScript/TypeScript", Uid = Guid.Parse("00000000-0000-0000-0000-000000000063") },
+                new Skill { Name = "Powershell", Uid = Guid.Parse("00000000-0000-0000-0000-000000000064") },
+                new Skill { Name = "Bash", Uid = Guid.Parse("00000000-0000-0000-0000-000000000065") },
+                new Skill { Name = "CMD", Uid = Guid.Parse("00000000-0000-0000-0000-000000000066") },
+                new Skill { Name = "Linux", Uid = Guid.Parse("00000000-0000-0000-0000-000000000067") },
+                new Skill { Name = "CSS", Uid = Guid.Parse("00000000-0000-0000-0000-000000000068") },
+                new Skill { Name = "Html", Uid = Guid.Parse("00000000-0000-0000-0000-000000000069") },
+                new Skill { Name = "Other programming languages", Uid = Guid.Parse("00000000-0000-0000-0000-000000000070") },
+                new Skill { Name = "SQL", Uid = Guid.Parse("00000000-0000-0000-0000-000000000071") },
+                new Skill { Name = "MsSQL", Uid = Guid.Parse("00000000-0000-0000-0000-000000000072") },
+                new Skill { Name = "Postgres", Uid = Guid.Parse("00000000-0000-0000-0000-000000000073") },
+                new Skill { Name = "MySql", Uid = Guid.Parse("00000000-0000-0000-0000-000000000074") },
+                new Skill { Name = "AWS", Uid = Guid.Parse("00000000-0000-0000-0000-000000000075") },
+                new Skill { Name = "Azure services", Uid = Guid.Parse("00000000-0000-0000-0000-000000000076") },
+                new Skill { Name = "Git", Uid = Guid.Parse("00000000-0000-0000-0000-000000000077") },
+                new Skill { Name = "GitHub CI", Uid = Guid.Parse("00000000-0000-0000-0000-000000000078") },
+                new Skill { Name = "GitLab CI", Uid = Guid.Parse("00000000-0000-0000-0000-000000000079") },
+                new Skill { Name = "Azure Devops Ci", Uid = Guid.Parse("00000000-0000-0000-0000-000000000080") },
+                new Skill { Name = "Jenkins", Uid = Guid.Parse("00000000-0000-0000-0000-000000000081") },
+                new Skill { Name = "Allure", Uid = Guid.Parse("00000000-0000-0000-0000-000000000082") },
+                new Skill { Name = "React", Uid = Guid.Parse("00000000-0000-0000-0000-000000000083") },
+                new Skill { Name = "Angular", Uid = Guid.Parse("00000000-0000-0000-0000-000000000084") },
+                new Skill { Name = "ASP.NET", Uid = Guid.Parse("00000000-0000-0000-0000-000000000085") },
+                new Skill { Name = "Spring Boot", Uid = Guid.Parse("00000000-0000-0000-0000-000000000086") },
+                new Skill { Name = "Junit", Uid = Guid.Parse("00000000-0000-0000-0000-000000000087") },
+                new Skill { Name = "TestNG", Uid = Guid.Parse("00000000-0000-0000-0000-000000000088") },
+                new Skill { Name = "NUnit", Uid = Guid.Parse("00000000-0000-0000-0000-000000000089") },
+                new Skill { Name = "XUnit", Uid = Guid.Parse("00000000-0000-0000-0000-000000000090") },
+                new Skill { Name = "Mocha", Uid = Guid.Parse("00000000-0000-0000-0000-000000000091") },
+                new Skill { Name = "Pytest", Uid = Guid.Parse("00000000-0000-0000-0000-000000000093") },
+                new Skill { Name = "Playwright", Uid = Guid.Parse("00000000-0000-0000-0000-000000000094") },
+                new Skill { Name = "Selenium", Uid = Guid.Parse("00000000-0000-0000-0000-000000000095") },
+                new Skill { Name = "Selenide", Uid = Guid.Parse("00000000-0000-0000-0000-000000000096") },
+                new Skill { Name = "Selenoid", Uid = Guid.Parse("00000000-0000-0000-0000-000000000097") },
             };
         }
 
@@ -82,70 +85,70 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
         {
             return new List<NonProfessionalInterest>
             {
-            new NonProfessionalInterest { Name = "Читання" },
-            new NonProfessionalInterest { Name = "Писання" },
-            new NonProfessionalInterest { Name = "Малювання" },
-            new NonProfessionalInterest { Name = "Живопис" },
-            new NonProfessionalInterest { Name = "Фотографія" },
-            new NonProfessionalInterest { Name = "Гра на музичних інструментах" },
-            new NonProfessionalInterest { Name = "Спів" },
-            new NonProfessionalInterest { Name = "Танці" },
-            new NonProfessionalInterest { Name = "Кулінарія" },
-            new NonProfessionalInterest { Name = "Пекарство" },
-            new NonProfessionalInterest { Name = "Садівництво" },
-            new NonProfessionalInterest { Name = "Походи в гори" },
-            new NonProfessionalInterest { Name = "Кемпінг" },
-            new NonProfessionalInterest { Name = "Риболовля" },
-            new NonProfessionalInterest { Name = "Спостереження за птахами" },
-            new NonProfessionalInterest { Name = "В'язання" },
-            new NonProfessionalInterest { Name = "В'язання гачком" },
-            new NonProfessionalInterest { Name = "Шиття" },
-            new NonProfessionalInterest { Name = "Гончарство" },
-            new NonProfessionalInterest { Name = "Скульптура" },
-            new NonProfessionalInterest { Name = "Робота з деревом" },
-            new NonProfessionalInterest { Name = "DIY проекти" },
-            new NonProfessionalInterest { Name = "Збір марок" },
-            new NonProfessionalInterest { Name = "Збір монет" },
-            new NonProfessionalInterest { Name = "Збір антикваріату" },
-            new NonProfessionalInterest { Name = "Збір винтажних речей" },
-            new NonProfessionalInterest { Name = "Збір коміксів" },
-            new NonProfessionalInterest { Name = "Збір фігурок" },
-            new NonProfessionalInterest { Name = "Збір спортивної меморабілії" },
-            new NonProfessionalInterest { Name = "Дивитися фільми" },
-            new NonProfessionalInterest { Name = "Дивитися телешоу" },
-            new NonProfessionalInterest { Name = "Грати в відеоігри" },
-            new NonProfessionalInterest { Name = "Настільні ігри" },
-            new NonProfessionalInterest { Name = "Розв'язування пазлів" },
-            new NonProfessionalInterest { Name = "Кросворди" },
-            new NonProfessionalInterest { Name = "Судоку" },
-            new NonProfessionalInterest { Name = "Йога" },
-            new NonProfessionalInterest { Name = "Медитація" },
-            new NonProfessionalInterest { Name = "Біг" },
-            new NonProfessionalInterest { Name = "Джоггінг" },
-            new NonProfessionalInterest { Name = "Велосипед" },
-            new NonProfessionalInterest { Name = "Плавання" },
-            new NonProfessionalInterest { Name = "Серфінг" },
-            new NonProfessionalInterest { Name = "Катання на лижах" },
-            new NonProfessionalInterest { Name = "Сноубординг" },
-            new NonProfessionalInterest { Name = "Скейтбординг" },
-            new NonProfessionalInterest { Name = "Скелелазіння" },
-            new NonProfessionalInterest { Name = "Настільний теніс" },
-            new NonProfessionalInterest { Name = "Теніс" },
-            new NonProfessionalInterest { Name = "Волейбол" },
-            new NonProfessionalInterest { Name = "Футбол" },
-            new NonProfessionalInterest { Name = "Баскетбол" },
-            new NonProfessionalInterest { Name = "Інший спорт" },
-        };
+                new NonProfessionalInterest { Name = "Читання", Uid = Guid.Parse("00000000-0000-0000-0000-000000000008") },
+                new NonProfessionalInterest { Name = "Писання", Uid = Guid.Parse("00000000-0000-0000-0000-000000000009") },
+                new NonProfessionalInterest { Name = "Малювання", Uid = Guid.Parse("00000000-0000-0000-0000-000000000010") },
+                new NonProfessionalInterest { Name = "Живопис", Uid = Guid.Parse("00000000-0000-0000-0000-000000000011") },
+                new NonProfessionalInterest { Name = "Фотографія", Uid = Guid.Parse("00000000-0000-0000-0000-000000000012") },
+                new NonProfessionalInterest { Name = "Гра на музичних інструментах", Uid = Guid.Parse("00000000-0000-0000-0000-000000000013") },
+                new NonProfessionalInterest { Name = "Спів", Uid = Guid.Parse("00000000-0000-0000-0000-000000000014") },
+                new NonProfessionalInterest { Name = "Танці", Uid = Guid.Parse("00000000-0000-0000-0000-000000000015") },
+                new NonProfessionalInterest { Name = "Кулінарія", Uid = Guid.Parse("00000000-0000-0000-0000-000000000016") },
+                new NonProfessionalInterest { Name = "Пекарство", Uid = Guid.Parse("00000000-0000-0000-0000-000000000017") },
+                new NonProfessionalInterest { Name = "Садівництво", Uid = Guid.Parse("00000000-0000-0000-0000-000000000018") },
+                new NonProfessionalInterest { Name = "Походи в гори", Uid = Guid.Parse("00000000-0000-0000-0000-000000000019") },
+                new NonProfessionalInterest { Name = "Кемпінг", Uid = Guid.Parse("00000000-0000-0000-0000-000000000020") },
+                new NonProfessionalInterest { Name = "Риболовля", Uid = Guid.Parse("00000000-0000-0000-0000-000000000021") },
+                new NonProfessionalInterest { Name = "Спостереження за птахами", Uid = Guid.Parse("00000000-0000-0000-0000-000000000022") },
+                new NonProfessionalInterest { Name = "В'язання", Uid = Guid.Parse("00000000-0000-0000-0000-000000000023") },
+                new NonProfessionalInterest { Name = "В'язання гачком", Uid = Guid.Parse("00000000-0000-0000-0000-000000000024") },
+                new NonProfessionalInterest { Name = "Шиття", Uid = Guid.Parse("00000000-0000-0000-0000-000000000025") },
+                new NonProfessionalInterest { Name = "Гончарство", Uid = Guid.Parse("00000000-0000-0000-0000-000000000026") },
+                new NonProfessionalInterest { Name = "Скульптура", Uid = Guid.Parse("00000000-0000-0000-0000-000000000027") },
+                new NonProfessionalInterest { Name = "Робота з деревом", Uid = Guid.Parse("00000000-0000-0000-0000-000000000028") },
+                new NonProfessionalInterest { Name = "DIY проекти", Uid = Guid.Parse("00000000-0000-0000-0000-000000000029") },
+                new NonProfessionalInterest { Name = "Збір марок", Uid = Guid.Parse("00000000-0000-0000-0000-000000000030") },
+                new NonProfessionalInterest { Name = "Збір монет", Uid = Guid.Parse("00000000-0000-0000-0000-000000000031") },
+                new NonProfessionalInterest { Name = "Збір антикваріату", Uid = Guid.Parse("00000000-0000-0000-0000-000000000032") },
+                new NonProfessionalInterest { Name = "Збір винтажних речей", Uid = Guid.Parse("00000000-0000-0000-0000-000000000033") },
+                new NonProfessionalInterest { Name = "Збір коміксів", Uid = Guid.Parse("00000000-0000-0000-0000-000000000034") },
+                new NonProfessionalInterest { Name = "Збір фігурок", Uid = Guid.Parse("00000000-0000-0000-0000-000000000035") },
+                new NonProfessionalInterest { Name = "Збір спортивної меморабілії", Uid = Guid.Parse("00000000-0000-0000-0000-000000000036") },
+                new NonProfessionalInterest { Name = "Дивитися фільми", Uid = Guid.Parse("00000000-0000-0000-0000-000000000037") },
+                new NonProfessionalInterest { Name = "Дивитися телешоу", Uid = Guid.Parse("00000000-0000-0000-0000-000000000038") },
+                new NonProfessionalInterest { Name = "Грати в відеоігри", Uid = Guid.Parse("00000000-0000-0000-0000-000000000039") },
+                new NonProfessionalInterest { Name = "Настільні ігри", Uid = Guid.Parse("00000000-0000-0000-0000-000000000040") },
+                new NonProfessionalInterest { Name = "Розв'язування пазлів", Uid = Guid.Parse("00000000-0000-0000-0000-000000000041") },
+                new NonProfessionalInterest { Name = "Кросворди", Uid = Guid.Parse("00000000-0000-0000-0000-000000000042") },
+                new NonProfessionalInterest { Name = "Судоку", Uid = Guid.Parse("00000000-0000-0000-0000-000000000043") },
+                new NonProfessionalInterest { Name = "Йога", Uid = Guid.Parse("00000000-0000-0000-0000-000000000044") },
+                new NonProfessionalInterest { Name = "Медитація", Uid = Guid.Parse("00000000-0000-0000-0000-000000000045") },
+                new NonProfessionalInterest { Name = "Біг", Uid = Guid.Parse("00000000-0000-0000-0000-000000000046") },
+                new NonProfessionalInterest { Name = "Джоггінг", Uid = Guid.Parse("00000000-0000-0000-0000-000000000047") },
+                new NonProfessionalInterest { Name = "Велосипед", Uid = Guid.Parse("00000000-0000-0000-0000-000000000048") },
+                new NonProfessionalInterest { Name = "Плавання", Uid = Guid.Parse("00000000-0000-0000-0000-000000000049") },
+                new NonProfessionalInterest { Name = "Серфінг", Uid = Guid.Parse("00000000-0000-0000-0000-000000000050") },
+                new NonProfessionalInterest { Name = "Катання на лижах", Uid = Guid.Parse("00000000-0000-0000-0000-000000000051") },
+                new NonProfessionalInterest { Name = "Сноубординг", Uid = Guid.Parse("00000000-0000-0000-0000-000000000052") },
+                new NonProfessionalInterest { Name = "Скейтбординг", Uid = Guid.Parse("00000000-0000-0000-0000-000000000053") },
+                new NonProfessionalInterest { Name = "Скелелазіння", Uid = Guid.Parse("00000000-0000-0000-0000-000000000054") },
+                new NonProfessionalInterest { Name = "Настільний теніс", Uid = Guid.Parse("00000000-0000-0000-0000-000000000055") },
+                new NonProfessionalInterest { Name = "Теніс", Uid = Guid.Parse("00000000-0000-0000-0000-000000000056") },
+                new NonProfessionalInterest { Name = "Волейбол", Uid = Guid.Parse("00000000-0000-0000-0000-000000000057") },
+                new NonProfessionalInterest { Name = "Футбол", Uid = Guid.Parse("00000000-0000-0000-0000-000000000058") },
+                new NonProfessionalInterest { Name = "Баскетбол", Uid = Guid.Parse("00000000-0000-0000-0000-000000000059") },
+                new NonProfessionalInterest { Name = "Інший спорт", Uid = Guid.Parse("00000000-0000-0000-0000-000000000060") },
+            };
         }
 
         private List<StudyField> GenerateStudyFields()
         {
             return new List<StudyField>
             {
-                new StudyField { Name = "QA/AQA" },
-                new StudyField { Name = "Frontend" },
-                new StudyField { Name = "Full stack" },
-                new StudyField { Name = "Backend" },
+                new StudyField { Name = "QA/AQA", Uid = Guid.Parse("00000000-0000-0000-0000-000000000100") },
+                new StudyField { Name = "Frontend", Uid = Guid.Parse("00000000-0000-0000-0000-000000000101") },
+                new StudyField { Name = "Full stack", Uid = Guid.Parse("00000000-0000-0000-0000-000000000102") },
+                new StudyField { Name = "Backend", Uid = Guid.Parse("00000000-0000-0000-0000-000000000103") },
             };
         }
 
@@ -153,15 +156,15 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
         {
             return new List<State>
             {
-                new State { Name = "Робота над тестовим завданням" },
-                new State { Name = "Випробовувальний період" },
-                new State { Name = "Навчається" },
-                new State { Name = "Ходить по співбесідам" },
-                new State { Name = "Отримав роботу" },
+                new State { Name = "Робота над тестовим завданням", Uid = Guid.Parse("00000000-0000-0000-0000-000000000200") },
+                new State { Name = "Випробовувальний період", Uid = Guid.Parse("00000000-0000-0000-0000-000000000201") },
+                new State { Name = "Навчається", Uid = Guid.Parse("00000000-0000-0000-0000-000000000202") },
+                new State { Name = "Ходить по співбесідам", Uid = Guid.Parse("00000000-0000-0000-0000-000000000203") },
+                new State { Name = "Отримав роботу", Uid = Guid.Parse("00000000-0000-0000-0000-000000000204") },
             };
         }
 
-        private static List<Location> GenerateLocations()
+        private List<Location> GenerateLocations()
         {
             return new List<Location>
             {
@@ -172,7 +175,7 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
             };
         }
 
-        private static List<Role> GenerateRoles()
+        private List<Role> GenerateRoles()
         {
             return new List<Role>
             {
@@ -182,67 +185,114 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
             };
         }
 
-        /* private static List<Product> UserInfos(int amount)
-         {
-             var productId = 1;
-             var productFaker = new Faker<Product>()
-                 .RuleFor(x => x.Id, f => productId++) // Each product will have an incrementing id.
-                 .RuleFor(x => x.Name, f => f.Commerce.ProductName())
-                 // The refDate is very important! Without it, it will generate a random date based on the CURRENT date on your system.
-                 // Generating a date based on the system date is not deterministic!
-                 // So the solution is to pass in a constant date instead which will be used to generate a random date
-                 .RuleFor(x => x.CreationDate, f => f.Date.FutureOffset(
-                     refDate: new DateTimeOffset(2024, 4, 15, 18, 0, 0, TimeSpan.FromHours(1))));
+        private List<UserInfo> GenerateUserInfos(int amount)
+        {
+            int userInfoUidCounter = 1000;
+            var userFaker = new Faker<UserInfo>("uk")
+                .UseSeed(777)
+                .RuleFor(x => x.Uid, f => Guid.Parse($"00000000-0000-0000-0000-00000000{userInfoUidCounter++}")) // Each product will have an incrementing id.
+                .RuleFor(x => x.Name, f => f.Name.FullName())
+                .RuleFor(x => x.Description, f => f.Lorem.Paragraph())
+                .RuleFor(x => x.CurentSalary, f => f.Random.Decimal(1000, 7000))
+                .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber())
+                .RuleFor(x => x.Email, f => f.Internet.Email())
+                .RuleFor(x => x.StudyFields, f => [f.PickRandom(StudyFields)])
+                .RuleFor(x => x.DateOfBirth, f => f.Date.Between(DateTime.Now.AddYears(50), DateTime.Now.AddYears(20)))
+                .RuleFor(x => x.Role, f => f.PickRandom(Roles))
+                .RuleFor(x => x.Locations, f => [f.PickRandom(Locations)])
+                .RuleFor(x => x.NonProfessionalInterests, f => f.PickRandom(NonProfessionalInterests, randomString.Length).ToList())
+                .RuleFor(x => x.Skills, f => f.PickRandom(Skills, randomString.Length).ToList());
+            //.RuleFor(x => x.MentorProperties, (f, x) => x.Role.Name == Domain.Roles.Mentor ? f.PickRandom(Mentors) : null);
 
-             // DEMO: Uncomment this line
-             //.RuleFor(x => x.Description, f => f.Commerce.ProductDescription());
+            var users = Enumerable.Range(1, amount)
+                .Select(i => SeedRow(userFaker, i))
+                .ToList();
 
-             var products = Enumerable.Range(1, amount)
-                 .Select(i => SeedRow(productFaker, i))
-                 .ToList();
+            return users;
+        }
 
-             return products;
-         }
+        private List<Student> GenerateStudents()
+        {
+            var students = UserInfos.Where(UserInfo => UserInfo.Role.Name == Domain.Roles.Student).ToList();
 
-         private static List<ProductCategory> GenerateProductCategories(int amount)
-         {
-             var categoryId = 1;
-             var categoryFaker = new Faker<ProductCategory>()
-                 .RuleFor(x => x.Id, f => categoryId++) // Each category will have an incrementing id.
-                 .RuleFor(x => x.Name, f => f.Commerce.Categories(1).First());
+            var categoryId = 1;
+            var categoryFaker = new Faker<Student>()
+                .RuleFor(x => x.Id, f => categoryId++) // Each category will have an incrementing id.
+                .RuleFor(x => x.State, f => f.PickRandom(States)) // Each category will have an incrementing id.
+                .RuleFor(x => x.UserInfo, (f, x) =>
+                {
+                    if (students.Any())
+                    {
+                        var student = f.PickRandom(students);
+                        students.Remove(student);
 
-             var categories = Enumerable.Range(1, amount)
-                 .Select(i => SeedRow(categoryFaker, i))
-                 .ToList();
+                        student.StudentPropertiesUid = x.UserInfo.Uid;
 
-             return categories;
-         }
+                        return student;
+                    }
+                    return null;
+                })
+                .RuleFor(x => x.UserInfoUid, (f, x) => x.UserInfo.Uid);
 
-         private static List<ProductProductCategory> GenerateProductProductCategories(
-             int amount,
-             IEnumerable<Product> products,
-             IEnumerable<ProductCategory> productCategories)
-         {
-             // Now we set up the faker for our join table.
-             // We do this by grabbing a random product and category that were generated.
-             var productProductCategoryFaker = new Faker<ProductProductCategory>()
-                 .RuleFor(x => x.ProductId, f => f.PickRandom(products).Id)
-                 .RuleFor(x => x.CategoryId, f => f.PickRandom(productCategories).Id);
+            var categories = Enumerable.Range(1, students.Count)
+                .Select(i => SeedRow(categoryFaker, i))
+                .ToList();
 
-             var productProductCategories = Enumerable.Range(1, amount)
-                 .Select(i => SeedRow(productProductCategoryFaker, i))
-                 // We do this GroupBy() + Select() to remove the duplicates from the generated join table entities
-                 .GroupBy(x => new { x.ProductId, x.CategoryId })
-                 .Select(x => x.First())
-                 .ToList();
+            return categories;
+        }
 
-             return productProductCategories;
-         }
+        private List<Mentor> GenerateMentors()
+        {
+            var mentors = UserInfos.Where(UserInfo => UserInfo.Role.Name == Domain.Roles.Mentor).ToList();
+            var students = Students.ToList();
 
-         private static T SeedRow<T>(Faker<T> faker, int rowId) where T : class
-         {
-             var recordRow = faker.UseSeed(rowId).Generate();
-             return recordRow;
-         }*/
+            var categoryId = 1;
+            var categoryFaker = new Faker<Mentor>()
+                .RuleFor(x => x.Id, f => categoryId++) // Each category will have an incrementing id.
+                .RuleFor(x => x.UserInfo, (f, x) =>
+                {
+                    var user = f.PickRandom(mentors);
+
+                    mentors.Remove(user);
+
+                    user.MentorPropertiesUid = x.UserInfo.Uid;
+
+                    return user;
+                })
+                .RuleFor(x => x.UserInfoUid, (f, x) => x.UserInfo.Uid)
+                .RuleFor(x => x.Students, (f, x) =>
+                {
+                    if (!students.Any())
+                    {
+                        return [];
+                    }
+                    var studentRange = f.PickRandom(students, ToPickCount(students)).ToList();
+
+                    students = students.Except(studentRange).ToList();
+
+                    studentRange.ForEach(student => { student.Mentor = x; student.MentorUid = x.UserInfo.Uid; });
+
+                    return studentRange;
+                });
+
+            var categories = Enumerable.Range(1, mentors.Count)
+                .Select(i => SeedRow(categoryFaker, i))
+                .ToList();
+
+            return categories;
+        }
+
+        private static T SeedRow<T>(Faker<T> faker, int rowId) where T : class
+        {
+            var recordRow = faker.UseSeed(rowId).Generate();
+            return recordRow;
+        }
+
+        private int ToPickCount<T>(IEnumerable<T> objects)
+        {
+            var randomStringValue = randomString.Length;
+
+            return randomStringValue > objects.Count() ? objects.Count() : randomStringValue;
+        }
     }
 }

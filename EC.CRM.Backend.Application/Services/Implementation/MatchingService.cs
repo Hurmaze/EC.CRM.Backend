@@ -1,10 +1,10 @@
-﻿using EC.CRM.Backend.Application.DTOs.Response;
+﻿using EC.CRM.Backend.Application.Common;
+using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {

@@ -2,6 +2,6 @@
 {
     public static class IEnumerableExtensions
     {
-        public static bool IsNullOrEmpty(this IEnumerable<string> values) => values == null || values.Any();
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> values) => values == null || values.Any();
     }
 }

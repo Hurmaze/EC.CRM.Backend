@@ -11,14 +11,13 @@ namespace EC.CRM.Backend.Application.Helpers
         public AutomapperProfile()
         {
             CreateMap<Student, StudentResponse>().PreserveReferences();
-
             CreateMap<StudentResponse, Student>().PreserveReferences();
-
             CreateMap<CreateUserRequest, Student>().PreserveReferences();
 
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
-
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
+            CreateMap<UserInfo, Mentor>().PreserveReferences();
+
             CreateMap<State, StateResponse>().PreserveReferences();
         }
     }

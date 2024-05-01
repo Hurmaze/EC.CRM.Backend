@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Repositories;
 
 namespace EC.CRM.Backend.Application.Services.Implementation

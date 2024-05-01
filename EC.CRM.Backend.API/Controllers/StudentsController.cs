@@ -2,9 +2,9 @@
 using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EC.CRM.Backend.API.Controllers
 {
@@ -66,11 +66,11 @@ namespace EC.CRM.Backend.API.Controllers
         }
 
         [HttpGet("/{studentUid:guid}/valuations")]
-        public async Task<ActionResult> GetStudentValuations(Guid studentUid)
+        public async Task<ActionResult<Dictionary<Guid, double>>> GetStudentValuations(Guid studentUid)
         {
-            await matchingService.GetStudentValuations(studentUid);
+            var valuations = await matchingService.GetStudentValuations(studentUid);
 
-            return Ok();
+            return Ok(valuations);
         }
     }
 }

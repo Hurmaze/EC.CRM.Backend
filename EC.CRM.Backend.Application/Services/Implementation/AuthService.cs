@@ -18,12 +18,12 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     {
         private readonly IUserRepository userRepository;
         private readonly IOptions<JwtOptions> authOptions;
-        private readonly ILogger<UserService> logger;
+        private readonly ILogger<AuthService> logger;
 
         public AuthService(
             IUserRepository userRepository,
             IOptions<JwtOptions> authOptions,
-            ILogger<UserService> logger)
+            ILogger<AuthService> logger)
         {
             this.userRepository = userRepository;
             this.authOptions = authOptions;

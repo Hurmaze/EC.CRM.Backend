@@ -1,6 +1,7 @@
 using EC.CRM.Backend.API.Extensions;
 using EC.CRM.Backend.Application;
 using EC.CRM.Backend.Persistence.DataContext;
+using EC.CRM.Backend.Persistence.DataContext.Seeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -34,10 +35,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 
+builder.Services.RegisterServices();
+
+builder.Services.Configure<DbContextSeedingOptions>(builder.Configuration.GetSection(DbContextSeedingOptions.Name));
 builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub")));
-
-builder.Services.RegisterServices();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -65,6 +67,6 @@ if (bool.Parse(builder.Configuration.GetSection("Features")["EnableAuth"]!))
     app.UseAuthorization();
 }
 
-app.MapControllers();
+app.MapControllers().AllowAnonymous();
 
 app.Run();

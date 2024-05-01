@@ -1,11 +1,14 @@
 ﻿using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
+using EC.CRM.Backend.Persistence.DataContext.Seeding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EC.CRM.Backend.Persistence.DataContext
 {
     public class EngineeringClubDbContext : DbContext
     {
+        private readonly DbContextSeedingOptions seedingOptions;
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Mentor> Mentors { get; set; }
         public DbSet<Student> Students { get; set; }
@@ -17,12 +20,16 @@ namespace EC.CRM.Backend.Persistence.DataContext
         public DbSet<Criteria> Criterias { get; set; }
         public DbSet<MentorValuation> MentorValuations { get; set; }
 
-        public EngineeringClubDbContext(DbContextOptions<EngineeringClubDbContext> dbContextOptions) : base(dbContextOptions)
+        public EngineeringClubDbContext(DbContextOptions<EngineeringClubDbContext> dbContextOptions, IOptions<DbContextSeedingOptions>? seedingOptions = null) : base(dbContextOptions)
         {
+            this.seedingOptions = seedingOptions is null
+                ? new DbContextSeedingOptions() { SeedBasicData = false, SeedTestData = false }
+                : seedingOptions.Value;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region configuration
             var userInfo = modelBuilder.Entity<UserInfo>();
             userInfo.HasKey(ui => ui.Uid);
             userInfo.Property(ui => ui.Uid)
@@ -132,6 +139,35 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
             var mentorValuation = modelBuilder.Entity<MentorValuation>();
             mentorValuation.HasNoKey();
+            #endregion
+
+            #region data seeding
+            SeedData(modelBuilder);
+            #endregion
+        }
+
+        private void SeedData(ModelBuilder modelBuilder)
+        {
+            if (seedingOptions.SeedBasicData)
+            {
+                var dBseeder = new DatabaseSeeder();
+
+                modelBuilder.Entity<Role>().HasData(dBseeder.Roles);
+                modelBuilder.Entity<State>().HasData(dBseeder.States);
+                modelBuilder.Entity<Location>().HasData(dBseeder.Locations);
+                modelBuilder.Entity<NonProfessionalInterest>().HasData(dBseeder.NonProfessionalInterests);
+                modelBuilder.Entity<Skill>().HasData(dBseeder.Skills);
+                modelBuilder.Entity<StudyField>().HasData(dBseeder.StudyFields);
+
+                if (seedingOptions.SeedTestData)
+                {
+                    /* modelBuilder.Entity<UserInfo>().HasData(dBseeder.UserInfos);
+                     modelBuilder.Entity<Credentials>().HasData(dBseeder.Credentials);
+                     modelBuilder.Entity<Mentor>().HasData(dBseeder.Mentors);
+                     modelBuilder.Entity<Student>().HasData(dBseeder.Students);
+                     modelBuilder.Entity<Job>().HasData(dBseeder.Jobs);*/
+                }
+            }
         }
     }
 }

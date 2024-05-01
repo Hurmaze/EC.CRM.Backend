@@ -1,4 +1,4 @@
-﻿namespace EC.CRM.Backend.Application.Common
+﻿namespace EC.CRM.Backend.Domain
 {
     public static class Roles
     {

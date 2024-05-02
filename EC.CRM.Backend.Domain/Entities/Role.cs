@@ -2,7 +2,7 @@
 {
     public class Role
     {
-        public Guid Uid { get; set; } = Guid.NewGuid();
+        public Guid Uid { get; set; }
         public required string Name { get; set; }
         public List<UserInfo>? UserInfos { get; set; }
     }

@@ -32,9 +32,9 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
             States = GenerateStates();
             StudyFields = GenerateStudyFields();
 
-            UserInfos = GenerateUserInfos(amount: 1000);
-            Students = GenerateStudents();
-            Mentors = GenerateMentors();
+            //UserInfos = GenerateUserInfos(amount: 1000);
+            //Students = GenerateStudents();
+            //Mentors = GenerateMentors();
         }
 
         private List<Skill> GenerateSkills()
@@ -61,7 +61,7 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
                 new Skill { Name = "Git", Uid = Guid.Parse("00000000-0000-0000-0000-000000000077") },
                 new Skill { Name = "GitHub CI", Uid = Guid.Parse("00000000-0000-0000-0000-000000000078") },
                 new Skill { Name = "GitLab CI", Uid = Guid.Parse("00000000-0000-0000-0000-000000000079") },
-                new Skill { Name = "Azure Devops Ci", Uid = Guid.Parse("00000000-0000-0000-0000-000000000080") },
+                new Skill { Name = "Azure Devops CI", Uid = Guid.Parse("00000000-0000-0000-0000-000000000080") },
                 new Skill { Name = "Jenkins", Uid = Guid.Parse("00000000-0000-0000-0000-000000000081") },
                 new Skill { Name = "Allure", Uid = Guid.Parse("00000000-0000-0000-0000-000000000082") },
                 new Skill { Name = "React", Uid = Guid.Parse("00000000-0000-0000-0000-000000000083") },
@@ -179,13 +179,13 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
         {
             return new List<Role>
             {
-                new Role { Name = Domain.Roles.Director, Uid = Guid.Parse("00000000-0000-0000-0000-000000000001") },
-                new Role { Name = Domain.Roles.Mentor, Uid = Guid.Parse("00000000-0000-0000-0000-000000000002") },
-                new Role { Name = Domain.Roles.Student, Uid = Guid.Parse("00000000-0000-0000-0000-000000000003") },
+                new Role { Name = Domain.Roles.Director, Uid = Guid.Parse("00000000-0000-0000-0000-000000000001"), UserInfos = [] },
+                new Role { Name = Domain.Roles.Mentor, Uid = Guid.Parse("00000000-0000-0000-0000-000000000002"), UserInfos = []  },
+                new Role { Name = Domain.Roles.Student, Uid = Guid.Parse("00000000-0000-0000-0000-000000000003"), UserInfos = []  },
             };
         }
 
-        private List<UserInfo> GenerateUserInfos(int amount)
+        /*private List<UserInfo> GenerateUserInfos1(int amount)
         {
             int userInfoUidCounter = 1000;
             var userFaker = new Faker<UserInfo>("uk")
@@ -196,17 +196,198 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
                 .RuleFor(x => x.CurentSalary, f => f.Random.Decimal(1000, 7000))
                 .RuleFor(x => x.PhoneNumber, f => f.Phone.PhoneNumber())
                 .RuleFor(x => x.Email, f => f.Internet.Email())
-                .RuleFor(x => x.StudyFields, f => [f.PickRandom(StudyFields)])
+                .RuleFor(x => x.StudyFields, (f, x) =>
+                {
+                    var studyFields = f.PickRandom(StudyFields);
+
+                    //studyFields.Users.Add(x);
+
+                    return [studyFields];
+                })
                 .RuleFor(x => x.DateOfBirth, f => f.Date.Between(DateTime.Now.AddYears(50), DateTime.Now.AddYears(20)))
-                .RuleFor(x => x.Role, f => f.PickRandom(Roles))
-                .RuleFor(x => x.Locations, f => [f.PickRandom(Locations)])
-                .RuleFor(x => x.NonProfessionalInterests, f => f.PickRandom(NonProfessionalInterests, randomString.Length).ToList())
-                .RuleFor(x => x.Skills, f => f.PickRandom(Skills, randomString.Length).ToList());
+                .RuleFor(x => x.Role, (f, x) =>
+                {
+                    var kek = f.PickRandom(Roles);
+                    //kek.UserInfos!.Add(x);
+                    return kek;
+                })
+                .RuleFor(x => x.RoleUid, (f, x) => x.Role.Uid)
+                .RuleFor(x => x.Locations, (f, x) =>
+                {
+                    var kek = f.PickRandom(Locations);
+                    //kek.Users.Add(x);
+                    return [kek];
+                })
+                .RuleFor(x => x.NonProfessionalInterests, (f, x) =>
+                {
+                    var interests = f.PickRandom(NonProfessionalInterests, randomString.Length).ToList();
+                    //interests.ForEach(interest => interest.Users.Add(x));
+
+                    return interests;
+                })
+                .RuleFor(x => x.Skills, (f, x) =>
+                {
+                    var skills = f.PickRandom(Skills, randomString.Length).ToList();
+                    //skills.ForEach(skill => skill.Users.Add(x));
+
+                    return skills;
+                });
             //.RuleFor(x => x.MentorProperties, (f, x) => x.Role.Name == Domain.Roles.Mentor ? f.PickRandom(Mentors) : null);
 
             var users = Enumerable.Range(1, amount)
                 .Select(i => SeedRow(userFaker, i))
                 .ToList();
+
+            return users;
+        }
+
+        private List<UserInfo> GenerateUserInfos2(int amount)
+        {
+            int userInfoUidCounter = 1000;
+            List<UserInfo> users = new();
+
+            for (int i = 0; i < amount; i++)
+            {
+                var userFaker = new Faker("uk") { Random = new Randomizer(i), DateTimeReference = new DateTime(638502810320000000) };
+                var role = userFaker.PickRandom(Roles);
+                var location = userFaker.PickRandom(Locations);
+
+                var user = new UserInfo
+                {
+                    Uid = Guid.Parse($"00000000-0000-0000-0000-00000000{userInfoUidCounter++}"),
+                    Name = userFaker.Name.FullName(),
+                    Description = userFaker.Lorem.Paragraph(),
+                    CurentSalary = userFaker.Random.Decimal(1000, 7000),
+                    PhoneNumber = userFaker.Phone.PhoneNumber(),
+                    Email = userFaker.Internet.Email(),
+                    DateOfBirth = userFaker.Date.Past(50),
+                    RoleUid = role.Uid,
+                    Locations = [location],
+                    NonProfessionalInterests = userFaker.PickRandom(NonProfessionalInterests, randomString.Length).ToList(),
+                    Skills = userFaker.PickRandom(Skills, randomString.Length).ToList(),
+                };
+
+                *//*if (role.UserInfos is null)
+                {
+                    role.UserInfos = [user];
+                }
+                else
+                {
+                    role.UserInfos.Add(user);
+                }
+
+                if (location.Users is null)
+                {
+                    location.Users = [user];
+                }
+                else
+                {
+                    location.Users.Add(user);
+                }
+
+                user.NonProfessionalInterests.ForEach(interest =>
+                {
+                    if (interest.Users == null)
+                    {
+                        interest.Users = [user];
+                    }
+                    else
+                    {
+                        interest.Users.Add(user);
+                    }
+                });
+
+                user.Skills.ForEach(skill =>
+                {
+                    if (skill.Users == null)
+                    {
+                        skill.Users = [user];
+                    }
+                    else
+                    {
+                        skill.Users.Add(user);
+                    }
+                });*//*
+
+                users.Add(user);
+            }
+            //.RuleFor(x => x.MentorProperties, (f, x) => x.Role.Name == Domain.Roles.Mentor ? f.PickRandom(Mentors) : null);
+
+            return users;
+        }
+
+        private List<UserInfo> GenerateUserInfos3(int amount)
+        {
+            int userInfoUidCounter = 1000;
+            List<UserInfo> users = new();
+
+            for (int i = 0; i < amount; i++)
+            {
+                var userFaker = new Faker("uk") { Random = new Randomizer(i), DateTimeReference = new DateTime(638502810320000000) };
+                var role = userFaker.PickRandom(Roles);
+                var location = userFaker.PickRandom(Locations);
+
+                var user = new UserInfo
+                {
+                    Uid = Guid.Parse($"00000000-0000-0000-0000-00000000{userInfoUidCounter++}"),
+                    Name = userFaker.Name.FullName(),
+                    Description = userFaker.Lorem.Paragraph(),
+                    CurentSalary = userFaker.Random.Decimal(1000, 7000),
+                    PhoneNumber = userFaker.Phone.PhoneNumber(),
+                    Email = userFaker.Internet.Email(),
+                    DateOfBirth = userFaker.Date.Past(50),
+                    Role = role,
+                    RoleUid = role.Uid,
+                    Locations = [location],
+                    NonProfessionalInterests = userFaker.PickRandom(NonProfessionalInterests, randomString.Length).ToList(),
+                    Skills = userFaker.PickRandom(Skills, randomString.Length).ToList(),
+                };
+
+                if (role.UserInfos is null)
+                {
+                    role.UserInfos = [user];
+                }
+                else
+                {
+                    role.UserInfos.Add(user);
+                }
+
+                if (location.Users is null)
+                {
+                    location.Users = [user];
+                }
+                else
+                {
+                    location.Users.Add(user);
+                }
+
+                user.NonProfessionalInterests.ForEach(interest =>
+                {
+                    if (interest.Users == null)
+                    {
+                        interest.Users = [user];
+                    }
+                    else
+                    {
+                        interest.Users.Add(user);
+                    }
+                });
+
+                user.Skills.ForEach(skill =>
+                {
+                    if (skill.Users == null)
+                    {
+                        skill.Users = [user];
+                    }
+                    else
+                    {
+                        skill.Users.Add(user);
+                    }
+                });
+
+                users.Add(user);
+            }
+            //.RuleFor(x => x.MentorProperties, (f, x) => x.Role.Name == Domain.Roles.Mentor ? f.PickRandom(Mentors) : null);
 
             return users;
         }
@@ -226,7 +407,8 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
                         var student = f.PickRandom(students);
                         students.Remove(student);
 
-                        student.StudentPropertiesUid = x.UserInfo.Uid;
+                        student.StudentPropertiesUid = student.Uid;
+                        student.StudentProperties = x;
 
                         return student;
                     }
@@ -255,7 +437,8 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
 
                     mentors.Remove(user);
 
-                    user.MentorPropertiesUid = x.UserInfo.Uid;
+                    user.MentorPropertiesUid = user.Uid;
+                    user.MentorProperties = x;
 
                     return user;
                 })
@@ -293,6 +476,6 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
             var randomStringValue = randomString.Length;
 
             return randomStringValue > objects.Count() ? objects.Count() : randomStringValue;
-        }
+        }*/
     }
 }

@@ -37,7 +37,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("UserInfoUid");
 
-                    b.ToTable("Credentials");
+                    b.ToTable("Credentials", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Job", b =>
@@ -74,7 +74,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UserInfoUid");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Location", b =>
@@ -95,32 +95,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Locations");
-
-                    b.HasData(
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000004"),
-                            Address = "Ковальский провулок 19",
-                            City = "Київ"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000005"),
-                            Address = "вулиця Травнева, 10, Броварський район, Київська область, 07443",
-                            City = "Калинівка"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000006"),
-                            Address = "вулиця Відродження 31, Волиньска область, 43000",
-                            City = "Луцьк"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000007"),
-                            City = "Online"
-                        });
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
@@ -142,7 +117,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasIndex("UserInfoUid")
                         .IsUnique();
 
-                    b.ToTable("Mentors");
+                    b.ToTable("Mentors", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.NonProfessionalInterest", b =>
@@ -159,274 +134,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("NonProfessionalInterest");
-
-                    b.HasData(
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000008"),
-                            Name = "Читання"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000009"),
-                            Name = "Писання"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000010"),
-                            Name = "Малювання"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000011"),
-                            Name = "Живопис"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000012"),
-                            Name = "Фотографія"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000013"),
-                            Name = "Гра на музичних інструментах"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000014"),
-                            Name = "Спів"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000015"),
-                            Name = "Танці"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000016"),
-                            Name = "Кулінарія"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000017"),
-                            Name = "Пекарство"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000018"),
-                            Name = "Садівництво"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000019"),
-                            Name = "Походи в гори"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000020"),
-                            Name = "Кемпінг"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000021"),
-                            Name = "Риболовля"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000022"),
-                            Name = "Спостереження за птахами"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000023"),
-                            Name = "В'язання"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000024"),
-                            Name = "В'язання гачком"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000025"),
-                            Name = "Шиття"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000026"),
-                            Name = "Гончарство"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000027"),
-                            Name = "Скульптура"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000028"),
-                            Name = "Робота з деревом"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000029"),
-                            Name = "DIY проекти"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000030"),
-                            Name = "Збір марок"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000031"),
-                            Name = "Збір монет"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000032"),
-                            Name = "Збір антикваріату"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000033"),
-                            Name = "Збір винтажних речей"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000034"),
-                            Name = "Збір коміксів"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000035"),
-                            Name = "Збір фігурок"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000036"),
-                            Name = "Збір спортивної меморабілії"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000037"),
-                            Name = "Дивитися фільми"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000038"),
-                            Name = "Дивитися телешоу"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000039"),
-                            Name = "Грати в відеоігри"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000040"),
-                            Name = "Настільні ігри"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000041"),
-                            Name = "Розв'язування пазлів"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000042"),
-                            Name = "Кросворди"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000043"),
-                            Name = "Судоку"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000044"),
-                            Name = "Йога"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000045"),
-                            Name = "Медитація"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000046"),
-                            Name = "Біг"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000047"),
-                            Name = "Джоггінг"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000048"),
-                            Name = "Велосипед"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000049"),
-                            Name = "Плавання"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000050"),
-                            Name = "Серфінг"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000051"),
-                            Name = "Катання на лижах"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000052"),
-                            Name = "Сноубординг"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000053"),
-                            Name = "Скейтбординг"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000054"),
-                            Name = "Скелелазіння"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000055"),
-                            Name = "Настільний теніс"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000056"),
-                            Name = "Теніс"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000057"),
-                            Name = "Волейбол"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000058"),
-                            Name = "Футбол"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000059"),
-                            Name = "Баскетбол"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000060"),
-                            Name = "Інший спорт"
-                        });
+                    b.ToTable("NonProfessionalInterest", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Role", b =>
@@ -443,24 +151,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000001"),
-                            Name = "Director"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000002"),
-                            Name = "Mentor"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000003"),
-                            Name = "Student"
-                        });
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Skill", b =>
@@ -477,194 +168,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Skill");
-
-                    b.HasData(
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000092"),
-                            Name = "C#"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000061"),
-                            Name = "Java"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000062"),
-                            Name = "Python"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000063"),
-                            Name = "JavaScript/TypeScript"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000064"),
-                            Name = "Powershell"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000065"),
-                            Name = "Bash"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000066"),
-                            Name = "CMD"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000067"),
-                            Name = "Linux"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000068"),
-                            Name = "CSS"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000069"),
-                            Name = "Html"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000070"),
-                            Name = "Other programming languages"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000071"),
-                            Name = "SQL"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000072"),
-                            Name = "MsSQL"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000073"),
-                            Name = "Postgres"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000074"),
-                            Name = "MySql"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000075"),
-                            Name = "AWS"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000076"),
-                            Name = "Azure services"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000077"),
-                            Name = "Git"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000078"),
-                            Name = "GitHub CI"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000079"),
-                            Name = "GitLab CI"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000080"),
-                            Name = "Azure Devops CI"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000081"),
-                            Name = "Jenkins"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000082"),
-                            Name = "Allure"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000083"),
-                            Name = "React"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000084"),
-                            Name = "Angular"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000085"),
-                            Name = "ASP.NET"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000086"),
-                            Name = "Spring Boot"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000087"),
-                            Name = "Junit"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000088"),
-                            Name = "TestNG"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000089"),
-                            Name = "NUnit"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000090"),
-                            Name = "XUnit"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000091"),
-                            Name = "Mocha"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000093"),
-                            Name = "Pytest"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000094"),
-                            Name = "Playwright"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000095"),
-                            Name = "Selenium"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000096"),
-                            Name = "Selenide"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000097"),
-                            Name = "Selenoid"
-                        });
+                    b.ToTable("Skill", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
@@ -684,39 +188,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("States");
-
-                    b.HasData(
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000200"),
-                            Name = "Робота над тестовим завданням",
-                            OrderingId = 0
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000201"),
-                            Name = "Випробовувальний період",
-                            OrderingId = 0
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000202"),
-                            Name = "Навчається",
-                            OrderingId = 0
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000203"),
-                            Name = "Ходить по співбесідам",
-                            OrderingId = 0
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000204"),
-                            Name = "Отримав роботу",
-                            OrderingId = 0
-                        });
+                    b.ToTable("States", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Student", b =>
@@ -729,9 +201,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.Property<int>("MentorId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("MentorUid")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("StateUid")
                         .HasColumnType("uniqueidentifier");
@@ -748,7 +217,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasIndex("UserInfoUid")
                         .IsUnique();
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.StudyField", b =>
@@ -765,29 +234,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("StudyField");
-
-                    b.HasData(
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000100"),
-                            Name = "QA/AQA"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000101"),
-                            Name = "Frontend"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000102"),
-                            Name = "Full stack"
-                        },
-                        new
-                        {
-                            Uid = new Guid("00000000-0000-0000-0000-000000000103"),
-                            Name = "Backend"
-                        });
+                    b.ToTable("StudyField", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.Criteria", b =>
@@ -804,7 +251,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Criterias");
+                    b.ToTable("Criterias", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
@@ -821,7 +268,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<double>("Valuation")
                         .HasColumnType("float");
 
-                    b.ToTable("MentorValuations");
+                    b.ToTable("MentorValuations", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
@@ -847,9 +294,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("MentorPropertiesUid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -866,14 +310,11 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<Guid>("RoleUid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("StudentPropertiesUid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Uid");
 
                     b.HasIndex("RoleUid");
 
-                    b.ToTable("UserInfos");
+                    b.ToTable("UserInfos", (string)null);
                 });
 
             modelBuilder.Entity("LocationUserInfo", b =>
@@ -888,7 +329,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("LocationUserInfo");
+                    b.ToTable("LocationUserInfo", (string)null);
                 });
 
             modelBuilder.Entity("NonProfessionalInterestUserInfo", b =>
@@ -903,7 +344,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("NonProfessionalInterestUserInfo");
+                    b.ToTable("NonProfessionalInterestUserInfo", (string)null);
                 });
 
             modelBuilder.Entity("SkillUserInfo", b =>
@@ -918,7 +359,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("SkillUserInfo");
+                    b.ToTable("SkillUserInfo", (string)null);
                 });
 
             modelBuilder.Entity("StudyFieldUserInfo", b =>
@@ -933,7 +374,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("StudyFieldUserInfo");
+                    b.ToTable("StudyFieldUserInfo", (string)null);
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Credentials", b =>

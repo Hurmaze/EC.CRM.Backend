@@ -150,7 +150,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            if (seedingOptions.SeedBasicData)
+            /*if (seedingOptions.SeedBasicData)
             {
                 var dBseeder = new DatabaseSeeder();
 
@@ -168,7 +168,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
                     modelBuilder.Entity<Mentor>().HasData(dBseeder.Mentors);
                     modelBuilder.Entity<Student>().HasData(dBseeder.Students);
                 }
-            }
+            }*/
         }
     }
 }

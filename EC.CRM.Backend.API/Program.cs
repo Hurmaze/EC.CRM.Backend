@@ -4,7 +4,9 @@ using EC.CRM.Backend.Persistence.DataContext;
 using EC.CRM.Backend.Persistence.DataContext.Seeding;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Serilog;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +33,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
         IssuerSigningKey = auth.GetSymmetricSecurityKey(),
         ValidateIssuerSigningKey = true,
-
     };
 });
 
@@ -49,13 +50,32 @@ builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub"));
     options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
-}
-    );
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    //add jwt authentication definition to the OpenAPI doc.
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "JWT Authentication",
+        Description = "Enter JWT Bearer Token Only",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        Reference = new OpenApiReference
+        {
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+
+    c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+    c.OperationFilter<SecurityRequirementsOperationFilter>();
+});
 
 var app = builder.Build();
 
@@ -76,8 +96,12 @@ if (bool.Parse(builder.Configuration.GetSection("Features")["EnableAuth"]!))
     app.UseAuthentication();
 
     app.UseAuthorization();
-}
 
-app.MapControllers().AllowAnonymous();
+    app.MapControllers();//.AllowAnonymous();
+}
+else
+{
+    app.MapControllers();
+}
 
 app.Run();

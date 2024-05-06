@@ -25,7 +25,7 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok(mentors);
         }
 
-        [HttpGet("/{userUid:guid}")]
+        [HttpGet("{userUid:guid}")]
         public async Task<ActionResult<MentorResponse>> GetMentor(Guid userUid)
         {
             var mentor = await mentorService.GetAsync(userUid);
@@ -33,7 +33,7 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok(mentor);
         }
 
-        [HttpPost("/{userUid:guid}")]
+        [HttpPost("{userUid:guid}")]
         public async Task<ActionResult> CreateMentor(Guid userUid)
         {
             await mentorService.CreateAsync(userUid);

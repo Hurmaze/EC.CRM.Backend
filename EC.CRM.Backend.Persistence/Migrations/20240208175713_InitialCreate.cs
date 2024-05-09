@@ -171,11 +171,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserInfos_LocationUid",
-                table: "UserInfos",
-                column: "LocationUid");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserInfos_RoleUid",
                 table: "UserInfos",
                 column: "RoleUid");

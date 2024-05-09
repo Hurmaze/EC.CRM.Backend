@@ -1,5 +1,6 @@
 ﻿using EC.CRM.Backend.API.Utils;
 using EC.CRM.Backend.Application.Common;
+using EC.CRM.Backend.Application.DTOs.Request.Students;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
@@ -71,6 +72,23 @@ namespace EC.CRM.Backend.API.Controllers
             var valuations = await matchingService.GetStudentValuations(studentUid);
 
             return Ok(valuations);
+        }
+
+        [HttpGet("application")]
+        public async Task<ActionResult<List<StudentResponse>>> GetStudentsApplications()
+        {
+            var students = await studentService.GetAllAsync();
+
+            return Ok(students);
+        }
+
+        [HttpPost("application")]
+        [AllowAnonymous]
+        public async Task<ActionResult<StudentResponse>> CreateStudentApplication(StudentApplicationRequest studentApplicationRequest)
+        {
+            var createdStudent = await studentService.CreateAsync(studentApplicationRequest);
+
+            return CreatedAtAction(nameof(CreateStudentApplication), new { uid = createdStudent.Uid }, createdStudent);
         }
     }
 }

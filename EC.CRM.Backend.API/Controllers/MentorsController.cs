@@ -34,7 +34,7 @@ namespace EC.CRM.Backend.API.Controllers
         }
 
         [HttpPost("{userUid:guid}")]
-        public async Task<ActionResult> CreateMentor(Guid userUid)
+        public async Task<ActionResult<MentorResponse>> CreateMentor(Guid userUid)
         {
             await mentorService.CreateAsync(userUid);
 

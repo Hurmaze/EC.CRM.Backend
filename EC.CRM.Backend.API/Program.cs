@@ -1,4 +1,5 @@
 using EC.CRM.Backend.API.Extensions;
+using EC.CRM.Backend.API.Middlewares;
 using EC.CRM.Backend.Application;
 using EC.CRM.Backend.Persistence.DataContext;
 using EC.CRM.Backend.Persistence.DataContext.Seeding;
@@ -103,5 +104,7 @@ else
 {
     app.MapControllers();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

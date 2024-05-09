@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EC.CRM.Backend.API.Middlewares;
 using EC.CRM.Backend.API.Utils;
 using EC.CRM.Backend.Application.Helpers;
 using EC.CRM.Backend.Application.Services.Implementation;
@@ -31,6 +32,8 @@ namespace EC.CRM.Backend.API.Extensions
             services.AddTransient<ITopsisAlgorithm, TopsisAlgorithm>();
 
             services.AddTransient<ClaimsHelper>();
+
+            services.AddTransient<ExceptionMiddleware>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {

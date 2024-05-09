@@ -55,7 +55,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
             userInfo.Property(ui => ui.Paid)
                 .HasPrecision(10, 3)
                 .HasColumnType("decimal");
-            userInfo.Property(ui => ui.CurentSalary)
+            userInfo.Property(ui => ui.CurrentSalary)
                .HasPrecision(10, 3)
                .HasColumnType("decimal");
 

@@ -1,5 +1,4 @@
-﻿using EC.CRM.Backend.Application.DTOs.Request.Students;
-using EC.CRM.Backend.Application.DTOs.Request.Users;
+﻿using EC.CRM.Backend.Application.DTOs.Request.Users;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -26,16 +25,7 @@ namespace EC.CRM.Backend.API.Controllers
         {
             var createdStudent = await userService.CreateUserAsync(createuserRequest);
 
-            return CreatedAtAction(nameof(CreateStudentApplication), new { uid = createdStudent.Uid }, createdStudent);
-        }
-
-        [HttpPost("/application")]
-        [AllowAnonymous]
-        public async Task<ActionResult<StudentResponse>> CreateStudentApplication(StudentApplicationRequest studentApplicationRequest)
-        {
-            var createdStudent = await studentService.CreateAsync(studentApplicationRequest);
-
-            return CreatedAtAction(nameof(CreateStudentApplication), new { uid = createdStudent.Uid }, createdStudent);
+            return CreatedAtAction(nameof(CreateUser), new { uid = createdStudent.Uid }, createdStudent);
         }
     }
 }

@@ -138,7 +138,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             for (int i = 0; i < mentors.Count; i++)
             {
-                studentsWithWorkCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Where(s => s.UserInfo.CurentSalary is not null).Count();
+                studentsWithWorkCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Where(s => s.UserInfo.CurrentSalary is not null).Count();
             }
 
             return studentsWithWorkCount;

@@ -52,6 +52,24 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             return GenerateToken(user);
         }
 
+        public async Task ChangePasswordAsync(Guid userUid, ChangePasswordRequest changePasswordRequest)
+        {
+            byte[] passwordHash;
+            byte[] passwordSalt;
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(changePasswordRequest.NewPassword));
+            }
+
+            var user = await userRepository.GetAsync(userUid);
+
+            user.Credentials.PasswordHash = passwordHash;
+            user.Credentials.PasswordSalt = passwordSalt;
+
+            await userRepository.UpdateAsync(user);
+        }
+
         /// <summary>
         /// Verifies the password.
         /// </summary>
@@ -97,24 +115,6 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             logger.LogInformation("JWT token for {email} generated.", user.Email);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public async Task ChangePasswordAsync(Guid userUid, ChangePasswordRequest changePasswordRequest)
-        {
-            byte[] passwordHash;
-            byte[] passwordSalt;
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(changePasswordRequest.NewPassword));
-            }
-
-            var user = await userRepository.GetAsync(userUid);
-
-            user.Credentials.PasswordHash = passwordHash;
-            user.Credentials.PasswordSalt = passwordSalt;
-
-            await userRepository.UpdateAsync(user);
         }
     }
 }

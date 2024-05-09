@@ -52,6 +52,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
             userInfo.Property(ui => ui.PhoneNumber).HasMaxLength(20);
             userInfo.Property(ui => ui.Name).HasMaxLength(100);
             userInfo.Property(ui => ui.Email).HasMaxLength(100);
+            userInfo.HasIndex(ui => ui.Email)
+                .IsUnique();
             userInfo.Property(ui => ui.Paid)
                 .HasPrecision(10, 3)
                 .HasColumnType("decimal");

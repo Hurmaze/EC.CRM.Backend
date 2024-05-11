@@ -6,5 +6,6 @@
 
         public bool SeedBasicData { get; set; }
         public bool SeedTestData { get; set; }
+        public string? SqlSeederPath { get; set; }
     }
 }

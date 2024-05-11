@@ -102,9 +102,11 @@ if (bool.Parse(builder.Configuration.GetSection("Features")["EnableAuth"]!))
 }
 else
 {
-    app.MapControllers();
+    app.MapControllers().AllowAnonymous();
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+app.EnsureMigrationOfContext<EngineeringClubDbContext>();
 
 app.Run();

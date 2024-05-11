@@ -1,4 +1,5 @@
-﻿using Bogus;
+﻿using System.Security.Cryptography;
+using Bogus;
 using EC.CRM.Backend.Domain.Entities;
 
 namespace EC.CRM.Backend.Persistence.DataContext.Seeding
@@ -31,10 +32,27 @@ namespace EC.CRM.Backend.Persistence.DataContext.Seeding
             NonProfessionalInterests = GenerateNonProfessionalInterests();
             States = GenerateStates();
             StudyFields = GenerateStudyFields();
+            Credentials = GetCreds();
 
             //UserInfos = GenerateUserInfos(amount: 1000);
             //Students = GenerateStudents();
             //Mentors = GenerateMentors();
+        }
+
+        private List<Credentials> GetCreds()
+        {
+            var password = "admin";
+            byte[] passwordHash;
+            byte[] passwordSalt;
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            }
+
+            var k = new Credentials { PasswordHash = passwordHash, PasswordSalt = passwordSalt, UserInfoUid = Guid.Parse("F6166FF0-D1DD-43FF-BD95-024836C1D4D2") };
+
+            return new List<Credentials>() { k };
         }
 
         private List<Skill> GenerateSkills()

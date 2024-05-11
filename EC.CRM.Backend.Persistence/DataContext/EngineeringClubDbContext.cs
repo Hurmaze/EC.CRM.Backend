@@ -152,7 +152,15 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
         private void SeedData(ModelBuilder modelBuilder)
         {
-            /*if (seedingOptions.SeedBasicData)
+            /*if (seedingOptions.SqlSeederPath is not null)
+            {
+                using var connection = new SqlConnection("Server=HURMAZE;Database=EngineeringClub;Trusted_Connection=true;TrustServerCertificate=true;");
+
+                var query = File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, seedingOptions.SqlSeederPath));
+
+                connection.Execute(query);
+            }
+            if (seedingOptions.SeedBasicData)
             {
                 var dBseeder = new DatabaseSeeder();
 
@@ -162,15 +170,13 @@ namespace EC.CRM.Backend.Persistence.DataContext
                 modelBuilder.Entity<NonProfessionalInterest>().HasData(dBseeder.NonProfessionalInterests);
                 modelBuilder.Entity<Skill>().HasData(dBseeder.Skills);
                 modelBuilder.Entity<StudyField>().HasData(dBseeder.StudyFields);
+                modelBuilder.Entity<Credentials>().HasData(dBseeder.Credentials);
+                modelBuilder.Entity<UserInfo>().HasData(dBseeder.UserInfos);
 
-                if (seedingOptions.SeedTestData)
-                {
-                    modelBuilder.Entity<UserInfo>().HasData(dBseeder.UserInfos);
-                    //modelBuilder.Entity<Credentials>().HasData(dBseeder.Credentials);
-                    modelBuilder.Entity<Mentor>().HasData(dBseeder.Mentors);
-                    modelBuilder.Entity<Student>().HasData(dBseeder.Students);
-                }
+                modelBuilder.Entity<Mentor>().HasData(dBseeder.Mentors);
+                modelBuilder.Entity<Student>().HasData(dBseeder.Students);
             }*/
         }
     }
 }
+

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,7 +74,19 @@ builder.Services.AddSwaggerGen(c =>
     };
 
     c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-    c.OperationFilter<SecurityRequirementsOperationFilter>();
+    //c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 var app = builder.Build();
@@ -98,10 +109,14 @@ if (bool.Parse(builder.Configuration.GetSection("Features")["EnableAuth"]!))
 
     app.UseAuthorization();
 
-    app.MapControllers();//.AllowAnonymous();
+    app.MapControllers();
 }
 else
 {
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
     app.MapControllers().AllowAnonymous();
 }
 

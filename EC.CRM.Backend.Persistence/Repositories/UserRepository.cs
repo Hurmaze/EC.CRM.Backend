@@ -44,6 +44,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                .UserInfos
                .Include(x => x.Locations)
+               .Include(x => x.Role)
                .AsNoTracking()
                .Where(predicate)
                .ToListAsync();
@@ -55,7 +56,11 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .UserInfos
                .Include(x => x.MentorProperties)
                .Include(x => x.StudentProperties)
+               .Include(x => x.Skills)
+               .Include(x => x.NonProfessionalInterests)
+               .Include(x => x.Credentials)
                .Include(x => x.Jobs)
+               .Include(x => x.Role)
                .Include(x => x.Locations)
                .SingleAsync(x => x.Uid == uid);
 
@@ -73,9 +78,13 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .UserInfos
                .Include(x => x.MentorProperties)
                .Include(x => x.StudentProperties)
+               .Include(x => x.Skills)
+               .Include(x => x.NonProfessionalInterests)
+               .Include(x => x.Credentials)
                .Include(x => x.Jobs)
+               .Include(x => x.Role)
                .Include(x => x.Locations)
-               .SingleOrDefaultAsync(x => x.Email == email);
+               .SingleAsync(x => x.Email == email);
 
             if (user is null)
             {

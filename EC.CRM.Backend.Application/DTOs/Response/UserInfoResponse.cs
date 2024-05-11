@@ -3,7 +3,6 @@
     public record UserInfoResponse
     {
         public Guid Uid { get; set; }
-        public Guid MentorUid { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? PhoneNumber { get; set; }

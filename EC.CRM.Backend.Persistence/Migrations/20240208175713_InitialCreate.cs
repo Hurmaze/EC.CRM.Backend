@@ -60,16 +60,10 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Paid = table.Column<decimal>(type: "decimal(10,3)", precision: 10, scale: 3, nullable: false),
                     RoleUid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LocationUid = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserInfos", x => x.Uid);
-                    table.ForeignKey(
-                        name: "FK_UserInfos_Locations_LocationUid",
-                        column: x => x.LocationUid,
-                        principalTable: "Locations",
-                        principalColumn: "Uid");
                     table.ForeignKey(
                         name: "FK_UserInfos_Roles_RoleUid",
                         column: x => x.RoleUid,
@@ -175,11 +169,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 table: "Students",
                 column: "UserInfoUid",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserInfos_LocationUid",
-                table: "UserInfos",
-                column: "LocationUid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserInfos_RoleUid",

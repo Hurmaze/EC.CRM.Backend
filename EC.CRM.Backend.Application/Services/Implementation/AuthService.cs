@@ -1,7 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using AutoMapper;
+using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Request.Auth;
 using EC.CRM.Backend.Application.Exceptions;
 using EC.CRM.Backend.Application.Services.Interfaces;
@@ -17,18 +17,15 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     public sealed class AuthService : IAuthService
     {
         private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
         private readonly IOptions<JwtOptions> authOptions;
-        private readonly ILogger<UserService> logger;
+        private readonly ILogger<AuthService> logger;
 
         public AuthService(
             IUserRepository userRepository,
-            IMapper mapper,
             IOptions<JwtOptions> authOptions,
-            ILogger<UserService> logger)
+            ILogger<AuthService> logger)
         {
             this.userRepository = userRepository;
-            this.mapper = mapper;
             this.authOptions = authOptions;
             this.logger = logger;
         }
@@ -46,11 +43,6 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         {
             var user = await userRepository.GetAsync(loginRequest.Email);
 
-            if (user == null)
-            {
-                throw new NotFoundException(nameof(user), loginRequest.Email);
-            }
-
             if (!VerifyPassword(loginRequest.Password, user.Credentials.PasswordHash, user.Credentials.PasswordSalt))
             {
                 throw new WrongPasswordException();
@@ -58,6 +50,24 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             logger.LogInformation("The user with email {email} has logged into.", loginRequest.Email);
             return GenerateToken(user);
+        }
+
+        public async Task ChangePasswordAsync(Guid userUid, ChangePasswordRequest changePasswordRequest)
+        {
+            byte[] passwordHash;
+            byte[] passwordSalt;
+            using (var hmac = new HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(changePasswordRequest.NewPassword));
+            }
+
+            var user = await userRepository.GetAsync(userUid);
+
+            user.Credentials.PasswordHash = passwordHash;
+            user.Credentials.PasswordSalt = passwordSalt;
+
+            await userRepository.UpdateAsync(user);
         }
 
         /// <summary>
@@ -89,7 +99,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             {
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role!.Name),
-                new Claim("uid", user.Uid.ToString()),
+                new Claim(CustomClaimTypes.Uid, user.Uid.ToString()),
             };
 
             var key = authParams.GetSymmetricSecurityKey();
@@ -105,24 +115,6 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             logger.LogInformation("JWT token for {email} generated.", user.Email);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public async Task ChangePasswordAsync(Guid userUid, ChangePasswordRequest changePasswordRequest)
-        {
-            byte[] passwordHash;
-            byte[] passwordSalt;
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(changePasswordRequest.NewPassword));
-            }
-
-            var user = await userRepository.GetAsync(userUid);
-
-            user.Credentials.PasswordHash = passwordHash;
-            user.Credentials.PasswordSalt = passwordSalt;
-
-            await userRepository.UpdateAsync(user);
         }
     }
 }

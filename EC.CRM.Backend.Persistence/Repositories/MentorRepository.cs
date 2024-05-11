@@ -14,6 +14,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             _dbContext = dbContext;
         }
+
         public async Task<Mentor> CreateAsync(Mentor mentor)
         {
             await _dbContext.Mentors.AddAsync(mentor);

@@ -1,5 +1,9 @@
-﻿using EC.CRM.Backend.Application.DTOs.Response;
+﻿using EC.CRM.Backend.API.Utils;
+using EC.CRM.Backend.Application.Common;
+using EC.CRM.Backend.Application.DTOs.Request.Students;
+using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,14 +16,17 @@ namespace EC.CRM.Backend.API.Controllers
     {
         private readonly IStudentService studentService;
         private readonly IMatchingService matchingService;
+        private readonly ClaimsHelper claimsHelper;
 
-        public StudentsController(IStudentService studentService, IMatchingService matchingService)
+        public StudentsController(IStudentService studentService, IMatchingService matchingService, ClaimsHelper claimsHelper)
         {
             this.studentService = studentService;
             this.matchingService = matchingService;
+            this.claimsHelper = claimsHelper;
         }
 
-        [HttpPost("/{studentUid: Guid}")]
+        [HttpPatch("{studentUid:guid}")]
+        [Authorize(Roles = Roles.Director)]
         public async Task<ActionResult<MatchingResponse>> ChooseMentor(Guid studentUid, [FromBody] bool assign)
         {
             var matchingResponse = await matchingService.ChooseMentorAsync(studentUid);
@@ -32,20 +39,56 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok(matchingResponse);
         }
 
-        [HttpPut("/{studentUid: Guid}")]
+        [HttpPost("{studentUid:guid}/valuations")]
+        [Authorize(Roles = $"{Roles.Mentor}, {Roles.Director}")]
         public async Task<ActionResult> SetMentorValuation(Guid studentUid, Dictionary<Guid, double> mentorsValuations)
         {
-            await matchingService.SetMentorValuation(studentUid, mentorsValuations);
+            var userRole = claimsHelper.GetUserRole(HttpContext);
+
+            if (userRole == Roles.Director)
+            {
+                await matchingService.SetMentorValuation(studentUid, mentorsValuations);
+            }
+            else
+            {
+                if (mentorsValuations.IsNullOrEmpty() || mentorsValuations.Count > 1)
+                {
+                    return BadRequest("Mentor can set only one valuation");
+                }
+                if (mentorsValuations.First().Key != claimsHelper.GetUserUid(HttpContext))
+                {
+                    return BadRequest("Mentor can set only his valuation");
+                }
+
+                await matchingService.SetMentorValuation(studentUid, mentorsValuations);
+            }
 
             return Ok();
         }
 
-        [HttpGet("/{studentUid: Guid}/valuations")]
-        public async Task<ActionResult> GetStudentValuations(Guid studentUid)
+        [HttpGet("{studentUid:guid}/valuations")]
+        public async Task<ActionResult<Dictionary<Guid, double>>> GetStudentValuations(Guid studentUid)
         {
-            await matchingService.GetStudentValuations(studentUid);
+            var valuations = await matchingService.GetStudentValuations(studentUid);
 
-            return Ok();
+            return Ok(valuations);
+        }
+
+        [HttpGet("application")]
+        public async Task<ActionResult<List<StudentResponse>>> GetStudentsApplications()
+        {
+            var students = await studentService.GetAllAsync();
+
+            return Ok(students);
+        }
+
+        [HttpPost("application")]
+        [AllowAnonymous]
+        public async Task<ActionResult<StudentResponse>> CreateStudentApplication(StudentApplicationRequest studentApplicationRequest)
+        {
+            var createdStudent = await studentService.CreateAsync(studentApplicationRequest);
+
+            return CreatedAtAction(nameof(CreateStudentApplication), new { uid = createdStudent.Uid }, createdStudent);
         }
     }
 }

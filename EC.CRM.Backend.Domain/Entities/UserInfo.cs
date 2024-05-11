@@ -7,9 +7,10 @@
         public string? Description { get; set; }
         public string? PhoneNumber { get; set; }
         public required string Email { get; set; }
-        public decimal? CurentSalary { get; set; }
+        public decimal? CurrentSalary { get; set; }
         public DateTime DateOfBirth { get; set; }
         public decimal Paid { get; set; }
+        public Guid RoleUid { get; set; }
         public required Role Role { get; set; }
         public List<Job>? Jobs { get; set; }
         public required List<Skill> Skills { get; set; }

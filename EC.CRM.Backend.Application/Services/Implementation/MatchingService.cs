@@ -1,10 +1,10 @@
-﻿using EC.CRM.Backend.Application.DTOs.Response;
+﻿using EC.CRM.Backend.Application.Common;
+using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {
@@ -43,6 +43,13 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
                 await criteriasRepository.AddOrUpdateMentorsValuationsAsync(mentorValuation);
             }
+        }
+
+        public async Task<Dictionary<Guid, double>> GetStudentValuations(Guid studentUid)
+        {
+            var valuations = await criteriasRepository.GetMentorsValuations(studentUid);
+
+            return valuations.ToDictionary(v => v.MentorUid, v => v.Valuation);
         }
 
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
@@ -131,7 +138,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             for (int i = 0; i < mentors.Count; i++)
             {
-                studentsWithWorkCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Where(s => s.UserInfo.CurentSalary is not null).Count();
+                studentsWithWorkCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Where(s => s.UserInfo.CurrentSalary is not null).Count();
             }
 
             return studentsWithWorkCount;

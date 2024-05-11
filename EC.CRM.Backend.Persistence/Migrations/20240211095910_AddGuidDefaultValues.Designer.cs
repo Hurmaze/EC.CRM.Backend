@@ -190,9 +190,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<Guid?>("LocationUid")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -210,8 +207,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Uid");
-
-                    b.HasIndex("LocationUid");
 
                     b.HasIndex("RoleUid");
 
@@ -269,25 +264,17 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
                 {
-                    b.HasOne("EC.CRM.Backend.Domain.Entities.Location", "Location")
-                        .WithMany("Users")
-                        .HasForeignKey("LocationUid");
-
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Role", "Role")
                         .WithMany("UserInfos")
                         .HasForeignKey("RoleUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Location");
+                    
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Location", b =>
-                {
-                    b.Navigation("Users");
-                });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
                 {

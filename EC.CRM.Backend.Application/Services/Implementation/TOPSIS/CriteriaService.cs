@@ -1,11 +1,11 @@
 ﻿using System.Globalization;
+using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Models;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using Microsoft.IdentityModel.Tokens;
 
 namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {

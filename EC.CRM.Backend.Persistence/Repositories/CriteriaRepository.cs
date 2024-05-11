@@ -33,6 +33,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                 .MentorValuations
                 .AsNoTracking()
+                .Where(mv => mv.StudentUid == studentId)
                 .ToListAsync();
         }
 

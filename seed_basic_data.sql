@@ -153,3 +153,315 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+DECLARE @counter INT = 1;
+
+WHILE @counter <= 200
+BEGIN
+  INSERT INTO [EngineeringClub].[dbo].UserInfos (Uid, Name, Description, PhoneNumber, Email, CurrentSalary, DateOfBirth, Paid, RoleUid)
+  VALUES (
+    NEWID(),  -- Generate random GUID
+    CONCAT('User', @counter),
+    SUBSTRING((
+        SELECT TOP (CAST(FLOOR(RAND() * 60) AS INT) + 3)  -- Random words between 3 and 60
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        FOR XML PATH(''), TYPE).value('.','VARCHAR(MAX)'), 1, 8000), -- Max length for description
+    CAST(FLOOR(RAND() * 9999999999999) AS VARCHAR(15)) + '-' + CAST(FLOOR(RAND() * 10000) AS VARCHAR(4)), -- Phone number with randomness
+    CONCAT('user', @counter, '@example.com'),
+    RAND() * 100000, -- Random decimal value
+    DATEADD(year, -RAND() * 80, GETDATE()),
+    0,  -- Paid
+    CASE WHEN @counter <= 5 THEN '00000000-0000-0000-0000-000000000001'
+          WHEN @counter <= 25 THEN '00000000-0000-0000-0000-000000000002'
+          ELSE '00000000-0000-0000-0000-000000000003' END
+  );
+
+  SET @counter = @counter + 1;
+END;
+
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+INSERT INTO [EngineeringClub].[dbo].[Mentors] (UserInfoUid, StartDate)
+SELECT [EngineeringClub].[dbo].UserInfos.Uid AS UserInfoUid, 
+       GETDATE() AS StartDate  -- Inserts current date as StartDate
+FROM [EngineeringClub].[dbo].UserInfos
+WHERE UserInfos.RoleUid = '00000000-0000-0000-0000-000000000002'
+ORDER BY UserInfos.Uid;  -- Optional: Order by UserInfo.Uid (if desired)
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+-- Create a temporary table to store UserInfoUid values
+CREATE TABLE #TempUserInfoUid (
+    UserInfoUid UNIQUEIDENTIFIER
+);
+
+-- Insert unique UserInfoUid values into the temporary table
+INSERT INTO #TempUserInfoUid (UserInfoUid)
+SELECT DISTINCT Uid
+FROM UserInfos
+WHERE RoleUid = '00000000-0000-0000-0000-000000000003';
+
+-- Declare variables for iteration
+DECLARE @UserInfoUid UNIQUEIDENTIFIER;
+DECLARE @Counter INT;
+DECLARE @MaxCounter INT;
+
+-- Initialize variables
+SELECT @Counter = 1, @MaxCounter = COUNT(*) FROM #TempUserInfoUid;
+
+-- Iterate over the temporary table and insert rows into the Students table
+WHILE @Counter <= @MaxCounter
+BEGIN
+    SELECT @UserInfoUid = UserInfoUid FROM #TempUserInfoUid WHERE UserInfoUid = (SELECT MIN(UserInfoUid) FROM #TempUserInfoUid);
+
+    -- Insert row into the Students table
+    INSERT INTO Students (UserInfoUid, StateUid, MentorId)
+    VALUES (
+        @UserInfoUid,
+        (SELECT TOP 1 Uid FROM States ORDER BY NEWID()), -- Randomly select StateUid
+        (SELECT TOP 1 Id FROM Mentors ORDER BY NEWID()) -- Randomly select MentorId
+    );
+
+    -- Remove processed UserInfoUid from temporary table
+    DELETE FROM #TempUserInfoUid WHERE UserInfoUid = @UserInfoUid;
+
+    -- Increment counter
+    SET @Counter = @Counter + 1;
+END;
+
+-- Drop the temporary table
+DROP TABLE #TempUserInfoUid;
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO 
+
+-- Create a temporary table to store UserInfoUid and SkillsUid combinations
+CREATE TABLE #TempSkillUserInfo (
+    UserInfoUid UNIQUEIDENTIFIER,
+    SkillsUid UNIQUEIDENTIFIER
+);
+
+-- Insert rows into the temporary table
+INSERT INTO #TempSkillUserInfo (UserInfoUid, SkillsUid)
+SELECT 
+    U.Uid AS UserInfoUid,
+    S.Uid AS SkillsUid
+FROM 
+    (SELECT Uid FROM UserInfos) AS U,
+    (SELECT Uid FROM Skill) AS S;
+
+-- Declare variables for iteration
+DECLARE @UserInfoUid UNIQUEIDENTIFIER;
+DECLARE @SkillsCounter INT;
+
+-- Iterate over the UserInfoUid values and assign random skills
+DECLARE userInfoCursor CURSOR FOR
+SELECT DISTINCT UserInfoUid FROM #TempSkillUserInfo;
+
+OPEN userInfoCursor;
+
+FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Randomly select a number of skills for the current user (between 1 and 10)
+    SET @SkillsCounter = CAST(RAND() * 10 + 1 AS INT);
+
+    -- Insert rows into the SkillUserInfo table for the current user
+    INSERT INTO SkillUserInfo (UsersUid, SkillsUid)
+    SELECT TOP (@SkillsCounter) UserInfoUid, SkillsUid
+    FROM #TempSkillUserInfo
+    WHERE UserInfoUid = @UserInfoUid
+    ORDER BY NEWID();
+
+    FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+END;
+
+CLOSE userInfoCursor;
+DEALLOCATE userInfoCursor;
+
+-- Drop the temporary table
+DROP TABLE #TempSkillUserInfo;
+
+
+COMMIT;
+Go
+
+BEGIN TRANSACTION;
+GO
+
+-- Create a temporary table to store UserInfoUid and SkillsUid combinations
+CREATE TABLE #TempSkillUserInfo (
+    UserInfoUid UNIQUEIDENTIFIER,
+    SkillsUid UNIQUEIDENTIFIER
+);
+
+-- Insert rows into the temporary table
+INSERT INTO #TempSkillUserInfo (UserInfoUid, SkillsUid)
+SELECT 
+    U.Uid AS UserInfoUid,
+    S.Uid AS SkillsUid
+FROM 
+    (SELECT Uid FROM UserInfos) AS U,
+    (SELECT Uid FROM NonProfessionalInterest) AS S;
+
+-- Declare variables for iteration
+DECLARE @UserInfoUid UNIQUEIDENTIFIER;
+DECLARE @SkillsCounter INT;
+
+-- Iterate over the UserInfoUid values and assign random skills
+DECLARE userInfoCursor CURSOR FOR
+SELECT DISTINCT UserInfoUid FROM #TempSkillUserInfo;
+
+OPEN userInfoCursor;
+
+FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Randomly select a number of skills for the current user (between 1 and 10)
+    SET @SkillsCounter = CAST(RAND() * 5 + 1 AS INT);
+
+    -- Insert rows into the SkillUserInfo table for the current user
+    INSERT INTO NonProfessionalInterestUserInfo (UsersUid, NonProfessionalInterestsUid)
+    SELECT TOP (@SkillsCounter) UserInfoUid, SkillsUid
+    FROM #TempSkillUserInfo
+    WHERE UserInfoUid = @UserInfoUid
+    ORDER BY NEWID();
+
+    FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+END;
+
+CLOSE userInfoCursor;
+DEALLOCATE userInfoCursor;
+
+-- Drop the temporary table
+DROP TABLE #TempSkillUserInfo;
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+-- Create a temporary table to store UserInfoUid and SkillsUid combinations
+CREATE TABLE #TempSkillUserInfo (
+    UserInfoUid UNIQUEIDENTIFIER,
+    SkillsUid UNIQUEIDENTIFIER
+);
+
+-- Insert rows into the temporary table
+INSERT INTO #TempSkillUserInfo (UserInfoUid, SkillsUid)
+SELECT 
+    U.Uid AS UserInfoUid,
+    S.Uid AS SkillsUid
+FROM 
+    (SELECT Uid FROM UserInfos) AS U,
+    (SELECT Uid FROM Locations) AS S;
+
+-- Declare variables for iteration
+DECLARE @UserInfoUid UNIQUEIDENTIFIER;
+DECLARE @SkillsCounter INT;
+
+-- Iterate over the UserInfoUid values and assign random skills
+DECLARE userInfoCursor CURSOR FOR
+SELECT DISTINCT UserInfoUid FROM #TempSkillUserInfo;
+
+OPEN userInfoCursor;
+
+FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Randomly select a number of skills for the current user (between 1 and 2)
+    SET @SkillsCounter = CAST(RAND() * 2 + 1 AS INT);
+
+    -- Insert rows into the SkillUserInfo table for the current user
+    INSERT INTO LocationUserInfo (UsersUid, LocationsUid)
+    SELECT TOP (@SkillsCounter) UserInfoUid, SkillsUid
+    FROM #TempSkillUserInfo
+    WHERE UserInfoUid = @UserInfoUid
+    ORDER BY NEWID();
+
+    FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+END;
+
+CLOSE userInfoCursor;
+DEALLOCATE userInfoCursor;
+
+-- Drop the temporary table
+DROP TABLE #TempSkillUserInfo;
+
+COMMIT;
+GO
+
+BEGIN TRANSACTION;
+GO
+
+-- Create a temporary table to store UserInfoUid and SkillsUid combinations
+CREATE TABLE #TempSkillUserInfo (
+    UserInfoUid UNIQUEIDENTIFIER,
+    SkillsUid UNIQUEIDENTIFIER
+);
+
+-- Insert rows into the temporary table
+INSERT INTO #TempSkillUserInfo (UserInfoUid, SkillsUid)
+SELECT 
+    U.Uid AS UserInfoUid,
+    S.Uid AS SkillsUid
+FROM 
+    (SELECT Uid FROM UserInfos) AS U,
+    (SELECT Uid FROM StudyField) AS S;
+
+-- Declare variables for iteration
+DECLARE @UserInfoUid UNIQUEIDENTIFIER;
+DECLARE @SkillsCounter INT;
+
+-- Iterate over the UserInfoUid values and assign random skills
+DECLARE userInfoCursor CURSOR FOR
+SELECT DISTINCT UserInfoUid FROM #TempSkillUserInfo;
+
+OPEN userInfoCursor;
+
+FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    -- Randomly select a number of skills for the current user (between 1 and 2)
+    SET @SkillsCounter = CAST(RAND() * 2 + 1 AS INT);
+
+    -- Insert rows into the SkillUserInfo table for the current user
+    INSERT INTO StudyFieldUserInfo (UsersUid, StudyFieldsUid)
+    SELECT TOP (@SkillsCounter) UserInfoUid, SkillsUid
+    FROM #TempSkillUserInfo
+    WHERE UserInfoUid = @UserInfoUid
+    ORDER BY NEWID();
+
+    FETCH NEXT FROM userInfoCursor INTO @UserInfoUid;
+END;
+
+CLOSE userInfoCursor;
+DEALLOCATE userInfoCursor;
+
+-- Drop the temporary table
+DROP TABLE #TempSkillUserInfo;
+
+COMMIT;
+GO
+
+
+ 

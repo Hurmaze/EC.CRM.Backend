@@ -49,7 +49,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
             return await _dbContext
                 .Jobs
-                .AsNoTracking()
                 .Where(predicate)
                 .OrderByDescending(x => x.StartTime)
                 .ToListAsync();

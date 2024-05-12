@@ -24,7 +24,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             // And then remove from domain entities redundant properties such as List<UserInfo> in this case.
             return await _dbContext
                 .Roles
-                .AsNoTracking()
                 .Where(predicate)
                 .OrderBy(x => x.Name)
                 .ToListAsync();

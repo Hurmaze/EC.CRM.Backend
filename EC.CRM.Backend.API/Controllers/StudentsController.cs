@@ -77,7 +77,7 @@ namespace EC.CRM.Backend.API.Controllers
         [HttpGet("application")]
         public async Task<ActionResult<List<StudentResponse>>> GetStudentsApplications()
         {
-            var students = await studentService.GetAllAsync();
+            var students = await studentService.GetAllApplicationAsync();
 
             return Ok(students);
         }

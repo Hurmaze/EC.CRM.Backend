@@ -2,6 +2,7 @@
 using EC.CRM.Backend.Application.DTOs.Request.Students;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Repositories;
 
@@ -11,13 +12,25 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     {
         private readonly IStudentRepository studentRepository;
         private readonly IMentorRepository mentorRepository;
+        private readonly IUserRepository userRepository;
+        private readonly IStateRepository stateRepository;
+        private readonly IRoleRepository roleRepository;
         private readonly IMapper mapper;
 
-        public StudentService(IStudentRepository studentRepository, IMentorRepository mentorRepository, IMapper mapper)
+        public StudentService(
+            IStudentRepository studentRepository,
+            IMentorRepository mentorRepository,
+            IMapper mapper,
+            IUserRepository userRepository,
+            IStateRepository stateRepository,
+            IRoleRepository roleRepository)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
             this.mapper = mapper;
+            this.userRepository = userRepository;
+            this.stateRepository = stateRepository;
+            this.roleRepository = roleRepository;
         }
 
         public async Task AssignMentorAsync(Guid studentUid, Guid mentorUid)
@@ -33,9 +46,20 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<StudentResponse> CreateAsync(StudentApplicationRequest studentApplicationRequest)
         {
-            var student = mapper.Map<Student>(studentApplicationRequest);
+            var user = mapper.Map<UserInfo>(studentApplicationRequest);
 
-            var createdStudent = await studentRepository.CreateAsync(student);
+            var roles = await roleRepository.GetAllAsync();
+
+            user.Role = roles.Single(r => r.Name == Roles.Student);
+
+            var createdUser = await userRepository.CreateAsync(user);
+            var studentToCreate = new Student
+            {
+                UserInfoUid = createdUser.Uid,
+                State = (await stateRepository.GetAllAsync()).Single(s => s.Name == States.DoingTestTask),
+                UserInfo = createdUser,
+            };
+            var createdStudent = await studentRepository.CreateAsync(studentToCreate);
 
             return mapper.Map<StudentResponse>(createdStudent);
         }
@@ -45,9 +69,18 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<List<StudentResponse>> GetAllAsync()
+        public async Task<List<StudentResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var mentors = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student);
+
+            return mapper.Map<List<StudentResponse>>(mentors);
+        }
+
+        public async Task<List<StudentResponse>> GetAllApplicationAsync()
+        {
+            var mentors = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student && u.StudentProperties!.State.Name == States.DoingTestTask);
+
+            return mapper.Map<List<StudentResponse>>(mentors);
         }
 
         public Task<List<State>> GetAllStates()

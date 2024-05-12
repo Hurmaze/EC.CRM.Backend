@@ -5,6 +5,7 @@ namespace EC.CRM.Backend.Application.DTOs.Request.Users
     public record CreateUserRequest(
         string Name,
         string Email,
+        string Password,
         string PhoneNumber,
         List<Guid>? SkillsUids,
         List<Guid>? NonProffesionalInterestsUids,

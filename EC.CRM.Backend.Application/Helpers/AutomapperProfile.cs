@@ -11,14 +11,26 @@ namespace EC.CRM.Backend.Application.Helpers
         public AutomapperProfile()
         {
             CreateMap<Student, StudentResponse>().PreserveReferences();
+            CreateMap<UserInfo, StudentResponse>()
+                .ForMember(x => x.State, opt => opt.MapFrom(ui => ui.StudentProperties!.State)).PreserveReferences();
             CreateMap<StudentResponse, Student>().PreserveReferences();
             CreateMap<CreateUserRequest, Student>().PreserveReferences();
+            CreateMap<StudentApplicationRequest, UserInfo>().PreserveReferences();
 
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
-            CreateMap<UserInfo, Mentor>().PreserveReferences();
+            CreateMap<UserInfo, MentorResponse>().PreserveReferences();
 
             CreateMap<State, StateResponse>().PreserveReferences();
+            CreateMap<Role, RoleResponse>().PreserveReferences();
+            CreateMap<Job, JobResponse>().PreserveReferences();
+            CreateMap<Location, LocationResponse>().PreserveReferences();
+            CreateMap<Skill, SkillResponse>().PreserveReferences();
+            CreateMap<NonProfessionalInterest, NonProfessionalInterestResponse>().PreserveReferences();
+            CreateMap<StudyField, StudyFieldResponse>().PreserveReferences();
+
+            CreateMap<UserInfo, UserInfoResponse>()
+                .PreserveReferences();
         }
     }
 }

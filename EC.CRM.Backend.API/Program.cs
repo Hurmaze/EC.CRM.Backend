@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EC.CRM.Backend.API.Extensions;
 using EC.CRM.Backend.API.Middlewares;
 using EC.CRM.Backend.Application;
@@ -7,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +53,11 @@ builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
     options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -75,7 +79,19 @@ builder.Services.AddSwaggerGen(c =>
     };
 
     c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
-    c.OperationFilter<SecurityRequirementsOperationFilter>();
+    //c.OperationFilter<SecurityRequirementsOperationFilter>();
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
 });
 
 var app = builder.Build();
@@ -98,10 +114,14 @@ if (bool.Parse(builder.Configuration.GetSection("Features")["EnableAuth"]!))
 
     app.UseAuthorization();
 
-    app.MapControllers();//.AllowAnonymous();
+    app.MapControllers();
 }
 else
 {
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
     app.MapControllers().AllowAnonymous();
 }
 

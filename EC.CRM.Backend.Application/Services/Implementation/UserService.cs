@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EC.CRM.Backend.Application.DTOs.Request.Users;
 using EC.CRM.Backend.Application.DTOs.Response;
+using EC.CRM.Backend.Application.Helpers;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Exceptions;
@@ -11,12 +12,14 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly AuthHelper authHelper;
         private readonly IMapper mapper;
 
-        public UserService(IMapper mapper, IUserRepository userRepository)
+        public UserService(IMapper mapper, IUserRepository userRepository, AuthHelper authHelper)
         {
             this.mapper = mapper;
             this.userRepository = userRepository;
+            this.authHelper = authHelper;
         }
 
         public Task AddUserJobAsync(Guid userUid, Job job)
@@ -37,9 +40,24 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             var userEntity = mapper.Map<UserInfo>(user);
 
+            var passwordhash = authHelper.CreatePasswordHash(user.Password);
+
+            userEntity.Credentials = new Credentials
+            {
+                PasswordHash = passwordhash.passwordHash,
+                PasswordSalt = passwordhash.passwordSalt
+            };
+
             var createdUser = userRepository.CreateAsync(userEntity);
 
             return mapper.Map<UserInfoResponse>(createdUser);
+        }
+
+        public async Task<UserInfoResponse> GetAsync(Guid uid)
+        {
+            var mentor = await userRepository.GetAsync(uid);
+
+            return mapper.Map<UserInfoResponse>(mentor);
         }
 
         public Task<List<Job>> GetJobsAsync(Guid userUid)

@@ -4,6 +4,12 @@
     {
         public Guid Uid { get; set; }
         public string? Name { get; set; }
+        public RoleResponse? Role { get; set; }
+        public List<JobResponse>? Jobs { get; set; }
+        public required List<SkillResponse> Skills { get; set; }
+        public List<NonProfessionalInterestResponse>? NonProfessionalInterests { get; set; }
+        public required List<LocationResponse> Locations { get; set; }
+        public required List<StudyFieldResponse> StudyFields { get; set; }
         public string? Description { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }

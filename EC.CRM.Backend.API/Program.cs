@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EC.CRM.Backend.API.Extensions;
 using EC.CRM.Backend.API.Middlewares;
 using EC.CRM.Backend.Application;
@@ -52,7 +53,11 @@ builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
     options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

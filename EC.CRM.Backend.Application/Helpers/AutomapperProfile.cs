@@ -16,9 +16,19 @@ namespace EC.CRM.Backend.Application.Helpers
 
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
-            CreateMap<UserInfo, Mentor>().PreserveReferences();
+            CreateMap<UserInfo, MentorResponse>().PreserveReferences();
 
             CreateMap<State, StateResponse>().PreserveReferences();
+            CreateMap<Role, RoleResponse>().PreserveReferences();
+            CreateMap<Job, JobResponse>().PreserveReferences();
+            CreateMap<Location, LocationResponse>().PreserveReferences();
+            CreateMap<Skill, SkillResponse>().PreserveReferences();
+            CreateMap<NonProfessionalInterest, NonProfessionalInterestResponse>().PreserveReferences();
+            CreateMap<StudyField, StudyFieldResponse>().PreserveReferences();
+
+            CreateMap<UserInfo, UserInfoResponse>()
+                //.ForMember(x => x.Role!.UserInfos, opt => opt.Ignore())
+                .PreserveReferences();
         }
     }
 }

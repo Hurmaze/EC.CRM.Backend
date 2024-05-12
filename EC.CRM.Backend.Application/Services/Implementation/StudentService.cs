@@ -2,6 +2,7 @@
 using EC.CRM.Backend.Application.DTOs.Request.Students;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Repositories;
 
@@ -11,13 +12,15 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     {
         private readonly IStudentRepository studentRepository;
         private readonly IMentorRepository mentorRepository;
+        private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 
-        public StudentService(IStudentRepository studentRepository, IMentorRepository mentorRepository, IMapper mapper)
+        public StudentService(IStudentRepository studentRepository, IMentorRepository mentorRepository, IMapper mapper, IUserRepository userRepository)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
             this.mapper = mapper;
+            this.userRepository = userRepository;
         }
 
         public async Task AssignMentorAsync(Guid studentUid, Guid mentorUid)
@@ -45,9 +48,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<List<StudentResponse>> GetAllAsync()
+        public async Task<List<StudentResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var mentors = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student);
+
+            return mapper.Map<List<StudentResponse>>(mentors);
         }
 
         public Task<List<State>> GetAllStates()

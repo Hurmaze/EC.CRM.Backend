@@ -31,6 +31,7 @@ namespace EC.CRM.Backend.API.Controllers
             return CreatedAtAction(nameof(CreateUser), new { uid = createdStudent.Uid }, createdStudent);
         }
 
+        [HttpGet("me")]
         public async Task<ActionResult<UserInfoResponse>> GetMe()
         {
             var userUid = claimsHelper.GetUserUid(HttpContext);

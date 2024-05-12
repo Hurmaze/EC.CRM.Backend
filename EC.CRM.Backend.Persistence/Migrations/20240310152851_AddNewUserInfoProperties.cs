@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,56 +10,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "UserInfos",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("bf7f6023-f109-4782-b8c2-6ff67571a539"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("73f8447e-8b35-4f32-adac-9fe9876529cf"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "States",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("ee97f425-d79e-416b-a6ee-0233dff83129"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("14f705dc-a2af-437e-88a2-c6b6a90c1d2a"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Roles",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("f07ab32b-419f-4e3e-b1ff-58fa7b49932b"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("940c8245-661d-4d10-b948-a5edbe18dee4"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Locations",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("330328e9-3bed-4110-9f03-124397340471"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("6fce367f-9c02-4b7e-9604-6f0004afd83f"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Jobs",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("78f720ca-9212-470c-87ae-f9acef45c523"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("9132b8a0-071c-467f-a146-becf9256dde4"));
-
             migrationBuilder.CreateTable(
                 name: "Credentials",
                 columns: table => new
@@ -227,56 +176,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudyField");
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "UserInfos",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("73f8447e-8b35-4f32-adac-9fe9876529cf"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("bf7f6023-f109-4782-b8c2-6ff67571a539"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "States",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("14f705dc-a2af-437e-88a2-c6b6a90c1d2a"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("ee97f425-d79e-416b-a6ee-0233dff83129"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Roles",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("940c8245-661d-4d10-b948-a5edbe18dee4"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("f07ab32b-419f-4e3e-b1ff-58fa7b49932b"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Locations",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("6fce367f-9c02-4b7e-9604-6f0004afd83f"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("330328e9-3bed-4110-9f03-124397340471"));
-
-            migrationBuilder.AlterColumn<Guid>(
-                name: "Uid",
-                table: "Jobs",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("9132b8a0-071c-467f-a146-becf9256dde4"),
-                oldClrType: typeof(Guid),
-                oldType: "uniqueidentifier",
-                oldDefaultValue: new Guid("78f720ca-9212-470c-87ae-f9acef45c523"));
         }
     }
 }

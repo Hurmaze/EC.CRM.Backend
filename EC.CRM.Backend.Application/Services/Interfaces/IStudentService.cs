@@ -8,6 +8,7 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
     {
         Task<StudentResponse> GetAsync(Guid uid);
         Task<List<StudentResponse>> GetAllAsync();
+        Task<List<StudentResponse>> GetAllApplicationAsync();
         Task<StudentResponse> CreateAsync(StudentApplicationRequest studentApplicationRequest);
         Task UpdateAsync(Guid uid, StudentResponse student);
         Task DeleteAsync(Guid uid);

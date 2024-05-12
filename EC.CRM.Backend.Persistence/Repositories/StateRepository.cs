@@ -38,7 +38,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             return await _dbContext
                 .States
-                .AsNoTracking()
                 .OrderBy(x => x.OrderingId)
                 .ToListAsync();
         }

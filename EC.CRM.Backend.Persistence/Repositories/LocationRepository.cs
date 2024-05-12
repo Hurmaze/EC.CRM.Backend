@@ -40,7 +40,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             return await _dbContext
                 .Locations
-                .AsNoTracking()
                 .OrderBy(x => x.City)
                 .ToListAsync();
         }

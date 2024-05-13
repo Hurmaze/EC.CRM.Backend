@@ -13,8 +13,8 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Add
 GO
 
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[NonProfessionalInterest]'))
-    SET IDENTITY_INSERT [NonProfessionalInterest] ON;
-INSERT INTO [NonProfessionalInterest] ([Uid], [Name])
+    SET IDENTITY_INSERT [NonProfessionalInterests] ON;
+INSERT INTO [NonProfessionalInterests] ([Uid], [Name])
 VALUES ('00000000-0000-0000-0000-000000000008', N'Читання'),
 ('00000000-0000-0000-0000-000000000009', N'Писання'),
 ('00000000-0000-0000-0000-000000000010', N'Малювання'),
@@ -57,7 +57,7 @@ VALUES ('00000000-0000-0000-0000-000000000008', N'Читання'),
 ('00000000-0000-0000-0000-000000000047', N'Джоггінг'),
 ('00000000-0000-0000-0000-000000000048', N'Велосипед'),
 ('00000000-0000-0000-0000-000000000049', N'Плавання');
-INSERT INTO [NonProfessionalInterest] ([Uid], [Name])
+INSERT INTO [NonProfessionalInterests] ([Uid], [Name])
 VALUES ('00000000-0000-0000-0000-000000000050', N'Серфінг'),
 ('00000000-0000-0000-0000-000000000051', N'Катання на лижах'),
 ('00000000-0000-0000-0000-000000000052', N'Сноубординг'),
@@ -69,8 +69,8 @@ VALUES ('00000000-0000-0000-0000-000000000050', N'Серфінг'),
 ('00000000-0000-0000-0000-000000000058', N'Футбол'),
 ('00000000-0000-0000-0000-000000000059', N'Баскетбол'),
 ('00000000-0000-0000-0000-000000000060', N'Інший спорт');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[NonProfessionalInterest]'))
-    SET IDENTITY_INSERT [NonProfessionalInterest] OFF;
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[NonProfessionalInterests]'))
+    SET IDENTITY_INSERT [NonProfessionalInterests] OFF;
 GO
 
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[Roles]'))
@@ -83,9 +83,9 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Nam
     SET IDENTITY_INSERT [Roles] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[Skill]'))
-    SET IDENTITY_INSERT [Skill] ON;
-INSERT INTO [Skill] ([Uid], [Name])
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[Skills]'))
+    SET IDENTITY_INSERT [Skills] ON;
+INSERT INTO [Skills] ([Uid], [Name])
 VALUES ('00000000-0000-0000-0000-000000000061', N'Java'),
 ('00000000-0000-0000-0000-000000000062', N'Python'),
 ('00000000-0000-0000-0000-000000000063', N'JavaScript/TypeScript'),
@@ -123,8 +123,8 @@ VALUES ('00000000-0000-0000-0000-000000000061', N'Java'),
 ('00000000-0000-0000-0000-000000000095', N'Selenium'),
 ('00000000-0000-0000-0000-000000000096', N'Selenide'),
 ('00000000-0000-0000-0000-000000000097', N'Selenoid');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[Skill]'))
-    SET IDENTITY_INSERT [Skill] OFF;
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[Skills]'))
+    SET IDENTITY_INSERT [Skills] OFF;
 GO
 
 IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name', N'OrderingId') AND [object_id] = OBJECT_ID(N'[States]'))
@@ -139,15 +139,15 @@ IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Nam
     SET IDENTITY_INSERT [States] OFF;
 GO
 
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[StudyField]'))
-    SET IDENTITY_INSERT [StudyField] ON;
-INSERT INTO [StudyField] ([Uid], [Name])
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[StudyFields]'))
+    SET IDENTITY_INSERT [StudyFields] ON;
+INSERT INTO [StudyFields] ([Uid], [Name])
 VALUES ('00000000-0000-0000-0000-000000000100', N'QA/AQA'),
 ('00000000-0000-0000-0000-000000000101', N'Frontend'),
 ('00000000-0000-0000-0000-000000000102', N'Full stack'),
 ('00000000-0000-0000-0000-000000000103', N'Backend');
-IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[StudyField]'))
-    SET IDENTITY_INSERT [StudyField] OFF;
+IF EXISTS (SELECT * FROM [sys].[identity_columns] WHERE [name] IN (N'Uid', N'Name') AND [object_id] = OBJECT_ID(N'[StudyFields]'))
+    SET IDENTITY_INSERT [StudyFields] OFF;
 GO
 
 COMMIT;
@@ -160,7 +160,7 @@ DECLARE @counter INT = 1;
 
 WHILE @counter <= 200
 BEGIN
-  INSERT INTO [EngineeringClub].[dbo].UserInfos (Uid, Name, Description, PhoneNumber, Email, CurrentSalary, DateOfBirth, Paid, RoleUid)
+  INSERT INTO [EngineeringClub].[dbo].UserInfos (Uid, Name, Description, PhoneNumber, Email, CurrentSalary, DateOfBirth, JoinDate, Paid, RoleUid)
   VALUES (
     NEWID(),  -- Generate random GUID
     CONCAT('User', @counter),
@@ -172,6 +172,7 @@ BEGIN
     CONCAT('user', @counter, '@example.com'),
     RAND() * 100000, -- Random decimal value
     DATEADD(year, -RAND() * 80, GETDATE()),
+	DATEADD(year, -RAND() * 80, GETDATE()),
     0,  -- Paid
     CASE WHEN @counter <= 5 THEN '00000000-0000-0000-0000-000000000001'
           WHEN @counter <= 25 THEN '00000000-0000-0000-0000-000000000002'
@@ -262,7 +263,7 @@ SELECT
     S.Uid AS SkillsUid
 FROM 
     (SELECT Uid FROM UserInfos) AS U,
-    (SELECT Uid FROM Skill) AS S;
+    (SELECT Uid FROM Skills) AS S;
 
 -- Declare variables for iteration
 DECLARE @UserInfoUid UNIQUEIDENTIFIER;
@@ -317,7 +318,7 @@ SELECT
     S.Uid AS SkillsUid
 FROM 
     (SELECT Uid FROM UserInfos) AS U,
-    (SELECT Uid FROM NonProfessionalInterest) AS S;
+    (SELECT Uid FROM NonProfessionalInterests) AS S;
 
 -- Declare variables for iteration
 DECLARE @UserInfoUid UNIQUEIDENTIFIER;
@@ -425,7 +426,7 @@ SELECT
     S.Uid AS SkillsUid
 FROM 
     (SELECT Uid FROM UserInfos) AS U,
-    (SELECT Uid FROM StudyField) AS S;
+    (SELECT Uid FROM StudyFields) AS S;
 
 -- Declare variables for iteration
 DECLARE @UserInfoUid UNIQUEIDENTIFIER;

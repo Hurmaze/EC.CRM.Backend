@@ -4,6 +4,7 @@ using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Entities;
+using EC.CRM.Backend.Domain.Exceptions;
 using EC.CRM.Backend.Domain.Repositories;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
@@ -15,6 +16,10 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         private readonly IUserRepository userRepository;
         private readonly IStateRepository stateRepository;
         private readonly IRoleRepository roleRepository;
+        private readonly ISkillRepository skillRepository;
+        private readonly INonProffesionalInterestRepository interestsRepository;
+        private readonly IStudyFieldRepository studyFieldRepository;
+        private readonly ILocationRepository locationRepository;
         private readonly IMapper mapper;
 
         public StudentService(
@@ -23,7 +28,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             IMapper mapper,
             IUserRepository userRepository,
             IStateRepository stateRepository,
-            IRoleRepository roleRepository)
+            IRoleRepository roleRepository,
+            ISkillRepository skillRepository,
+            INonProffesionalInterestRepository interestsRepository,
+            IStudyFieldRepository studyFieldRepository,
+            ILocationRepository locationRepository)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
@@ -31,6 +40,10 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             this.userRepository = userRepository;
             this.stateRepository = stateRepository;
             this.roleRepository = roleRepository;
+            this.skillRepository = skillRepository;
+            this.interestsRepository = interestsRepository;
+            this.studyFieldRepository = studyFieldRepository;
+            this.locationRepository = locationRepository;
         }
 
         public async Task AssignMentorAsync(Guid studentUid, Guid mentorUid)
@@ -51,6 +64,25 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             var roles = await roleRepository.GetAllAsync();
 
             user.Role = roles.Single(r => r.Name == Roles.Student);
+            if (studentApplicationRequest.NonProffesionalInterestsUids != null)
+            {
+                var interests = await interestsRepository.GetAllAsync(r => studentApplicationRequest.NonProffesionalInterestsUids.Contains(r.Uid));
+                user.NonProfessionalInterests = interests;
+            }
+
+            if (studentApplicationRequest.SkillsUids != null)
+            {
+                var skills = await skillRepository.GetAllAsync(r => studentApplicationRequest.SkillsUids.Contains(r.Uid));
+                user.Skills = skills;
+            }
+            var studyFields = await studyFieldRepository.GetAllAsync(r => studentApplicationRequest.DesiredStudyFieldUid == r.Uid);
+            user.StudyFields = studyFields;
+            var location = await locationRepository.GetAsync(studentApplicationRequest.LocationUid);
+            if (location == null)
+            {
+                throw new NotFoundException("Location", studentApplicationRequest.LocationUid);
+            }
+            user.Locations = new List<Location> { location };
 
             var createdUser = await userRepository.CreateAsync(user);
             var studentToCreate = new Student
@@ -61,7 +93,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             };
             var createdStudent = await studentRepository.CreateAsync(studentToCreate);
 
-            return mapper.Map<StudentResponse>(createdStudent);
+            return mapper.Map<StudentResponse>(createdUser);
         }
 
         public Task DeleteAsync(Guid uid)

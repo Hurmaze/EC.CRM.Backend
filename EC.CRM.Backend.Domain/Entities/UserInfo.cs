@@ -9,6 +9,7 @@
         public required string Email { get; set; }
         public decimal? CurrentSalary { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public DateTime JoinDate { get; set; }
         public decimal Paid { get; set; }
         public Guid RoleUid { get; set; }
         public required Role Role { get; set; }

@@ -19,6 +19,9 @@ namespace EC.CRM.Backend.Persistence.DataContext
         public DbSet<Credentials> Credentials { get; set; }
         public DbSet<Criteria> Criterias { get; set; }
         public DbSet<MentorValuation> MentorValuations { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<NonProfessionalInterest> NonProfessionalInterests { get; set; }
+        public DbSet<StudyField> StudyFields { get; set; }
 
         public EngineeringClubDbContext(DbContextOptions<EngineeringClubDbContext> dbContextOptions, IOptions<DbContextSeedingOptions>? seedingOptions = null) : base(dbContextOptions)
         {
@@ -60,6 +63,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
             userInfo.Property(ui => ui.CurrentSalary)
                .HasPrecision(10, 3)
                .HasColumnType("decimal");
+            userInfo.Property(ui => ui.JoinDate)
+               .HasDefaultValueSql("getdate()");
 
             var mentor = modelBuilder.Entity<Mentor>();
             mentor.HasKey(m => m.Id);

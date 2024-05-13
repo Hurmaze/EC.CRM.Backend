@@ -22,6 +22,9 @@ namespace EC.CRM.Backend.API.Extensions
             services.AddTransient<IStateRepository, StateRepository>();
             services.AddTransient<IStudentRepository, StudentRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<INonProffesionalInterestRepository, NonProfessionalInterestsRepository>();
+            services.AddTransient<ISkillRepository, SkillsRepository>();
+            services.AddTransient<IStudyFieldRepository, StudyFieldsRepository>();
 
             services.AddTransient<AuthHelper>();
             services.AddTransient<IAuthService, AuthService>();

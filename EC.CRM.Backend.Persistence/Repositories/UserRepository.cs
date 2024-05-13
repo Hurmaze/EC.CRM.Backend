@@ -38,6 +38,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        // TODO: Add pagination, Add sorting
         public async Task<List<UserInfo>> GetAllAsync(Expression<Func<UserInfo, bool>>? predicate = null)
         {
             if (predicate == null) predicate = (x) => true;
@@ -55,6 +56,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Include(x => x.StudyFields)
                .AsNoTracking()
                .Where(predicate)
+               .OrderByDescending(x => x.JoinDate)
                .ToListAsync();
         }
 

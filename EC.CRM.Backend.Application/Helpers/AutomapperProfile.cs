@@ -12,7 +12,8 @@ namespace EC.CRM.Backend.Application.Helpers
         {
             CreateMap<Student, StudentResponse>().PreserveReferences();
             CreateMap<UserInfo, StudentResponse>()
-                .ForMember(x => x.State, opt => opt.MapFrom(ui => ui.StudentProperties!.State)).PreserveReferences();
+                .ForMember(x => x.State, opt => opt.MapFrom(ui => ui.StudentProperties!.State))
+                .PreserveReferences();
             CreateMap<StudentResponse, Student>().PreserveReferences();
             CreateMap<CreateUserRequest, Student>().PreserveReferences();
             CreateMap<StudentApplicationRequest, UserInfo>().PreserveReferences();

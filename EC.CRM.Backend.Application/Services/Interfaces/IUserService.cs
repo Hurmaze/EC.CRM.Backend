@@ -10,5 +10,10 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
         Task AddUserJobAsync(Guid userUid, Job job);
         Task<UserInfoResponse> CreateUserAsync(CreateUserRequest user);
         Task<UserInfoResponse> GetAsync(Guid uid);
+
+        Task<List<SkillResponse>> GetSkillsAsync();
+        Task<List<LocationResponse>> GetLocationsAsync();
+        Task<List<NonProfessionalInterestResponse>> GetNonProfessionalInterestsAsync();
+        Task<List<StudyFieldResponse>> GetStudyFieldsAsync();
     }
 }

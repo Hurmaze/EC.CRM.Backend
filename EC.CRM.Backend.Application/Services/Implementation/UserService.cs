@@ -12,14 +12,29 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly ISkillRepository skillsRepository;
+        private readonly INonProffesionalInterestRepository nonProffesinalInterestRepository;
+        private readonly ILocationRepository locationRepository;
+        private readonly IStudyFieldRepository studyFieldRepository;
         private readonly AuthHelper authHelper;
         private readonly IMapper mapper;
 
-        public UserService(IMapper mapper, IUserRepository userRepository, AuthHelper authHelper)
+        public UserService(
+            IMapper mapper,
+            IUserRepository userRepository,
+            AuthHelper authHelper,
+            ISkillRepository skillsRepository,
+            INonProffesionalInterestRepository nonProffesinalInterestRepository,
+            ILocationRepository locationRepository,
+            IStudyFieldRepository studyFieldRepository)
         {
             this.mapper = mapper;
             this.userRepository = userRepository;
             this.authHelper = authHelper;
+            this.skillsRepository = skillsRepository;
+            this.nonProffesinalInterestRepository = nonProffesinalInterestRepository;
+            this.locationRepository = locationRepository;
+            this.studyFieldRepository = studyFieldRepository;
         }
 
         public Task AddUserJobAsync(Guid userUid, Job job)
@@ -63,6 +78,34 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         public Task<List<Job>> GetJobsAsync(Guid userUid)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<List<LocationResponse>> GetLocationsAsync()
+        {
+            var locations = await locationRepository.GetAllAsync();
+
+            return mapper.Map<List<LocationResponse>>(locations);
+        }
+
+        public async Task<List<NonProfessionalInterestResponse>> GetNonProfessionalInterestsAsync()
+        {
+            var nonProfessionalInterests = await nonProffesinalInterestRepository.GetAllAsync();
+
+            return mapper.Map<List<NonProfessionalInterestResponse>>(nonProfessionalInterests);
+        }
+
+        public async Task<List<SkillResponse>> GetSkillsAsync()
+        {
+            var skills = await skillsRepository.GetAllAsync();
+
+            return mapper.Map<List<SkillResponse>>(skills);
+        }
+
+        public async Task<List<StudyFieldResponse>> GetStudyFieldsAsync()
+        {
+            var studyFields = await studyFieldRepository.GetAllAsync();
+
+            return mapper.Map<List<StudyFieldResponse>>(studyFields);
         }
     }
 }

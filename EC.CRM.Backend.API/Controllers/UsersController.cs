@@ -40,5 +40,37 @@ namespace EC.CRM.Backend.API.Controllers
 
             return Ok(user);
         }
+
+        [HttpGet("skills")]
+        public async Task<ActionResult<List<SkillResponse>>> GetSkills()
+        {
+            var skills = await userService.GetSkillsAsync();
+
+            return Ok(skills);
+        }
+
+        [HttpGet("locations")]
+        public async Task<ActionResult<List<LocationResponse>>> GetLocations()
+        {
+            var locations = await userService.GetLocationsAsync();
+
+            return Ok(locations);
+        }
+
+        [HttpGet("non-professional-interests")]
+        public async Task<ActionResult<List<NonProfessionalInterestResponse>>> GetNonProfessionalInterests()
+        {
+            var nonProfessionalInterests = await userService.GetNonProfessionalInterestsAsync();
+
+            return Ok(nonProfessionalInterests);
+        }
+
+        [HttpGet("study-fields")]
+        public async Task<ActionResult<List<StudyFieldResponse>>> GetStudyFields()
+        {
+            var studyFields = await userService.GetStudyFieldsAsync();
+
+            return Ok(studyFields);
+        }
     }
 }

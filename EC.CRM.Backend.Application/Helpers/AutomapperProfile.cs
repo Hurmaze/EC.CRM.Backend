@@ -21,6 +21,7 @@ namespace EC.CRM.Backend.Application.Helpers
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
             CreateMap<UserInfo, MentorResponse>().PreserveReferences();
+            CreateMap<MentorResponse, MentorValuationResponse>().PreserveReferences();
 
             CreateMap<State, StateResponse>().PreserveReferences();
             CreateMap<Role, RoleResponse>().PreserveReferences();

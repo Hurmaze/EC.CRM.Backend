@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataContext\NewFolder\**" />
+    <EmbeddedResource Remove="DataContext\NewFolder\**" />
+    <None Remove="DataContext\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="35.5.1" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
@@ -23,10 +29,6 @@
     <None Update="seed_basic_data.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="DataContext\NewFolder\" />
   </ItemGroup>
 
 </Project>

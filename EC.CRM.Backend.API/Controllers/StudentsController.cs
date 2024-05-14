@@ -41,13 +41,13 @@ namespace EC.CRM.Backend.API.Controllers
 
         [HttpPost("{studentUid:guid}/valuations")]
         [Authorize(Roles = $"{Roles.Mentor}, {Roles.Director}")]
-        public async Task<ActionResult> SetMentorValuation(Guid studentUid, Dictionary<Guid, double> mentorsValuations)
+        public async Task<ActionResult> SetMentorValuation(Guid studentUid, List<MentorValuationRequest> mentorsValuations)
         {
             var userRole = claimsHelper.GetUserRole(HttpContext);
 
             if (userRole == Roles.Director)
             {
-                await matchingService.SetMentorValuation(studentUid, mentorsValuations);
+                await matchingService.SetMentorValuationAsync(studentUid, mentorsValuations);
             }
             else
             {
@@ -55,21 +55,21 @@ namespace EC.CRM.Backend.API.Controllers
                 {
                     return BadRequest("Mentor can set only one valuation");
                 }
-                if (mentorsValuations.First().Key != claimsHelper.GetUserUid(HttpContext))
+                if (mentorsValuations.First().MentorUid != claimsHelper.GetUserUid(HttpContext))
                 {
                     return BadRequest("Mentor can set only his valuation");
                 }
 
-                await matchingService.SetMentorValuation(studentUid, mentorsValuations);
+                await matchingService.SetMentorValuationAsync(studentUid, mentorsValuations);
             }
 
             return Ok();
         }
 
         [HttpGet("{studentUid:guid}/valuations")]
-        public async Task<ActionResult<Dictionary<Guid, double>>> GetStudentValuations(Guid studentUid)
+        public async Task<ActionResult<List<MentorValuationResponse>>> GetStudentValuations(Guid studentUid)
         {
-            var valuations = await matchingService.GetStudentValuations(studentUid);
+            var valuations = await matchingService.GetStudentValuationsAsync(studentUid);
 
             return Ok(valuations);
         }

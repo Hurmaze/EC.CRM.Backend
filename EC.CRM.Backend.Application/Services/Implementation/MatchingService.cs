@@ -1,9 +1,10 @@
-﻿using EC.CRM.Backend.Application.Common;
+﻿using AutoMapper;
+using EC.CRM.Backend.Application.Common;
+using EC.CRM.Backend.Application.DTOs.Request.Students;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain.Entities;
-using EC.CRM.Backend.Domain.Entities.TOPSIS;
 using EC.CRM.Backend.Domain.Repositories;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
@@ -12,8 +13,10 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     {
         private readonly ICriteriaRepository criteriasRepository;
         private readonly IMentorRepository mentorRepository;
+        private readonly IUserRepository userRepository;
         private readonly IStudentRepository studentRepository;
         private readonly ITopsisAlgorithm topsisAlgorithm;
+        private readonly IMapper mapper;
 
         private Student? student;
         private List<Mentor>? mentors;
@@ -22,50 +25,69 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             IStudentRepository studentRepository,
             IMentorRepository mentorRepository,
             ICriteriaRepository criteriasRepository,
-            ITopsisAlgorithm topsisAlgorithm)
+            ITopsisAlgorithm topsisAlgorithm,
+            IMapper mapper,
+            IUserRepository userRepository)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
             this.criteriasRepository = criteriasRepository;
             this.topsisAlgorithm = topsisAlgorithm;
+            this.mapper = mapper;
+            this.userRepository = userRepository;
         }
 
-        public async Task SetMentorValuation(Guid studentUid, Dictionary<Guid, double> valuations)
+        public async Task SetMentorValuationAsync(Guid studentUid, List<MentorValuationRequest> valuations)
         {
             foreach (var valuation in valuations)
             {
-                var mentorValuation = new MentorValuation
+                var mentorValuation = new Domain.Entities.TOPSIS.MentorValuation
                 {
-                    MentorUid = valuation.Key,
+                    MentorUid = valuation.MentorUid,
                     StudentUid = studentUid,
-                    Valuation = valuation.Value
+                    Valuation = valuation.Valuation
                 };
 
                 await criteriasRepository.AddOrUpdateMentorsValuationsAsync(mentorValuation);
             }
         }
 
-        public async Task<Dictionary<Guid, double>> GetStudentValuations(Guid studentUid)
+        public async Task<List<MentorValuationResponse>> GetStudentValuationsAsync(Guid studentUid)
         {
+            var student = await userRepository.GetAsync(studentUid);
+
             var valuations = await criteriasRepository.GetMentorsValuations(studentUid);
 
-            return valuations.ToDictionary(v => v.MentorUid, v => v.Valuation);
+            var allMentors = await mentorRepository.GetAllAsync(m => m.UserInfo.Locations.Any(l => student.Locations.Contains(l)));
+
+            var result = allMentors.GroupJoin(
+                valuations,
+                m => m.UserInfoUid,
+                v => v.MentorUid,
+                (m, v) => new MentorValuationResponse(m.UserInfoUid, m.UserInfo.Name, v.FirstOrDefault()?.Valuation));
+
+            return result.ToList();
         }
 
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
         {
+            var criterias = await criteriasRepository.GetCriteriasAsync();
+
+            if (criterias.Where(c => c.Weight is null || c.Weight == 0).Any())
+            {
+                throw new ApplicationException("Criterias are not initialized!");
+            }
+
             student = await studentRepository.GetAsync(studentUid);
 
             var alternatives = await GetAlternativesAsync(
                 student.UserInfo.StudyFields.First().Uid,
                 student.UserInfo.Locations.First().Uid);
 
-            var criterias = await criteriasRepository.GetCriteriasAsync();
-
             // TODO: Make sure it indexes are right
             var topsisResult = topsisAlgorithm.Calculate(
                 alternatives,
-                criterias.Select(c => c.Weight).ToArray(),
+                criterias.Select(c => c.Weight!.Value).ToArray(),
                 criterias.Select(c => c.IsBeneficial).ToArray());
 
             return new MatchingResponse

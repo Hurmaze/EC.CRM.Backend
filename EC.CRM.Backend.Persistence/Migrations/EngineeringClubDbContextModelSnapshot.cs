@@ -246,7 +246,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<bool>("IsBeneficial")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Weight")
+                    b.Property<double?>("Weight")
                         .HasColumnType("float");
 
                     b.HasKey("Name");
@@ -257,7 +257,10 @@ namespace EC.CRM.Backend.Persistence.Migrations
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("MentorUid")
                         .HasColumnType("uniqueidentifier");
@@ -267,6 +270,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.Property<double>("Valuation")
                         .HasColumnType("float");
+
+                    b.HasKey("Id");
 
                     b.ToTable("MentorValuations");
                 });

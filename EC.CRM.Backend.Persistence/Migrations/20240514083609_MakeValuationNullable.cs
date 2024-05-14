@@ -17,8 +17,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 nullable: true,
                 oldClrType: typeof(double),
                 oldType: "float");
-
-            migrationBuilder.Sql(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "seed_basic_data.sql"));
         }
 
         /// <inheritdoc />

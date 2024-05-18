@@ -56,7 +56,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Mentors
                .Include(x => x.UserInfo)
                .ThenInclude(x => x.Jobs)
-               .SingleAsync(x => x.UserInfoUid == uid);
+               .SingleOrDefaultAsync(x => x.UserInfoUid == uid);
 
             if (mentor is null)
             {

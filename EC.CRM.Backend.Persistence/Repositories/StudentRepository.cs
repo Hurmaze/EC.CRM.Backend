@@ -55,7 +55,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Students
                .Include(x => x.UserInfo)
                .ThenInclude(x => x.Jobs)
-               .SingleAsync(x => x.UserInfoUid == uid);
+               .SingleOrDefaultAsync(x => x.UserInfoUid == uid);
 
             if (student is null)
             {

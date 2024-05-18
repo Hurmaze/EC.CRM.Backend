@@ -163,9 +163,8 @@ DECLARE @counter INT = 1;
 
 WHILE @counter <= 200
 BEGIN
-  INSERT INTO [EngineeringClub].[dbo].UserInfos (Uid, Name, Description, PhoneNumber, Email, CurrentSalary, DateOfBirth, JoinDate, Paid, RoleUid)
+  INSERT INTO [EngineeringClub].[dbo].UserInfos (Name, Description, PhoneNumber, Email, CurrentSalary, DateOfBirth, JoinDate, Paid, RoleUid)
   VALUES (
-    NEWID(),  -- Generate random GUID
     CONCAT('User', @counter),
     SUBSTRING((
         SELECT TOP (CAST(FLOOR(RAND() * 60) AS INT) + 3)  -- Random words between 3 and 60

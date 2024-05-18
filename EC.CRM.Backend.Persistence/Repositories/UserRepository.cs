@@ -76,7 +76,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Include(x => x.Role)
                .Include(x => x.Locations)
                .Include(x => x.StudyFields)
-               .SingleAsync(x => x.Uid == uid);
+               .SingleOrDefaultAsync(x => x.Uid == uid);
 
             if (user is null)
             {
@@ -101,7 +101,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Include(x => x.Role)
                .Include(x => x.Locations)
                .Include(x => x.StudyFields)
-               .SingleAsync(x => x.Email == email);
+               .SingleOrDefaultAsync(x => x.Email == email);
 
             if (user is null)
             {

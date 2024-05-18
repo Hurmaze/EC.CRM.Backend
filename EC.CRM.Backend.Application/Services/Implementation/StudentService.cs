@@ -61,6 +61,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         {
             var user = mapper.Map<UserInfo>(studentApplicationRequest);
 
+            if (await IsEmailTakenAsync(user.Email))
+            {
+                throw new ApplicationException("Email is already taken");
+            }
+
             var roles = await roleRepository.GetAllAsync();
 
             user.Role = roles.Single(r => r.Name == Roles.Student);
@@ -133,6 +138,19 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         public Task UpdateAsync(Guid uid, StudentResponse student)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<bool> IsEmailTakenAsync(string email)
+        {
+            try
+            {
+                var user = await userRepository.GetAsync(email);
+                return true;
+            }
+            catch (NotFoundException)
+            {
+                return false;
+            }
         }
     }
 }

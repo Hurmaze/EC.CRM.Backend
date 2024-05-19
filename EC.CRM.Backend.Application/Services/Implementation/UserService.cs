@@ -55,13 +55,16 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             var userEntity = mapper.Map<UserInfo>(user);
 
-            var passwordhash = authHelper.CreatePasswordHash(user.Password);
-
-            userEntity.Credentials = new Credentials
+            if (user.Password != null)
             {
-                PasswordHash = passwordhash.passwordHash,
-                PasswordSalt = passwordhash.passwordSalt
-            };
+                var passwordhash = authHelper.CreatePasswordHash(user.Password);
+
+                userEntity.Credentials = new Credentials
+                {
+                    PasswordHash = passwordhash.passwordHash,
+                    PasswordSalt = passwordhash.passwordSalt
+                };
+            }
 
             var createdUser = userRepository.CreateAsync(userEntity);
 

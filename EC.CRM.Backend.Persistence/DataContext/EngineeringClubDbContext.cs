@@ -146,6 +146,8 @@ namespace EC.CRM.Backend.Persistence.DataContext
 
             var mentorValuation = modelBuilder.Entity<MentorValuation>();
             mentorValuation.HasKey(mv => mv.Id);
+            mentorValuation.Property(mv => mv.Id)
+                .UseIdentityColumn();
             mentorValuation.HasOne(mv => mv.Mentor)
                 .WithMany(m => m.MentorValuations)
                 .HasForeignKey(x => x.Id);

@@ -259,9 +259,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
                 {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
                     b.Property<Guid>("MentorUid")
                         .HasColumnType("uniqueidentifier");
 

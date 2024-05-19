@@ -37,7 +37,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("UserInfoUid");
 
-                    b.ToTable("Credentials", (string)null);
+                    b.ToTable("Credentials");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Job", b =>
@@ -74,7 +74,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UserInfoUid");
 
-                    b.ToTable("Jobs", (string)null);
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Location", b =>
@@ -95,7 +95,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
@@ -117,7 +117,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasIndex("UserInfoUid")
                         .IsUnique();
 
-                    b.ToTable("Mentors", (string)null);
+                    b.ToTable("Mentors");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.NonProfessionalInterest", b =>
@@ -134,7 +134,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("NonProfessionalInterests", (string)null);
+                    b.ToTable("NonProfessionalInterests");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Role", b =>
@@ -151,7 +151,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Skill", b =>
@@ -168,7 +168,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Skills", (string)null);
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
@@ -188,7 +188,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("States", (string)null);
+                    b.ToTable("States");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Student", b =>
@@ -217,7 +217,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasIndex("UserInfoUid")
                         .IsUnique();
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.StudyField", b =>
@@ -234,7 +234,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("StudyFields", (string)null);
+                    b.ToTable("StudyFields");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.Criteria", b =>
@@ -251,7 +251,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Name");
 
-                    b.ToTable("Criterias", (string)null);
+                    b.ToTable("Criterias");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
@@ -273,7 +273,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MentorValuations", (string)null);
+                    b.ToTable("MentorValuations");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
@@ -327,7 +327,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("RoleUid");
 
-                    b.ToTable("UserInfos", (string)null);
+                    b.ToTable("UserInfos");
                 });
 
             modelBuilder.Entity("LocationUserInfo", b =>
@@ -342,7 +342,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("LocationUserInfo", (string)null);
+                    b.ToTable("LocationUserInfo");
                 });
 
             modelBuilder.Entity("NonProfessionalInterestUserInfo", b =>
@@ -357,7 +357,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("NonProfessionalInterestUserInfo", (string)null);
+                    b.ToTable("NonProfessionalInterestUserInfo");
                 });
 
             modelBuilder.Entity("SkillUserInfo", b =>
@@ -372,7 +372,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("SkillUserInfo", (string)null);
+                    b.ToTable("SkillUserInfo");
                 });
 
             modelBuilder.Entity("StudyFieldUserInfo", b =>
@@ -387,7 +387,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasIndex("UsersUid");
 
-                    b.ToTable("StudyFieldUserInfo", (string)null);
+                    b.ToTable("StudyFieldUserInfo");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Credentials", b =>
@@ -447,6 +447,25 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Navigation("State");
 
                     b.Navigation("UserInfo");
+                });
+
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
+                {
+                    b.HasOne("EC.CRM.Backend.Domain.Entities.Mentor", "Mentor")
+                        .WithMany("MentorValuations")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EC.CRM.Backend.Domain.Entities.Student", "Student")
+                        .WithMany("MentorValuations")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
@@ -522,6 +541,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
                 {
+                    b.Navigation("MentorValuations");
+
                     b.Navigation("Students");
                 });
 
@@ -533,6 +554,11 @@ namespace EC.CRM.Backend.Persistence.Migrations
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
                 {
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Student", b =>
+                {
+                    b.Navigation("MentorValuations");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>

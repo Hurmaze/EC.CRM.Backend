@@ -16,6 +16,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         private readonly IUserRepository userRepository;
         private readonly IStateRepository stateRepository;
         private readonly IRoleRepository roleRepository;
+        private readonly IMatchingService matchingService;
         private readonly ISkillRepository skillRepository;
         private readonly INonProffesionalInterestRepository interestsRepository;
         private readonly IStudyFieldRepository studyFieldRepository;
@@ -32,7 +33,8 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             ISkillRepository skillRepository,
             INonProffesionalInterestRepository interestsRepository,
             IStudyFieldRepository studyFieldRepository,
-            ILocationRepository locationRepository)
+            ILocationRepository locationRepository,
+            IMatchingService matchingService)
         {
             this.studentRepository = studentRepository;
             this.mentorRepository = mentorRepository;
@@ -44,6 +46,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             this.interestsRepository = interestsRepository;
             this.studyFieldRepository = studyFieldRepository;
             this.locationRepository = locationRepository;
+            this.matchingService = matchingService;
         }
 
         public async Task AssignMentorAsync(Guid studentUid, Guid mentorUid)
@@ -117,7 +120,15 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         {
             var students = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student && u.StudentProperties!.State.Name == States.DoingTestTask);
 
-            return mapper.Map<List<StudentResponse>>(students);
+            var studentResponses = mapper.Map<List<StudentResponse>>(students);
+
+            foreach (var student in studentResponses)
+            {
+                var val = await matchingService.GetStudentValuationsAsync(student.Uid);
+                student.MentorValuations = val;
+            }
+
+            return studentResponses;
         }
 
         public Task<List<State>> GetAllStates()

@@ -15,13 +15,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
                 table: "States",
                 newName: "OrderingId");
 
-            migrationBuilder.AddColumn<int>(
-                name: "Id",
-                table: "MentorValuations",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
             migrationBuilder.AlterColumn<string>(
                 name: "Address",
                 table: "Locations",
@@ -36,10 +29,6 @@ namespace EC.CRM.Backend.Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Id",
-                table: "MentorValuations");
-
             migrationBuilder.RenameColumn(
                 name: "OrderingId",
                 table: "States",

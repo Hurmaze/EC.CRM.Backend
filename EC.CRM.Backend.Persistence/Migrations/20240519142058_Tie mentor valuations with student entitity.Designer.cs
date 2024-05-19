@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EC.CRM.Backend.Persistence.Migrations
 {
     [DbContext(typeof(EngineeringClubDbContext))]
-    [Migration("20240509184841_Fix typo")]
-    partial class Fixtypo
+    [Migration("20240519142058_Tie mentor valuations with student entitity")]
+    partial class Tiementorvaluationswithstudententitity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,7 +137,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("NonProfessionalInterest");
+                    b.ToTable("NonProfessionalInterests");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Role", b =>
@@ -171,7 +171,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("Skill");
+                    b.ToTable("Skills");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
@@ -202,7 +202,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MentorId")
+                    b.Property<int?>("MentorId")
                         .HasColumnType("int");
 
                     b.Property<Guid>("StateUid")
@@ -237,7 +237,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.HasKey("Uid");
 
-                    b.ToTable("StudyField");
+                    b.ToTable("StudyFields");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.Criteria", b =>
@@ -249,7 +249,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Property<bool>("IsBeneficial")
                         .HasColumnType("bit");
 
-                    b.Property<double>("Weight")
+                    b.Property<double?>("Weight")
                         .HasColumnType("float");
 
                     b.HasKey("Name");
@@ -259,6 +259,12 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<Guid>("MentorUid")
                         .HasColumnType("uniqueidentifier");
 
@@ -267,6 +273,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
                     b.Property<double>("Valuation")
                         .HasColumnType("float");
+
+                    b.HasKey("Id");
 
                     b.ToTable("MentorValuations");
                 });
@@ -294,6 +302,11 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<DateTime>("JoinDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -311,6 +324,9 @@ namespace EC.CRM.Backend.Persistence.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Uid");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.HasIndex("RoleUid");
 
@@ -415,8 +431,7 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.HasOne("EC.CRM.Backend.Domain.Entities.Mentor", "Mentor")
                         .WithMany("Students")
                         .HasForeignKey("MentorId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("EC.CRM.Backend.Domain.Entities.State", "State")
                         .WithMany("Students")
@@ -435,6 +450,25 @@ namespace EC.CRM.Backend.Persistence.Migrations
                     b.Navigation("State");
 
                     b.Navigation("UserInfo");
+                });
+
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.TOPSIS.MentorValuation", b =>
+                {
+                    b.HasOne("EC.CRM.Backend.Domain.Entities.Mentor", "Mentor")
+                        .WithMany("MentorValuations")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EC.CRM.Backend.Domain.Entities.Student", "Student")
+                        .WithMany("MentorValuations")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>
@@ -510,6 +544,8 @@ namespace EC.CRM.Backend.Persistence.Migrations
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Mentor", b =>
                 {
+                    b.Navigation("MentorValuations");
+
                     b.Navigation("Students");
                 });
 
@@ -521,6 +557,11 @@ namespace EC.CRM.Backend.Persistence.Migrations
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.State", b =>
                 {
                     b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.Student", b =>
+                {
+                    b.Navigation("MentorValuations");
                 });
 
             modelBuilder.Entity("EC.CRM.Backend.Domain.Entities.UserInfo", b =>

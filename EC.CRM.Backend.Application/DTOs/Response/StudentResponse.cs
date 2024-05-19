@@ -3,5 +3,6 @@
     public record StudentResponse : UserInfoResponse
     {
         public required StateResponse State { get; set; }
+        public List<MentorValuationResponse>? MentorValuations { get; set; }
     }
 }

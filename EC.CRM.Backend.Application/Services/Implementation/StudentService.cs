@@ -108,16 +108,16 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<List<StudentResponse>> GetAllAsync()
         {
-            var mentors = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student);
+            var students = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student);
 
-            return mapper.Map<List<StudentResponse>>(mentors);
+            return mapper.Map<List<StudentResponse>>(students);
         }
 
         public async Task<List<StudentResponse>> GetAllApplicationAsync()
         {
-            var mentors = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student && u.StudentProperties!.State.Name == States.DoingTestTask);
+            var students = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student && u.StudentProperties!.State.Name == States.DoingTestTask);
 
-            return mapper.Map<List<StudentResponse>>(mentors);
+            return mapper.Map<List<StudentResponse>>(students);
         }
 
         public Task<List<State>> GetAllStates()

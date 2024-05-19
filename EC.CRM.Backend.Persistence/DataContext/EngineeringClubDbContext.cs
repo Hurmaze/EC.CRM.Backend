@@ -143,6 +143,15 @@ namespace EC.CRM.Backend.Persistence.DataContext
             criteria.HasKey(c => c.Name);
             criteria.Property(c => c.Name)
                 .HasMaxLength(100);
+
+            var mentorValuation = modelBuilder.Entity<MentorValuation>();
+            mentorValuation.HasKey(mv => mv.Id);
+            mentorValuation.HasOne(mv => mv.Mentor)
+                .WithMany(m => m.MentorValuations)
+                .HasForeignKey(x => x.Id);
+            mentorValuation.HasOne(mv => mv.Student)
+                .WithMany(m => m.MentorValuations)
+                .HasForeignKey(x => x.Id);
             #endregion
 
             #region data seeding

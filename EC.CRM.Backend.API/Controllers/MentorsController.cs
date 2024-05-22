@@ -1,5 +1,6 @@
 ﻿using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,8 +34,9 @@ namespace EC.CRM.Backend.API.Controllers
             return Ok(mentor);
         }
 
+        [Authorize(Roles = Roles.Director)]
         [HttpPost("{userUid:guid}")]
-        public async Task<ActionResult<MentorResponse>> CreateMentor(Guid userUid)
+        public async Task<ActionResult> CreateMentor(Guid userUid)
         {
             await mentorService.CreateAsync(userUid);
 

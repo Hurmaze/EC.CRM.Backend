@@ -19,6 +19,7 @@ namespace EC.CRM.Backend.Application.Helpers
             CreateMap<StudentResponse, Student>().PreserveReferences();
             CreateMap<CreateUserRequest, Student>().PreserveReferences();
             CreateMap<StudentApplicationRequest, UserInfo>().PreserveReferences();
+            CreateMap<UserInfoResponse, UserInfo>().PreserveReferences();
 
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
@@ -26,13 +27,13 @@ namespace EC.CRM.Backend.Application.Helpers
             CreateMap<MentorResponse, MentorValuationResponse>().PreserveReferences();
             CreateMap<MentorValuation, MentorValuationResponse>().PreserveReferences();
 
-            CreateMap<State, StateResponse>().PreserveReferences();
-            CreateMap<Role, RoleResponse>().PreserveReferences();
-            CreateMap<Job, JobResponse>().PreserveReferences();
-            CreateMap<Location, LocationResponse>().PreserveReferences();
-            CreateMap<Skill, SkillResponse>().PreserveReferences();
-            CreateMap<NonProfessionalInterest, NonProfessionalInterestResponse>().PreserveReferences();
-            CreateMap<StudyField, StudyFieldResponse>().PreserveReferences();
+            CreateMap<State, StateResponse>().ReverseMap().PreserveReferences();
+            CreateMap<Role, RoleResponse>().ReverseMap().PreserveReferences();
+            CreateMap<Job, JobResponse>().ReverseMap().PreserveReferences();
+            CreateMap<Location, LocationResponse>().ReverseMap().PreserveReferences();
+            CreateMap<Skill, SkillResponse>().ReverseMap().PreserveReferences();
+            CreateMap<NonProfessionalInterest, NonProfessionalInterestResponse>().ReverseMap().PreserveReferences();
+            CreateMap<StudyField, StudyFieldResponse>().ReverseMap().PreserveReferences();
 
             CreateMap<UserInfo, UserInfoResponse>()
                 .PreserveReferences();

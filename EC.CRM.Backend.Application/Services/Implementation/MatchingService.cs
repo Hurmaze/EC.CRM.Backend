@@ -58,7 +58,9 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             var valuations = await criteriasRepository.GetMentorsValuations(studentUid);
 
-            var allMentors = await mentorRepository.GetAllAsync(m => m.UserInfo.Locations.Any(l => student.Locations.Contains(l)));
+            var allMentors = await mentorRepository.GetAllAsync(m => m.UserInfo.Locations
+            .Any(l => student.Locations.Contains(l)) &&
+            m.UserInfo.StudyFields.Any(s => student.StudyFields.Contains(s)));
 
             var result = allMentors.GroupJoin(
                 valuations,

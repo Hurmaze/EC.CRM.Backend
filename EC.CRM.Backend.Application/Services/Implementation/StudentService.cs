@@ -136,9 +136,16 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<StudentResponse> GetAsync(Guid uid)
+        public async Task<StudentResponse> GetAsync(Guid uid)
         {
-            throw new NotImplementedException();
+            var students = await userRepository.GetAsync(uid);
+
+            var studentResponse = mapper.Map<StudentResponse>(students);
+
+            var val = await matchingService.GetStudentValuationsAsync(uid);
+            studentResponse.MentorValuations = val;
+
+            return studentResponse;
         }
 
         public Task<MentorResponse> GetStudentMentor(Guid studentUid)
@@ -146,9 +153,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(Guid uid, StudentResponse student)
+        public async Task UpdateAsync(Guid uid, UserInfoResponse student)
         {
-            throw new NotImplementedException();
+            var studententity = mapper.Map<UserInfo>(student);
+
+            await userRepository.UpdateAsync(studententity);
         }
 
         private async Task<bool> IsEmailTakenAsync(string email)

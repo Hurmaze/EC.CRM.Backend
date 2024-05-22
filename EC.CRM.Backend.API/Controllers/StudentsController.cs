@@ -90,5 +90,23 @@ namespace EC.CRM.Backend.API.Controllers
 
             return CreatedAtAction(nameof(CreateStudentApplication), new { uid = createdStudent.Uid }, createdStudent);
         }
+
+        [Authorize]
+        [HttpGet("{studentUid:guid}")]
+        public async Task<ActionResult<StudentResponse>> GetStudent(Guid studentUid)
+        {
+            var student = await studentService.GetAsync(studentUid);
+
+            return Ok(student);
+        }
+
+        [Authorize]
+        [HttpPut("{studentUid:guid}")]
+        public async Task<ActionResult> UpdateStudent(Guid studentUid, UserInfoResponse requestBody)
+        {
+            await studentService.UpdateAsync(studentUid, requestBody);
+
+            return Ok();
+        }
     }
 }

@@ -118,15 +118,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<List<StudentResponse>> GetAllApplicationAsync()
         {
-            var students = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student && u.StudentProperties!.State.Name == States.DoingTestTask);
+            var students = await userRepository.GetAllAsync(
+                   u => u.Role.Name == Roles.Student
+                && u.StudentProperties!.State.Name == States.DoingTestTask);
 
             var studentResponses = mapper.Map<List<StudentResponse>>(students);
-
-            foreach (var student in studentResponses)
-            {
-                var val = await matchingService.GetStudentValuationsAsync(student.Uid);
-                student.MentorValuations = val;
-            }
 
             return studentResponses;
         }

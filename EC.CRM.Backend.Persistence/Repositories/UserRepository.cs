@@ -51,7 +51,9 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Include(x => x.NonProfessionalInterests)
                .Include(x => x.Locations)
                .Include(x => x.StudentProperties)
-               .ThenInclude(s => s.MentorValuations)
+               .ThenInclude(s => s.MentorValuations)!
+               .ThenInclude(mv => mv.Mentor)
+               .ThenInclude(m => m.UserInfo)
                .Include(x => x.StudentProperties)
                .ThenInclude(s => s.State)
                .Include(x => x.MentorProperties)

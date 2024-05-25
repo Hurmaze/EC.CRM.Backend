@@ -14,8 +14,9 @@ namespace EC.CRM.Backend.Application.Helpers
             CreateMap<Student, StudentResponse>().PreserveReferences();
             CreateMap<UserInfo, StudentResponse>()
                 .ForMember(x => x.State, opt => opt.MapFrom(ui => ui.StudentProperties!.State))
-                //.ForMember(x => x.MentorValuations, opt => opt.MapFrom(ui => ui.StudentProperties!.MentorValuations))
-                .PreserveReferences();
+                .ForMember(x => x.MentorValuations,
+                opt => opt.MapFrom(src => src.StudentProperties != null ? src.StudentProperties.MentorValuations : null));
+            //.PreserveReferences();
             CreateMap<StudentResponse, Student>().PreserveReferences();
             CreateMap<CreateUserRequest, Student>().PreserveReferences();
             CreateMap<StudentApplicationRequest, UserInfo>().PreserveReferences();
@@ -24,8 +25,9 @@ namespace EC.CRM.Backend.Application.Helpers
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
             CreateMap<UserInfo, MentorResponse>().PreserveReferences();
-            CreateMap<MentorResponse, MentorValuationResponse>().PreserveReferences();
-            CreateMap<MentorValuation, MentorValuationResponse>().PreserveReferences();
+            //CreateMap<MentorResponse, MentorValuationResponse>().PreserveReferences();
+            CreateMap<MentorValuation, MentorValuationResponse>()
+                .ForMember(dest => dest.MentorName, opt => opt.MapFrom(src => src.Mentor.UserInfo.Name)).PreserveReferences();
 
             CreateMap<State, StateResponse>().ReverseMap().PreserveReferences();
             CreateMap<Role, RoleResponse>().ReverseMap().PreserveReferences();

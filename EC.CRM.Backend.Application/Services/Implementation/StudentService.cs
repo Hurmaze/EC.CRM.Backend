@@ -158,15 +158,9 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         private async Task<bool> IsEmailTakenAsync(string email)
         {
-            try
-            {
-                var user = await userRepository.GetAsync(email);
-                return true;
-            }
-            catch (NotFoundException)
-            {
-                return false;
-            }
+            var entity = await userRepository.GetAsync(email);
+
+            return entity is null ? false : true;
         }
     }
 }

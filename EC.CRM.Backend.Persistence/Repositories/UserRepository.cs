@@ -93,7 +93,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return user;
         }
 
-        public async Task<UserInfo> GetAsync(string email)
+        public async Task<UserInfo?> GetAsync(string email)
         {
             var user = await _dbContext
                .UserInfos
@@ -111,11 +111,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Include(x => x.Locations)
                .Include(x => x.StudyFields)
                .SingleOrDefaultAsync(x => x.Email == email);
-
-            if (user is null)
-            {
-                throw new NotFoundException(nameof(user), email);
-            }
 
             return user;
         }

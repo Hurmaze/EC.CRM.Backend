@@ -150,10 +150,12 @@ namespace EC.CRM.Backend.Persistence.DataContext
                 .UseIdentityColumn();
             mentorValuation.HasOne(mv => mv.Mentor)
                 .WithMany(m => m.MentorValuations)
-                .HasForeignKey(x => x.Id);
+                .HasForeignKey(mv => mv.MentorUid)
+                .HasPrincipalKey(m => m.UserInfoUid);
             mentorValuation.HasOne(mv => mv.Student)
-                .WithMany(m => m.MentorValuations)
-                .HasForeignKey(x => x.Id);
+                .WithMany(s => s.MentorValuations)
+                .HasForeignKey(mv => mv.StudentUid)
+                .HasPrincipalKey(s => s.UserInfoUid);
             #endregion
 
             #region data seeding

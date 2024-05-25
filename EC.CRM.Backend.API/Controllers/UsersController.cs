@@ -72,5 +72,15 @@ namespace EC.CRM.Backend.API.Controllers
 
             return Ok(studyFields);
         }
+        /*
+                [HttpPatch("aaa")]
+                public async Task<ActionResult> UpdateUser([FromBody] JsonPatchDocument<StudentResponse> updateUserRequest)
+                {
+                    var userUid = claimsHelper.GetUserUid(HttpContext);
+
+                    await userService.UpdateUserAsync(userUid, updateUserRequest);
+
+                    return Ok();
+                }*/
     }
 }

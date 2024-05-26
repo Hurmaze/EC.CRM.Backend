@@ -64,6 +64,8 @@ namespace EC.CRM.Backend.Application.Helpers
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role!.Name),
                 new Claim(CustomClaimTypes.Uid, user.Uid.ToString()),
+                new Claim(CustomClaimTypes.LocationUids, user.Locations.Select(x => x.Uid).Join(", ")),
+                new Claim(CustomClaimTypes.StudyFieldUids, user.StudyFields.Select(x => x.Uid).Join(", ")),
             };
 
             var key = authParams.GetSymmetricSecurityKey();

@@ -6,124 +6,121 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
     {
         public TopsisAlgorithm() { }
 
-        public void Validate(double[,] decisionMatrix, double[] weights, bool[] isBeneficial)
-        {
-            if (decisionMatrix.GetLength(0) == 0 || decisionMatrix.GetLength(1) == 0)
-                throw new ArgumentException("Decision matrix cannot be empty");
-
-            if (decisionMatrix.GetLength(1) != weights.Length || decisionMatrix.GetLength(0) != isBeneficial.Length)
-                throw new ArgumentException("Invalid input sizes");
-        }
-
         public Dictionary<int, double> Calculate(double[,] decisionMatrix, double[] weights, bool[] isBeneficial)
         {
-            Validate(decisionMatrix, weights, isBeneficial);
-
             decisionMatrix = NormalizeMatrix(decisionMatrix);
 
-            decisionMatrix = WeightNormalize(decisionMatrix, weights);
+            decisionMatrix = ApplyWeights(decisionMatrix, weights);
 
-            var idealSolutions = CalculateBestAndWorseSolution(decisionMatrix, isBeneficial);
+            double[] positiveIdeal = GetIdealSolution(decisionMatrix, isBeneficial, true);
+            double[] negativeIdeal = GetIdealSolution(decisionMatrix, isBeneficial, false);
 
-            var distances = CalculateEuclideanDistances(decisionMatrix, idealSolutions.bestSolution, idealSolutions.worseSolution);
+            double[] distanceToPositive = CalculateDistances(decisionMatrix, positiveIdeal);
+            double[] distanceToNegative = CalculateDistances(decisionMatrix, negativeIdeal);
 
-            var closenessCoefficients = CalculateClosenessCoefficient(distances.positiveDistances, distances.negativeDistances);
+            // Step 5: Calculate the relative closeness to the ideal solution
+            double[] relativeCloseness = CalculateRelativeCloseness(distanceToPositive, distanceToNegative);
 
-            return CalculateRankins(closenessCoefficients);
+            return CalculateRankins(relativeCloseness);
         }
 
-        private double[,] NormalizeMatrix(double[,] matrix)
+        public static double[,] NormalizeMatrix(double[,] matrix)
         {
-            var alternativesCount = matrix.GetLength(0);
-            var criteriasCount = matrix.GetLength(1);
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
+            double[,] normalizedMatrix = new double[rows, cols];
 
-            double[,] normalizedMatrix = new double[alternativesCount, criteriasCount];
-            for (int i = 0; i < alternativesCount; i++)
+            for (int j = 0; j < cols; j++)
             {
-                for (int j = 0; j < criteriasCount; j++)
+                double sum = 0;
+                for (int i = 0; i < rows; i++)
                 {
-                    normalizedMatrix[i, j] = matrix[i, j] / Norm(matrix, j);
+                    sum += matrix[i, j] * matrix[i, j];
+                }
+                double norm = Math.Sqrt(sum);
+                for (int i = 0; i < rows; i++)
+                {
+                    normalizedMatrix[i, j] = matrix[i, j] / norm;
                 }
             }
 
             return normalizedMatrix;
         }
 
-        private double Norm(double[,] matrix, int column)
+        public static double[,] ApplyWeights(double[,] matrix, double[] weights)
         {
-            double sum = 0;
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
+            double[,] weightedMatrix = new double[rows, cols];
 
-            for (int i = 0; i < matrix.GetLength(0); i++)
+            for (int i = 0; i < rows; i++)
             {
-                sum += Math.Pow(matrix[i, column], 2);
-            }
-            return Math.Sqrt(sum);
-        }
-
-        private double[,] WeightNormalize(double[,] normalizedMatrix, double[] weights)
-        {
-            var alternativesCount = normalizedMatrix.GetLength(0);
-            var criteriasCount = normalizedMatrix.GetLength(1);
-
-            double[,] weightedNormalizedMatrix = new double[alternativesCount, criteriasCount];
-            for (int i = 0; i < alternativesCount; i++)
-            {
-                for (int j = 0; j < criteriasCount; j++)
+                for (int j = 0; j < cols; j++)
                 {
-                    weightedNormalizedMatrix[i, j] = normalizedMatrix[i, j] * weights[j];
+                    weightedMatrix[i, j] = matrix[i, j] * weights[j];
                 }
             }
 
-            return weightedNormalizedMatrix;
+            return weightedMatrix;
         }
 
-        private (double[] bestSolution, double[] worseSolution) CalculateBestAndWorseSolution(
-            double[,] weightedNormalizedMatrix,
-            bool[] isBeneficial)
+        public static double[] GetIdealSolution(double[,] matrix, bool[] beneficial, bool positive)
         {
-            var criteriasCount = weightedNormalizedMatrix.GetLength(1);
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
+            double[] idealSolution = new double[cols];
 
-            double[] idealSolution = new double[criteriasCount];
-            double[] negativeIdealSolution = new double[criteriasCount];
-            for (int j = 0; j < criteriasCount; j++)
+            for (int j = 0; j < cols; j++)
             {
-                idealSolution[j] = isBeneficial[j] ? weightedNormalizedMatrix.GetColumn(j).Max() : weightedNormalizedMatrix.GetRow(j).Min();
-                negativeIdealSolution[j] = isBeneficial[j] ? weightedNormalizedMatrix.GetColumn(j).Min() : weightedNormalizedMatrix.GetRow(j).Max();
+                double[] columnValues = new double[rows];
+                for (int i = 0; i < rows; i++)
+                {
+                    columnValues[i] = matrix[i, j];
+                }
+
+                if (positive)
+                {
+                    idealSolution[j] = beneficial[j] ? columnValues.Max() : columnValues.Min();
+                }
+                else
+                {
+                    idealSolution[j] = beneficial[j] ? columnValues.Min() : columnValues.Max();
+                }
             }
 
-            return (idealSolution, negativeIdealSolution);
+            return idealSolution;
         }
 
-        private (double[] positiveDistances, double[] negativeDistances) CalculateEuclideanDistances(
-            double[,] weightedNormalizedMatrix,
-            double[] idealSolution,
-            double[] negativeIdealSolution)
+        public static double[] CalculateDistances(double[,] matrix, double[] idealSolution)
         {
-            var alternativesCount = weightedNormalizedMatrix.GetLength(0);
-            var criteriasCount = weightedNormalizedMatrix.GetLength(1);
+            int rows = matrix.GetLength(0);
+            int cols = matrix.GetLength(1);
+            double[] distances = new double[rows];
 
-            double[] positiveDistances = new double[alternativesCount];
-            double[] negativeDistances = new double[alternativesCount];
-            for (int i = 0; i < alternativesCount; i++)
+            for (int i = 0; i < rows; i++)
             {
-                positiveDistances[i] = Math.Sqrt(weightedNormalizedMatrix.GetRow(i).Select((x, j) => Math.Pow(x - idealSolution[j], 2)).Sum());
-                negativeDistances[i] = Math.Sqrt(weightedNormalizedMatrix.GetRow(i).Select((x, j) => Math.Pow(x - negativeIdealSolution[j], 2)).Sum());
+                double sum = 0;
+                for (int j = 0; j < cols; j++)
+                {
+                    sum += Math.Pow(matrix[i, j] - idealSolution[j], 2);
+                }
+                distances[i] = Math.Sqrt(sum);
             }
 
-            return (positiveDistances, negativeDistances);
+            return distances;
         }
 
-        private double[] CalculateClosenessCoefficient(double[] positiveDistances, double[] negativeDistances)
+        public static double[] CalculateRelativeCloseness(double[] distanceToPositive, double[] distanceToNegative)
         {
-            var alternativesCount = positiveDistances.Length;
+            int length = distanceToPositive.Length;
+            double[] relativeCloseness = new double[length];
 
-            double[] closenessCoefficient = new double[alternativesCount];
-            for (int i = 0; i < alternativesCount; i++)
+            for (int i = 0; i < length; i++)
             {
-                closenessCoefficient[i] = negativeDistances[i] / (negativeDistances[i] + positiveDistances[i]);
+                relativeCloseness[i] = distanceToNegative[i] / (distanceToPositive[i] + distanceToNegative[i]);
             }
 
-            return closenessCoefficient;
+            return relativeCloseness;
         }
 
         private Dictionary<int, double> CalculateRankins(double[] closenessCoefficients)
@@ -131,7 +128,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             var alternativesCount = closenessCoefficients.Length;
 
             return closenessCoefficients.ToDictionary(i => Array.IndexOf(closenessCoefficients, i))
-                .OrderBy(c => c.Value)
+                .OrderByDescending(c => c.Value)
                 .ToDictionary(c => c.Key, c => c.Value);
         }
     }

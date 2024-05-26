@@ -13,11 +13,11 @@ namespace EC.CRM.Backend.UnitTests.Application
                 {5, 8, 4},
                 {7, 6, 8},
                 {8, 8, 6},
-                {7, 4, 6}
+                {7, 4, 6},
             };
 
             double[] weights = { 0.3, 0.4, 0.3 };
-            bool[] isBeneficial = { true, true, true, true };
+            bool[] isBeneficial = { true, true, true };
 
             var topsis = new TopsisAlgorithm();
 

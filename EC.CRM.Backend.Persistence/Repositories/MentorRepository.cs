@@ -45,6 +45,10 @@ namespace EC.CRM.Backend.Persistence.Repositories
             return await _dbContext
                .Mentors
                .Include(x => x.UserInfo)
+               .Include(x => x.UserInfo.Skills)
+               .Include(x => x.UserInfo.NonProfessionalInterests)
+               .Include(x => x.UserInfo.Locations)
+               .Include(x => x.Students)
                .AsNoTracking()
                .Where(predicate)
                .ToListAsync();

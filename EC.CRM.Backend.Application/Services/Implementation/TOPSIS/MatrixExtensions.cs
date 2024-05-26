@@ -30,5 +30,26 @@
                 matrix[rowIndex, i] = values.ElementAt(i);
             }
         }
+
+        public static void SetColumn<T>(this T[,] matrix, int colIndex, IEnumerable<T> values)
+        {
+            int rowCount = matrix.GetLength(0);
+
+            if (colIndex < 0 || colIndex >= matrix.GetLength(1))
+            {
+                throw new ArgumentOutOfRangeException(nameof(colIndex), "Column index is out of range.");
+            }
+
+            if (values.Count() != rowCount)
+            {
+                throw new ArgumentException("The number of values does not match the number of rows in the matrix.", nameof(values));
+            }
+
+            int row = 0;
+            foreach (var value in values)
+            {
+                matrix[row++, colIndex] = value;
+            }
+        }
     }
 }

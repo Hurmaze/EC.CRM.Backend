@@ -58,11 +58,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             var valuations = await criteriasRepository.GetMentorsValuations(studentUid);
 
-            var allMentors = await mentorRepository.GetAllAsync(m => m.UserInfo.Locations
-            .Any(l => student.Locations.Contains(l)) &&
-            m.UserInfo.StudyFields.Any(s => student.StudyFields.Contains(s)));
+            mentors = await mentorRepository.GetAllAsync(
+                m => m.UserInfo.Locations.Any(l => student.Locations.Contains(l))
+                && m.UserInfo.StudyFields.Select(sf => sf.Uid).Contains(student.StudyFields.First().Uid));
 
-            var result = allMentors.GroupJoin(
+            var result = mentors.GroupJoin(
                 valuations,
                 m => m.UserInfoUid,
                 v => v.MentorUid,
@@ -82,9 +82,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             student = await studentRepository.GetAsync(studentUid);
 
-            var alternatives = await GetAlternativesAsync(
-                student.UserInfo.StudyFields.First().Uid,
-                student.UserInfo.Locations.First().Uid);
+            var alternatives = await GetAlternativesAsync();
 
             // TODO: Make sure it indexes are right
             var topsisResult = topsisAlgorithm.Calculate(
@@ -92,37 +90,35 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                 criterias.Select(c => c.Weight!.Value).ToArray(),
                 criterias.Select(c => c.IsBeneficial).ToArray());
 
+            var bestMentor = mentors![topsisResult.Keys.First()];
             return new MatchingResponse
-            {
-                MenthorUid = mentors![topsisResult.Keys.First()].UserInfoUid,
-                MatchingCoefficient = topsisResult.First().Value,
-                OtherResults = topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
-            };
+            (
+                bestMentor.UserInfoUid,
+                bestMentor.UserInfo.Name,
+                topsisResult.First().Value,
+                topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
+            );
         }
 
         #region private
-        private async Task<double[,]> GetAlternativesAsync(Guid studyFieldUid, Guid locationUid)
+        private async Task<double[,]> GetAlternativesAsync()
         {
             var criteriasCount = await criteriasRepository.GetCriteriasCountAsync();
 
-            mentors = await mentorRepository.GetAllAsync(
-                m => m.UserInfo.StudyFields.Select(sf => sf.Uid).Contains(studyFieldUid)
-                  && m.UserInfo.Locations.Select(sf => sf.Uid).Contains(locationUid));
+            var mentorsValuations = await GetStudentValuationsAsync(student!.UserInfoUid);
 
-            var mentorsValuations = await criteriasRepository.GetMentorsValuations(student!.UserInfoUid);
-
-            if (mentorsValuations.Count != mentors.Count)
+            if (mentorsValuations.Any(x => x.Valuation == default))
             {
-                throw new Exception("Mentors valuations count is not equal to mentors count. Someone has not voted.");
+                throw new ApplicationException("Mentors valuations count is not equal to mentors count. Someone has not voted.");
             }
 
-            var alternativeMatrix = new double[criteriasCount, mentors.Count];
+            var alternativeMatrix = new double[mentors!.Count, criteriasCount];
 
-            alternativeMatrix.SetRow(0, mentorsValuations.Select(mv => mv.Valuation)!);
-            alternativeMatrix.SetRow(1, GetSkillsMatchingValuations(mentors));
-            alternativeMatrix.SetRow(2, GetMentorsWorkloadEstimations(mentors));
-            alternativeMatrix.SetRow(3, GetMentorSuccessEstimations(mentors));
-            alternativeMatrix.SetRow(4, GetNonProffesionalInterestsMatching(mentors));
+            alternativeMatrix.SetColumn(0, mentorsValuations.Select(mv => mv.Valuation!.Value)!);
+            alternativeMatrix.SetColumn(1, GetSkillsMatchingValuations(mentors));
+            alternativeMatrix.SetColumn(2, GetMentorsWorkloadEstimations(mentors));
+            alternativeMatrix.SetColumn(3, await GetMentorSuccessEstimationsAsync(mentors));
+            alternativeMatrix.SetColumn(4, GetNonProffesionalInterestsMatching(mentors));
 
             return alternativeMatrix;
         }
@@ -156,13 +152,15 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             return skillsMatchingCount;
         }
 
-        private double[] GetMentorSuccessEstimations(List<Mentor> mentors)
+        private async Task<double[]> GetMentorSuccessEstimationsAsync(List<Mentor> mentors)
         {
             double[] studentsWithWorkCount = new double[mentors.Count];
 
             for (int i = 0; i < mentors.Count; i++)
             {
-                studentsWithWorkCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Where(s => s.UserInfo.CurrentSalary is not null).Count();
+                var mentorStudents = await studentRepository.GetAllAsync(s => s.Mentor.UserInfoUid == mentors[i].UserInfoUid);
+
+                studentsWithWorkCount[i] = mentorStudents.IsNullOrEmpty() ? 0 : mentorStudents.Where(s => s.UserInfo.CurrentSalary is not null).Count();
             }
 
             return studentsWithWorkCount;

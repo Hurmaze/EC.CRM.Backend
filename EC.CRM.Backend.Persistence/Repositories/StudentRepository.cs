@@ -54,7 +54,10 @@ namespace EC.CRM.Backend.Persistence.Repositories
             var student = await _dbContext
                .Students
                .Include(x => x.UserInfo)
-               .ThenInclude(x => x.Jobs)
+               .ThenInclude(x => x.StudyFields)
+               .Include(x => x.UserInfo.Locations)
+               .Include(x => x.UserInfo.StudyFields)
+               .Include(x => x.UserInfo.Jobs)
                .SingleOrDefaultAsync(x => x.UserInfoUid == uid);
 
             if (student is null)

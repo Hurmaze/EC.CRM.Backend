@@ -34,7 +34,7 @@ namespace EC.CRM.Backend.API.Controllers
 
             if (assign)
             {
-                await studentService.AssignMentorAsync(studentUid, matchingResponse.MenthorUid);
+                await studentService.AssignMentorAsync(studentUid, matchingResponse.MentorUid);
             }
 
             return Ok(matchingResponse);

@@ -58,6 +58,8 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             student.Mentor = mentor;
 
+            student.State = (await stateRepository.GetAllAsync(s => s.Name == States.Probation)).Single();
+
             await studentRepository.UpdateAsync(student);
         }
 

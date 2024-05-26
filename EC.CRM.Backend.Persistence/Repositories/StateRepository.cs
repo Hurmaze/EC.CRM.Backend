@@ -1,4 +1,5 @@
-﻿using EC.CRM.Backend.Domain.Entities;
+﻿using System.Linq.Expressions;
+using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Exceptions;
 using EC.CRM.Backend.Domain.Repositories;
 using EC.CRM.Backend.Persistence.DataContext;
@@ -34,11 +35,14 @@ namespace EC.CRM.Backend.Persistence.Repositories
             _dbContext.States.Entry(state).State = EntityState.Deleted;
         }
 
-        public async Task<List<State>> GetAllAsync()
+        public async Task<List<State>> GetAllAsync(Expression<Func<State, bool>>? predicate = null)
         {
+            if (predicate == null) predicate = (x) => true;
+
             return await _dbContext
                 .States
                 .OrderBy(x => x.OrderingId)
+                .Where(predicate)
                 .ToListAsync();
         }
 

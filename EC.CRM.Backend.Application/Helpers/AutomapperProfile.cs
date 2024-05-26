@@ -16,7 +16,8 @@ namespace EC.CRM.Backend.Application.Helpers
                 .ForMember(x => x.State, opt => opt.MapFrom(ui => ui.StudentProperties!.State))
                 .ForMember(x => x.MentorValuations,
                 opt => opt.MapFrom(src => src.StudentProperties != null ? src.StudentProperties.MentorValuations : null));
-            //.PreserveReferences();
+
+            CreateMap<UpdateUserRequest, UserInfo>().ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != default));
             CreateMap<StudentResponse, Student>().PreserveReferences();
             CreateMap<CreateUserRequest, Student>().PreserveReferences();
             CreateMap<StudentApplicationRequest, UserInfo>().PreserveReferences();
@@ -25,7 +26,6 @@ namespace EC.CRM.Backend.Application.Helpers
             CreateMap<Mentor, MentorResponse>().PreserveReferences();
             CreateMap<MentorResponse, Mentor>().PreserveReferences();
             CreateMap<UserInfo, MentorResponse>().PreserveReferences();
-            //CreateMap<MentorResponse, MentorValuationResponse>().PreserveReferences();
             CreateMap<MentorValuation, MentorValuationResponse>()
                 .ForMember(dest => dest.MentorName, opt => opt.MapFrom(src => src.Mentor.UserInfo.Name)).PreserveReferences();
 

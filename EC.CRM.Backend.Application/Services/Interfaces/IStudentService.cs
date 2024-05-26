@@ -1,4 +1,5 @@
 ﻿using EC.CRM.Backend.Application.DTOs.Request.Students;
+using EC.CRM.Backend.Application.DTOs.Request.Users;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Domain.Entities;
 
@@ -10,7 +11,7 @@ namespace EC.CRM.Backend.Application.Services.Interfaces
         Task<List<StudentResponse>> GetAllAsync();
         Task<List<StudentResponse>> GetAllApplicationAsync();
         Task<StudentResponse> CreateAsync(StudentApplicationRequest studentApplicationRequest);
-        Task UpdateAsync(Guid uid, UserInfoResponse student);
+        Task UpdateAsync(Guid uid, UpdateUserRequest student);
         Task DeleteAsync(Guid uid);
         Task<MentorResponse> GetStudentMentor(Guid studentUid);
         Task<List<State>> GetAllStates();

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EC.CRM.Backend.Application.DTOs.Request.Students;
+using EC.CRM.Backend.Application.DTOs.Request.Users;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
@@ -149,11 +150,29 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public async Task UpdateAsync(Guid uid, UserInfoResponse student)
+        public async Task UpdateAsync(Guid uid, UpdateUserRequest studentPatch)
         {
-            var studententity = mapper.Map<UserInfo>(student);
+            var studentEntity = await userRepository.GetAsync(uid);
 
-            await userRepository.UpdateAsync(studententity);
+            mapper.Map(studentPatch, studentEntity);
+
+            if (studentPatch.NonProffesionalInterestsUids != null)
+            {
+                var interests = await interestsRepository.GetAllAsync(r => studentPatch.NonProffesionalInterestsUids.Contains(r.Uid));
+                studentEntity.NonProfessionalInterests = interests;
+            }
+            if (studentPatch.SkillsUids != null)
+            {
+                var skills = await skillRepository.GetAllAsync(r => studentPatch.SkillsUids.Contains(r.Uid));
+                studentEntity.Skills = skills;
+            }
+            if (studentPatch.LocationUid != default)
+            {
+                var locations = await locationRepository.GetAllAsync();
+                studentEntity.Locations = locations.Where(x => x.Uid == studentPatch.LocationUid).ToList();
+            }
+
+            await userRepository.UpdateAsync(studentEntity);
         }
 
         private async Task<bool> IsEmailTakenAsync(string email)

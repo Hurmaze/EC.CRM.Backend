@@ -1,6 +1,7 @@
 ﻿using EC.CRM.Backend.API.Utils;
 using EC.CRM.Backend.Application.Common;
 using EC.CRM.Backend.Application.DTOs.Request.Students;
+using EC.CRM.Backend.Application.DTOs.Request.Users;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
@@ -102,7 +103,7 @@ namespace EC.CRM.Backend.API.Controllers
 
         [Authorize]
         [HttpPut("{studentUid:guid}")]
-        public async Task<ActionResult> UpdateStudent(Guid studentUid, UserInfoResponse requestBody)
+        public async Task<ActionResult> UpdateStudent(Guid studentUid, UpdateUserRequest requestBody)
         {
             await studentService.UpdateAsync(studentUid, requestBody);
 

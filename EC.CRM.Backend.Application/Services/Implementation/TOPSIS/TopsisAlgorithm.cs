@@ -37,7 +37,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
                 {
                     sum += matrix[i, j] * matrix[i, j];
                 }
-                double norm = Math.Sqrt(sum);
+                double norm = Math.Sqrt(sum) == 0 ? 1 : Math.Sqrt(sum);
                 for (int i = 0; i < rows; i++)
                 {
                     normalizedMatrix[i, j] = matrix[i, j] / norm;

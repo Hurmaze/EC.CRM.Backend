@@ -18,7 +18,6 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
             double[] distanceToPositive = CalculateDistances(decisionMatrix, positiveIdeal);
             double[] distanceToNegative = CalculateDistances(decisionMatrix, negativeIdeal);
 
-            // Step 5: Calculate the relative closeness to the ideal solution
             double[] relativeCloseness = CalculateRelativeCloseness(distanceToPositive, distanceToNegative);
 
             return CalculateRankins(relativeCloseness);

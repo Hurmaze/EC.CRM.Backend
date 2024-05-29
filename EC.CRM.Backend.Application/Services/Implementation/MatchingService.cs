@@ -141,12 +141,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         private double[] GetMentorsWorkloadEstimations(List<Mentor> mentors)
         {
-            const double workloadWeightCoefficient = 1.2;
             double[] skillsMatchingCount = new double[mentors.Count];
 
             for (int i = 0; i < mentors.Count; i++)
             {
-                skillsMatchingCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Count * workloadWeightCoefficient;
+                skillsMatchingCount[i] = mentors[i].Students.IsNullOrEmpty() ? 0 : mentors[i].Students!.Count;
             }
 
             return skillsMatchingCount;
@@ -160,7 +159,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             {
                 var mentorStudents = await studentRepository.GetAllAsync(s => s.Mentor.UserInfoUid == mentors[i].UserInfoUid);
 
-                studentsWithWorkCount[i] = mentorStudents.IsNullOrEmpty() ? 0 : mentorStudents.Where(s => s.UserInfo.CurrentSalary is not null).Count();
+                studentsWithWorkCount[i] = mentorStudents.IsNullOrEmpty() ? 0 : mentorStudents.Where(s => s.UserInfo.CurrentSalary is not null && s.UserInfo.CurrentSalary != 0).Count();
             }
 
             return studentsWithWorkCount;

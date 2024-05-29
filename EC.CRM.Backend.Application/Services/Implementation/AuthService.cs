@@ -41,6 +41,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         {
             var user = await userRepository.GetAsync(loginRequest.Email);
 
+            if (user is null)
+            {
+                throw new NotFoundException(nameof(user), loginRequest.Email);
+            }
+
             if (!authHelper.VerifyPassword(loginRequest.Password, user.Credentials.PasswordHash, user.Credentials.PasswordSalt))
             {
                 throw new WrongPasswordException();

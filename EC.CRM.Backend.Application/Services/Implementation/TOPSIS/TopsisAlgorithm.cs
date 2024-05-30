@@ -1,4 +1,5 @@
-﻿using EC.CRM.Backend.Application.Services.Interfaces;
+﻿using EC.CRM.Backend.Application.Common.Extensions;
+using EC.CRM.Backend.Application.Services.Interfaces;
 
 namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 {
@@ -8,17 +9,37 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 
         public Dictionary<int, double> Calculate(double[,] decisionMatrix, double[] weights, bool[] isBeneficial)
         {
+            Console.WriteLine("Input");
+            Console.WriteLine("Is beneficial:");
+            isBeneficial.PrintMatrix();
+            Console.WriteLine("Weights:");
+            weights.PrintMatrix();
+            Console.WriteLine("Decision matrix:");
+            decisionMatrix.PrintMatrix();
+
             decisionMatrix = NormalizeMatrix(decisionMatrix);
+            Console.WriteLine("Normalized");
+            decisionMatrix.PrintMatrix();
 
             decisionMatrix = ApplyWeights(decisionMatrix, weights);
+            Console.WriteLine("Weighted");
+            decisionMatrix.PrintMatrix();
 
             double[] positiveIdeal = GetIdealSolution(decisionMatrix, isBeneficial, true);
             double[] negativeIdeal = GetIdealSolution(decisionMatrix, isBeneficial, false);
+            Console.WriteLine("Solutions");
+            positiveIdeal.PrintMatrix();
+            negativeIdeal.PrintMatrix();
 
             double[] distanceToPositive = CalculateDistances(decisionMatrix, positiveIdeal);
             double[] distanceToNegative = CalculateDistances(decisionMatrix, negativeIdeal);
+            Console.WriteLine("Distances");
+            distanceToPositive.PrintMatrix();
+            distanceToNegative.PrintMatrix();
 
             double[] relativeCloseness = CalculateRelativeCloseness(distanceToPositive, distanceToNegative);
+            Console.WriteLine("Closeness");
+            relativeCloseness.PrintMatrix();
 
             return CalculateRankins(relativeCloseness);
         }

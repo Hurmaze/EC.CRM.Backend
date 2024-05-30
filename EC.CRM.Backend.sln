@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EC.CRM.Backend.API", "EC.CR
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{CDB4E7FD-439D-4F22-AC86-E5DCDA451D5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EC.CRM.Backend.UnitTests", "EC.CRM.Backend.UnitTests\EC.CRM.Backend.UnitTests.csproj", "{FE0BB192-749F-4629-BB48-725326AE5354}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EC.CRM.Backend.UnitTests", "EC.CRM.Backend.UnitTests\EC.CRM.Backend.UnitTests.csproj", "{FE0BB192-749F-4629-BB48-725326AE5354}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EC.CRM.Backend.IntegrationTests", "EC.CRM.Backend.IntegrationTests\EC.CRM.Backend.IntegrationTests.csproj", "{C98A4CA1-A191-42D9-95AC-D322FDD83904}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{FE0BB192-749F-4629-BB48-725326AE5354}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE0BB192-749F-4629-BB48-725326AE5354}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE0BB192-749F-4629-BB48-725326AE5354}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C98A4CA1-A191-42D9-95AC-D322FDD83904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C98A4CA1-A191-42D9-95AC-D322FDD83904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C98A4CA1-A191-42D9-95AC-D322FDD83904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C98A4CA1-A191-42D9-95AC-D322FDD83904}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +65,7 @@ Global
 		{3E176044-C7B7-4831-B60E-46BD84ED9A69} = {2C7F7D57-2AD3-4478-A763-4D7C88255D1E}
 		{062B3799-807B-4692-9285-D7A490BDD004} = {2C7F7D57-2AD3-4478-A763-4D7C88255D1E}
 		{FE0BB192-749F-4629-BB48-725326AE5354} = {CDB4E7FD-439D-4F22-AC86-E5DCDA451D5A}
+		{C98A4CA1-A191-42D9-95AC-D322FDD83904} = {CDB4E7FD-439D-4F22-AC86-E5DCDA451D5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {70520E07-CB85-413B-A4C5-55E4BD81E940}

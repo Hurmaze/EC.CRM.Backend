@@ -1,0 +1,49 @@
+IsBeneficial,,,true,true,false,true,true
+Михайло В,,,MentorsValuation,SkillsMatchingValuation,MentorsWorkloadEstimation,MentorSuccessEstimation,NonProffesionalInterests
+,,,1,5,6,7,9
+,,,0.200000,1,3,0.333333,7
+,,,0.166667,0.333333,1,2,7
+,,,0.142857,3,0.500000,1,7
+,,,0.111111,0.142857,0.142857,0.142857,1
+,,,,,,,
+Олександр Г,,,MentorsValuation,SkillsMatchingValuation,MentorsWorkloadEstimation,MentorSuccessEstimation,NonProffesionalInterests
+,,,1,0.333333,0.333333,0.333333,5
+,,,3,1,1,1,7
+,,,3,1,1,1,7
+,,,3,1,1,1,7
+,,,0.200000,0.142857,0.142857,0.142857,1
+,,,,,,,
+Антон Ч,,,MentorsValuation,SkillsMatchingValuation,MentorsWorkloadEstimation,MentorSuccessEstimation,NonProffesionalInterests
+,,,1,0.200000,0.333333,3,1
+,,,5,1,1,5,7
+,,,3,1,1,5,3
+,,,0.333333,0.200000,0.200000,1,1
+,,,1,0.142857,0.333333,1,1
+,,,,,,,
+Павло Ш,,,MentorsValuation,SkillsMatchingValuation,MentorsWorkloadEstimation,MentorSuccessEstimation,NonProffesionalInterests
+,,,1,0.200000,0.333333,1,0.200000
+,,,5,1,5,7,3
+,,,3,0.200000,1,5,1
+,,,1,0.166667,0.200000,1,0.200000
+,,,5.000000,0.142857,1.000000,5.000000,1
+,,,,,,,
+Ігор Г,,,,,,,
+,,,1,7,7,7,9
+,,,0.142857,1,0.142857,0.142857,3
+,,,0.142857,7,1,7,7
+,,,0.142857,7,0.142857,1,7
+,,,0.142857,0.333333,0.142857,0.142857,1
+,,,,,,,
+Анна К,,,MentorsValuation,SkillsMatchingValuation,MentorsWorkloadEstimation,MentorSuccessEstimation,NonProffesionalInterests
+,,,1,3,1,5,7
+,,,0.333333,1,3,7,7
+,,,1,0.333333,1,5,5
+,,,0.200000,0.142857,0.200000,1,0.333333
+,,,0.142857,0.142857,0.200000,3,1
+,,,,,,,
+Михайло М,,,MentorsValuation,SkillsMatchingValuation,MentorsWorkloadEstimation,MentorSuccessEstimation,NonProffesionalInterests
+,,,1,1,1,1,1
+,,,1,1,1,1,1
+,,,1,1,1,1,1
+,,,1,1,1,1,1
+,,,1,1,1,1,1

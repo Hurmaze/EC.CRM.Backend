@@ -145,9 +145,7 @@ namespace EC.CRM.Backend.Persistence.DataContext
                 .HasMaxLength(100);
 
             var mentorValuation = modelBuilder.Entity<MentorValuation>();
-            mentorValuation.HasKey(mv => mv.Id);
-            mentorValuation.Property(mv => mv.Id)
-                .UseIdentityColumn();
+            mentorValuation.HasKey(mv => new { mv.StudentUid, mv.MentorUid });
             mentorValuation.HasOne(mv => mv.Mentor)
                 .WithMany(m => m.MentorValuations)
                 .HasForeignKey(mv => mv.MentorUid)

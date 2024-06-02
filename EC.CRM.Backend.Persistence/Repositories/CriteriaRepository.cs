@@ -54,7 +54,7 @@ namespace EC.CRM.Backend.Persistence.Repositories
 
         public async Task AddOrUpdateMentorsValuationsAsync(MentorValuation mentorValuation)
         {
-            if (await _dbContext.MentorValuations.FindAsync(mentorValuation.Id) is MentorValuation found)
+            if (await _dbContext.MentorValuations.FindAsync(mentorValuation.StudentUid, mentorValuation.MentorUid) is MentorValuation found)
             {
                 _dbContext.MentorValuations.Entry(found).CurrentValues.SetValues(mentorValuation);
                 await _dbContext.SaveChangesAsync();

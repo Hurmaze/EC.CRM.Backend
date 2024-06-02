@@ -2,7 +2,6 @@
 {
     public class MentorValuation
     {
-        public int Id { get; set; }
         public Guid MentorUid { get; set; }
         public Mentor Mentor { get; set; }
         public Guid StudentUid { get; set; }

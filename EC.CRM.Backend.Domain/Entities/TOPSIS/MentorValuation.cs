@@ -7,6 +7,7 @@
         public Mentor Mentor { get; set; }
         public Guid StudentUid { get; set; }
         public Student Student { get; set; }
+        public bool WasSetByMentor { get; set; } = true;
         public double Valuation { get; set; }
     }
 }

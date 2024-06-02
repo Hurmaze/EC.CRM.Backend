@@ -37,7 +37,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             this.userRepository = userRepository;
         }
 
-        public async Task SetMentorValuationAsync(Guid studentUid, List<MentorValuationRequest> valuations)
+        public async Task SetMentorValuationAsync(Guid studentUid, List<MentorValuationRequest> valuations, bool wasSetByMentor)
         {
             foreach (var valuation in valuations)
             {
@@ -45,7 +45,8 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                 {
                     MentorUid = valuation.MentorUid,
                     StudentUid = studentUid,
-                    Valuation = valuation.Valuation
+                    Valuation = valuation.Valuation,
+                    WasSetByMentor = wasSetByMentor,
                 };
 
                 await criteriasRepository.AddOrUpdateMentorsValuationsAsync(mentorValuation);
@@ -66,7 +67,11 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                 valuations,
                 m => m.UserInfoUid,
                 v => v.MentorUid,
-                (m, v) => new MentorValuationResponse(m.UserInfoUid, m.UserInfo.Name, v.FirstOrDefault()?.Valuation));
+                (m, v) => new MentorValuationResponse(
+                    m.UserInfoUid,
+                    m.UserInfo.Name,
+                    v.FirstOrDefault()?.Valuation,
+                    v.FirstOrDefault()?.WasSetByMentor));
 
             return result.ToList();
         }

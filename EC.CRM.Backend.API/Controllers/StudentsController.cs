@@ -48,7 +48,7 @@ namespace EC.CRM.Backend.API.Controllers
 
             if (userRole == Roles.Director)
             {
-                await matchingService.SetMentorValuationAsync(studentUid, mentorsValuations);
+                await matchingService.SetMentorValuationAsync(studentUid, mentorsValuations, false);
             }
             else
             {
@@ -61,7 +61,7 @@ namespace EC.CRM.Backend.API.Controllers
                     return BadRequest("Mentor can set only his valuation");
                 }
 
-                await matchingService.SetMentorValuationAsync(studentUid, mentorsValuations);
+                await matchingService.SetMentorValuationAsync(studentUid, mentorsValuations, true);
             }
 
             return Ok();

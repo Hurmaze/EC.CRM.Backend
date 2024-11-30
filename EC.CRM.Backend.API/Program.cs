@@ -49,13 +49,14 @@ builder.Services.AddLogging(loggingBuilder =>
 builder.Services.Configure<DbContextSeedingOptions>(builder.Configuration.GetSection(DbContextSeedingOptions.Name));
 builder.Services.AddDbContext<EngineeringClubDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EngineeringClub"), o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
     options.EnableSensitiveDataLogging(builder.Environment.IsDevelopment());
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull | JsonIgnoreCondition.WhenWritingDefault;
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -102,7 +103,7 @@ app.UseCors(x => x
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .SetIsOriginAllowed(origin => true) // allow any origin
-                    //.WithOrigins("https://localhost:44351")); // Allow only this origin can also have multiple origins separated with comma
+                                                        //.WithOrigins("https://localhost:44351")); // Allow only this origin can also have multiple origins separated with comma
                     .AllowCredentials()); // allow credentials
 
 // Configure the HTTP request pipeline.

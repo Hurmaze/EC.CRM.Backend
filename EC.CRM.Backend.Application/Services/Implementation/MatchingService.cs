@@ -101,7 +101,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                 bestMentor.UserInfoUid,
                 bestMentor.UserInfo.Name,
                 topsisResult.First().Value,
-                topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
+                mentors.Count == 1 ? null : topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
             );
         }
 

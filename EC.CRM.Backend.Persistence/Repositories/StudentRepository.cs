@@ -18,8 +18,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             await _dbContext.Students.AddAsync(student);
 
-            await _dbContext.SaveChangesAsync();
-
             return student;
         }
 
@@ -33,8 +31,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
 
             _dbContext.Students.Entry(location).State = EntityState.Deleted;
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Student>> GetAllAsync(Expression<Func<Student, bool>>? predicate = null)
@@ -73,7 +69,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.Students.FindAsync(student.Id) is Student found)
             {
                 _dbContext.Students.Entry(found).CurrentValues.SetValues(student);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {

@@ -18,8 +18,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             await _dbContext.States.AddAsync(state);
 
-            await _dbContext.SaveChangesAsync();
-
             return state;
         }
 
@@ -58,7 +56,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.States.FindAsync(state.Uid) is State found)
             {
                 _dbContext.States.Entry(found).CurrentValues.SetValues(state);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {

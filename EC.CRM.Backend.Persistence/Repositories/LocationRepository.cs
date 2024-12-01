@@ -17,8 +17,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             await _dbContext.Locations.AddAsync(location);
 
-            await _dbContext.SaveChangesAsync();
-
             return location;
         }
 
@@ -32,8 +30,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
 
             _dbContext.Locations.Entry(location).State = EntityState.Deleted;
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Location>> GetAllAsync()
@@ -56,7 +52,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.Locations.FindAsync(location.Uid) is Location found)
             {
                 _dbContext.Locations.Entry(found).CurrentValues.SetValues(location);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {

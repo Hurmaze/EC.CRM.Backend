@@ -42,13 +42,10 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.Criterias.FindAsync(criteria.Name) is Criteria found)
             {
                 _dbContext.Criterias.Entry(found).CurrentValues.SetValues(criteria);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {
                 await _dbContext.Criterias.AddAsync(criteria);
-
-                await _dbContext.SaveChangesAsync();
             }
         }
 
@@ -57,13 +54,10 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.MentorValuations.FindAsync(mentorValuation.StudentUid, mentorValuation.MentorUid) is MentorValuation found)
             {
                 _dbContext.MentorValuations.Entry(found).CurrentValues.SetValues(mentorValuation);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {
                 await _dbContext.MentorValuations.AddAsync(mentorValuation);
-
-                await _dbContext.SaveChangesAsync();
             }
         }
     }

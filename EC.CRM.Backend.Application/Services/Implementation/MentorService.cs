@@ -2,30 +2,25 @@
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
-using EC.CRM.Backend.Domain.Repositories;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public class MentorService : IMentorService
     {
-        private readonly IUserRepository userRepository;
-        private readonly IMentorRepository mentorRepository;
-        private readonly IRoleRepository roleRepository;
         private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
 
-        public MentorService(IUserRepository userRepository, IMapper mapper, IRoleRepository roleRepository, IMentorRepository mentorRepository)
+        public MentorService(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            this.userRepository = userRepository;
             this.mapper = mapper;
-            this.roleRepository = roleRepository;
-            this.mentorRepository = mentorRepository;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task CreateAsync(Guid userInfoUid)
         {
-            var user = await userRepository.GetAsync(userInfoUid);
+            var user = await unitOfWork.UserRepository.GetAsync(userInfoUid);
 
-            var mentorRole = (await roleRepository.GetAllAsync(r => r.Name == Roles.Mentor)).SingleOrDefault();
+            var mentorRole = (await unitOfWork.RoleRepository.GetAllAsync(r => r.Name == Roles.Mentor)).SingleOrDefault();
 
             if (mentorRole is null)
             {
@@ -34,7 +29,8 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             user.Role = mentorRole;
 
-            await userRepository.UpdateAsync(user);
+            await unitOfWork.UserRepository.UpdateAsync(user);
+            await unitOfWork.CommitAsync();
         }
 
         public Task DeleteAsync(Guid uid)
@@ -44,14 +40,14 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<List<MentorResponse>> GetAllAsync()
         {
-            var mentors = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Mentor);
+            var mentors = await unitOfWork.UserRepository.GetAllAsync(u => u.Role.Name == Roles.Mentor);
 
             return mapper.Map<List<MentorResponse>>(mentors);
         }
 
         public async Task<MentorResponse> GetAsync(Guid uid)
         {
-            var mentor = await userRepository.GetAsync(uid);
+            var mentor = await unitOfWork.UserRepository.GetAsync(uid);
 
             return mapper.Map<MentorResponse>(mentor);
         }

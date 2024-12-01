@@ -14,7 +14,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
     {
         private readonly IUserRepository userRepository;
         private readonly ISkillRepository skillsRepository;
-        private readonly INonProffesionalInterestRepository nonProffesinalInterestRepository;
+        private readonly INonProfessionalInterestRepository nonProffesinalInterestRepository;
         private readonly ILocationRepository locationRepository;
         private readonly IStudyFieldRepository studyFieldRepository;
         private readonly IRoleRepository roleRepository;
@@ -28,7 +28,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
             IUserRepository userRepository,
             AuthHelper authHelper,
             ISkillRepository skillsRepository,
-            INonProffesionalInterestRepository nonProffesinalInterestRepository,
+            INonProfessionalInterestRepository nonProffesinalInterestRepository,
             ILocationRepository locationRepository,
             IStudyFieldRepository studyFieldRepository,
             IRoleRepository roleRepository,

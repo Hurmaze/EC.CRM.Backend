@@ -6,61 +6,37 @@ using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Exceptions;
-using EC.CRM.Backend.Domain.Repositories;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public class StudentService : IStudentService
     {
-        private readonly IStudentRepository studentRepository;
-        private readonly IMentorRepository mentorRepository;
-        private readonly IUserRepository userRepository;
-        private readonly IStateRepository stateRepository;
-        private readonly IRoleRepository roleRepository;
-        private readonly IMatchingService matchingService;
-        private readonly ISkillRepository skillRepository;
-        private readonly INonProffesionalInterestRepository interestsRepository;
-        private readonly IStudyFieldRepository studyFieldRepository;
-        private readonly ILocationRepository locationRepository;
         private readonly IMapper mapper;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IMatchingService matchingService;
 
         public StudentService(
-            IStudentRepository studentRepository,
-            IMentorRepository mentorRepository,
             IMapper mapper,
-            IUserRepository userRepository,
-            IStateRepository stateRepository,
-            IRoleRepository roleRepository,
-            ISkillRepository skillRepository,
-            INonProffesionalInterestRepository interestsRepository,
-            IStudyFieldRepository studyFieldRepository,
-            ILocationRepository locationRepository,
+            IUnitOfWork unitOfWork,
             IMatchingService matchingService)
         {
-            this.studentRepository = studentRepository;
-            this.mentorRepository = mentorRepository;
             this.mapper = mapper;
-            this.userRepository = userRepository;
-            this.stateRepository = stateRepository;
-            this.roleRepository = roleRepository;
-            this.skillRepository = skillRepository;
-            this.interestsRepository = interestsRepository;
-            this.studyFieldRepository = studyFieldRepository;
-            this.locationRepository = locationRepository;
+            this.unitOfWork = unitOfWork;
             this.matchingService = matchingService;
         }
 
         public async Task AssignMentorAsync(Guid studentUid, Guid mentorUid)
         {
-            var student = await studentRepository.GetAsync(studentUid);
+            var student = await unitOfWork.StudentRepository.GetAsync(studentUid);
 
-            var mentor = await mentorRepository.GetAsync(mentorUid);
+            var mentor = await unitOfWork.MentorRepository.GetAsync(mentorUid);
 
             student.Mentor = mentor;
 
-            student.State = (await stateRepository.GetAllAsync(s => s.Name == States.Probation)).Single();
+            student.State = (await unitOfWork.StateRepository.GetAllAsync(s => s.Name == States.Probation)).Single();
 
-            await studentRepository.UpdateAsync(student);
+            await unitOfWork.StudentRepository.UpdateAsync(student);
+            await unitOfWork.CommitAsync();
         }
 
         public async Task<StudentResponse> CreateAsync(StudentApplicationRequest studentApplicationRequest)
@@ -72,37 +48,38 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                 throw new ApplicationException("Email is already taken");
             }
 
-            var roles = await roleRepository.GetAllAsync();
+            var roles = await unitOfWork.RoleRepository.GetAllAsync();
 
             user.Role = roles.Single(r => r.Name == Roles.Student);
             if (studentApplicationRequest.NonProffesionalInterestsUids != null)
             {
-                var interests = await interestsRepository.GetAllAsync(r => studentApplicationRequest.NonProffesionalInterestsUids.Contains(r.Uid));
+                var interests = await unitOfWork.InterestRepository.GetAllAsync(r => studentApplicationRequest.NonProffesionalInterestsUids.Contains(r.Uid));
                 user.NonProfessionalInterests = interests;
             }
 
             if (studentApplicationRequest.SkillsUids != null)
             {
-                var skills = await skillRepository.GetAllAsync(r => studentApplicationRequest.SkillsUids.Contains(r.Uid));
+                var skills = await unitOfWork.SkillRepository.GetAllAsync(r => studentApplicationRequest.SkillsUids.Contains(r.Uid));
                 user.Skills = skills;
             }
-            var studyFields = await studyFieldRepository.GetAllAsync(r => studentApplicationRequest.DesiredStudyFieldUid == r.Uid);
+            var studyFields = await unitOfWork.StudyFieldRepository.GetAllAsync(r => studentApplicationRequest.DesiredStudyFieldUid == r.Uid);
             user.StudyFields = studyFields;
-            var location = await locationRepository.GetAsync(studentApplicationRequest.LocationUid);
+            var location = await unitOfWork.LocationRepository.GetAsync(studentApplicationRequest.LocationUid);
             if (location == null)
             {
                 throw new NotFoundException("Location", studentApplicationRequest.LocationUid);
             }
             user.Locations = new List<Location> { location };
 
-            var createdUser = await userRepository.CreateAsync(user);
+            var createdUser = await unitOfWork.UserRepository.CreateAsync(user);
             var studentToCreate = new Student
             {
                 UserInfoUid = createdUser.Uid,
-                State = (await stateRepository.GetAllAsync()).Single(s => s.Name == States.DoingTestTask),
+                State = (await unitOfWork.StateRepository.GetAllAsync()).Single(s => s.Name == States.DoingTestTask),
                 UserInfo = createdUser,
             };
-            var createdStudent = await studentRepository.CreateAsync(studentToCreate);
+            var createdStudent = await unitOfWork.StudentRepository.CreateAsync(studentToCreate);
+            await unitOfWork.CommitAsync();
 
             return mapper.Map<StudentResponse>(createdUser);
         }
@@ -114,14 +91,14 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<List<StudentResponse>> GetAllAsync()
         {
-            var students = await userRepository.GetAllAsync(u => u.Role.Name == Roles.Student);
+            var students = await unitOfWork.UserRepository.GetAllAsync(u => u.Role.Name == Roles.Student);
 
             return mapper.Map<List<StudentResponse>>(students);
         }
 
         public async Task<List<StudentResponse>> GetAllApplicationAsync()
         {
-            var students = await userRepository.GetAllAsync(
+            var students = await unitOfWork.UserRepository.GetAllAsync(
                    u => u.Role.Name == Roles.Student
                 && u.StudentProperties!.State.Name == States.DoingTestTask);
 
@@ -137,7 +114,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<StudentResponse> GetAsync(Guid uid)
         {
-            var students = await userRepository.GetAsync(uid);
+            var students = await unitOfWork.UserRepository.GetAsync(uid);
 
             var studentResponse = mapper.Map<StudentResponse>(students);
 
@@ -154,32 +131,33 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task UpdateAsync(Guid uid, UpdateUserRequest studentPatch)
         {
-            var studentEntity = await userRepository.GetAsync(uid);
+            var studentEntity = await unitOfWork.UserRepository.GetAsync(uid);
 
             mapper.Map(studentPatch, studentEntity);
 
             if (studentPatch.NonProffesionalInterestsUids != null)
             {
-                var interests = await interestsRepository.GetAllAsync(r => studentPatch.NonProffesionalInterestsUids.Contains(r.Uid));
+                var interests = await unitOfWork.InterestRepository.GetAllAsync(r => studentPatch.NonProffesionalInterestsUids.Contains(r.Uid));
                 studentEntity.NonProfessionalInterests = interests;
             }
             if (studentPatch.SkillsUids != null)
             {
-                var skills = await skillRepository.GetAllAsync(r => studentPatch.SkillsUids.Contains(r.Uid));
+                var skills = await unitOfWork.SkillRepository.GetAllAsync(r => studentPatch.SkillsUids.Contains(r.Uid));
                 studentEntity.Skills = skills;
             }
             if (studentPatch.LocationUid != default)
             {
-                var locations = await locationRepository.GetAllAsync();
+                var locations = await unitOfWork.LocationRepository.GetAllAsync();
                 studentEntity.Locations = locations.Where(x => x.Uid == studentPatch.LocationUid).ToList();
             }
 
-            await userRepository.UpdateAsync(studentEntity);
+            await unitOfWork.UserRepository.UpdateAsync(studentEntity);
+            await unitOfWork.CommitAsync();
         }
 
         private async Task<bool> IsEmailTakenAsync(string email)
         {
-            var entity = await userRepository.GetAsync(email);
+            var entity = await unitOfWork.UserRepository.GetAsync(email);
 
             return entity is null ? false : true;
         }

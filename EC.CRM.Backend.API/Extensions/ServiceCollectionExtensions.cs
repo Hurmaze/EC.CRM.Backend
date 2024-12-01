@@ -5,8 +5,8 @@ using EC.CRM.Backend.Application.Helpers;
 using EC.CRM.Backend.Application.Services.Implementation;
 using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
 using EC.CRM.Backend.Application.Services.Interfaces;
-using EC.CRM.Backend.Domain.Repositories;
-using EC.CRM.Backend.Persistence.Repositories;
+using EC.CRM.Backend.Domain;
+using EC.CRM.Backend.Persistence;
 
 namespace EC.CRM.Backend.API.Extensions
 {
@@ -14,17 +14,7 @@ namespace EC.CRM.Backend.API.Extensions
     {
         public static void RegisterServices(this IServiceCollection services)
         {
-            services.AddTransient<ICriteriaRepository, CriteriaRepository>();
-            services.AddTransient<IJobRepository, JobRepository>();
-            services.AddTransient<ILocationRepository, LocationRepository>();
-            services.AddTransient<IMentorRepository, MentorRepository>();
-            services.AddTransient<IRoleRepository, RoleRepository>();
-            services.AddTransient<IStateRepository, StateRepository>();
-            services.AddTransient<IStudentRepository, StudentRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<INonProffesionalInterestRepository, NonProfessionalInterestsRepository>();
-            services.AddTransient<ISkillRepository, SkillsRepository>();
-            services.AddTransient<IStudyFieldRepository, StudyFieldsRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient<AuthHelper>();
             services.AddTransient<IAuthService, AuthService>();

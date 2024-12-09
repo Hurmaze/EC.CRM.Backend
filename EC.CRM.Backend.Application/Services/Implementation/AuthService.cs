@@ -2,8 +2,8 @@
 using EC.CRM.Backend.Application.Exceptions;
 using EC.CRM.Backend.Application.Helpers;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Exceptions;
-using EC.CRM.Backend.Domain.Repositories;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,18 +11,18 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public sealed class AuthService : IAuthService
     {
-        private readonly IUserRepository userRepository;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IOptions<JwtOptions> authOptions;
         private readonly ILogger<AuthService> logger;
         private readonly AuthHelper authHelper;
 
         public AuthService(
-            IUserRepository userRepository,
+            IUnitOfWork unitOfWork,
             IOptions<JwtOptions> authOptions,
             ILogger<AuthService> logger,
             AuthHelper authHelper)
         {
-            this.userRepository = userRepository;
+            this.unitOfWork = unitOfWork;
             this.authOptions = authOptions;
             this.logger = logger;
             this.authHelper = authHelper;
@@ -39,7 +39,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         /// <exception cref="WrongPasswordException"></exception>
         public async Task<string> GetTokenAsync(LoginRequest loginRequest)
         {
-            var user = await userRepository.GetAsync(loginRequest.Email);
+            var user = await unitOfWork.UserRepository.GetAsync(loginRequest.Email);
 
             if (user is null)
             {
@@ -59,12 +59,13 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         {
             var hash = authHelper.CreatePasswordHash(changePasswordRequest.NewPassword);
 
-            var user = await userRepository.GetAsync(userUid);
+            var user = await unitOfWork.UserRepository.GetAsync(userUid);
 
             user.Credentials.PasswordHash = hash.passwordHash;
             user.Credentials.PasswordSalt = hash.passwordSalt;
 
-            await userRepository.UpdateAsync(user);
+            await unitOfWork.UserRepository.UpdateAsync(user);
+            await unitOfWork.CommitAsync();
         }
     }
 }

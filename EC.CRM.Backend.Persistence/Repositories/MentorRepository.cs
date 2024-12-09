@@ -19,8 +19,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             await _dbContext.Mentors.AddAsync(mentor);
 
-            await _dbContext.SaveChangesAsync();
-
             return mentor;
         }
 
@@ -34,8 +32,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
 
             _dbContext.Mentors.Entry(location).State = EntityState.Deleted;
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Mentor>> GetAllAsync(Expression<Func<Mentor, bool>>? predicate = null)
@@ -75,7 +71,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.Mentors.FindAsync(mentor.Id) is Mentor found)
             {
                 _dbContext.Mentors.Entry(found).CurrentValues.SetValues(mentor);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {

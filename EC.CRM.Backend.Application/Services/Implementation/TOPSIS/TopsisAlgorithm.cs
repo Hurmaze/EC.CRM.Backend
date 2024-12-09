@@ -137,7 +137,10 @@ namespace EC.CRM.Backend.Application.Services.Implementation.TOPSIS
 
             for (int i = 0; i < length; i++)
             {
-                relativeCloseness[i] = distanceToNegative[i] / (distanceToPositive[i] + distanceToNegative[i]);
+                if (distanceToPositive[i] + distanceToNegative[i] == 0)
+                    relativeCloseness[i] = 1;
+                else
+                    relativeCloseness[i] = distanceToNegative[i] / (distanceToPositive[i] + distanceToNegative[i]);
             }
 
             return relativeCloseness;

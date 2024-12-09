@@ -19,7 +19,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.UserInfos.FindAsync(userUid) is UserInfo found)
             {
                 found.Jobs!.Add(job);
-                await _dbContext.SaveChangesAsync();
 
                 return job;
             }
@@ -39,8 +38,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
 
             _dbContext.Jobs.Entry(job).State = EntityState.Deleted;
-
-            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<Job>> GetAllAsync(Expression<Func<Job, bool>>? predicate = null)
@@ -66,7 +63,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.Jobs.FindAsync(job.Uid) is Job found)
             {
                 _dbContext.Jobs.Entry(found).CurrentValues.SetValues(job);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {

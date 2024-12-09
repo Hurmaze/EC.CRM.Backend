@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EC.CRM.Backend.Persistence.Repositories
 {
-    public class NonProfessionalInterestsRepository : INonProffesionalInterestRepository
+    public class NonProfessionalInterestsRepository : INonProfessionalInterestRepository
     {
         private readonly EngineeringClubDbContext _dbContext;
         public NonProfessionalInterestsRepository(EngineeringClubDbContext engineeringClubDbContext)

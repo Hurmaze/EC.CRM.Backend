@@ -19,8 +19,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
         {
             await _dbContext.UserInfos.AddAsync(user);
 
-            await _dbContext.SaveChangesAsync();
-
             return user;
         }
 
@@ -34,8 +32,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             }
 
             _dbContext.UserInfos.Entry(location).State = EntityState.Deleted;
-
-            await _dbContext.SaveChangesAsync();
         }
 
         // TODO: Add pagination, Add sorting
@@ -120,7 +116,6 @@ namespace EC.CRM.Backend.Persistence.Repositories
             if (await _dbContext.UserInfos.FindAsync(user.Uid) is UserInfo found)
             {
                 _dbContext.UserInfos.Entry(found).CurrentValues.SetValues(user);
-                await _dbContext.SaveChangesAsync();
             }
             else
             {

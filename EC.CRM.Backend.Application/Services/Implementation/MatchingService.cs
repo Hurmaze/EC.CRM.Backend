@@ -4,17 +4,14 @@ using EC.CRM.Backend.Application.DTOs.Request.Students;
 using EC.CRM.Backend.Application.DTOs.Response;
 using EC.CRM.Backend.Application.Services.Implementation.TOPSIS;
 using EC.CRM.Backend.Application.Services.Interfaces;
+using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Entities;
-using EC.CRM.Backend.Domain.Repositories;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {
     public class MatchingService : IMatchingService
     {
-        private readonly ICriteriaRepository criteriasRepository;
-        private readonly IMentorRepository mentorRepository;
-        private readonly IUserRepository userRepository;
-        private readonly IStudentRepository studentRepository;
+        private readonly IUnitOfWork unitOfWork;
         private readonly ITopsisAlgorithm topsisAlgorithm;
         private readonly IMapper mapper;
 
@@ -22,19 +19,13 @@ namespace EC.CRM.Backend.Application.Services.Implementation
         private List<Mentor>? mentors;
 
         public MatchingService(
-            IStudentRepository studentRepository,
-            IMentorRepository mentorRepository,
-            ICriteriaRepository criteriasRepository,
+            IUnitOfWork unitOfWork,
             ITopsisAlgorithm topsisAlgorithm,
-            IMapper mapper,
-            IUserRepository userRepository)
+            IMapper mapper)
         {
-            this.studentRepository = studentRepository;
-            this.mentorRepository = mentorRepository;
-            this.criteriasRepository = criteriasRepository;
+            this.unitOfWork = unitOfWork;
             this.topsisAlgorithm = topsisAlgorithm;
             this.mapper = mapper;
-            this.userRepository = userRepository;
         }
 
         public async Task SetMentorValuationAsync(Guid studentUid, List<MentorValuationRequest> valuations, bool wasSetByMentor)
@@ -49,17 +40,18 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                     WasSetByMentor = wasSetByMentor,
                 };
 
-                await criteriasRepository.AddOrUpdateMentorsValuationsAsync(mentorValuation);
+                await unitOfWork.CriteriaRepository.AddOrUpdateMentorsValuationsAsync(mentorValuation);
+                await unitOfWork.CommitAsync();
             }
         }
 
         public async Task<List<MentorValuationResponse>> GetStudentValuationsAsync(Guid studentUid)
         {
-            var student = await userRepository.GetAsync(studentUid);
+            var student = await unitOfWork.UserRepository.GetAsync(studentUid);
 
-            var valuations = await criteriasRepository.GetMentorsValuations(studentUid);
+            var valuations = await unitOfWork.CriteriaRepository.GetMentorsValuations(studentUid);
 
-            mentors = await mentorRepository.GetAllAsync(
+            mentors = await unitOfWork.MentorRepository.GetAllAsync(
                 m => m.UserInfo.Locations.Any(l => student.Locations.Contains(l))
                 && m.UserInfo.StudyFields.Select(sf => sf.Uid).Contains(student.StudyFields.First().Uid));
 
@@ -78,14 +70,14 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<MatchingResponse> ChooseMentorAsync(Guid studentUid)
         {
-            var criterias = await criteriasRepository.GetCriteriasAsync();
+            var criterias = await unitOfWork.CriteriaRepository.GetCriteriasAsync();
 
             if (criterias.Where(c => c.Weight is null || c.Weight == 0).Any())
             {
                 throw new ApplicationException("Criterias are not initialized!");
             }
 
-            student = await studentRepository.GetAsync(studentUid);
+            student = await unitOfWork.StudentRepository.GetAsync(studentUid);
 
             var alternatives = await GetAlternativesAsync();
 
@@ -101,14 +93,14 @@ namespace EC.CRM.Backend.Application.Services.Implementation
                 bestMentor.UserInfoUid,
                 bestMentor.UserInfo.Name,
                 topsisResult.First().Value,
-                topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
+                mentors.Count == 1 ? null : topsisResult.ToDictionary(tr => mentors[tr.Key].UserInfoUid, tr => tr.Value).Skip(1).ToDictionary()
             );
         }
 
         #region private
         private async Task<double[,]> GetAlternativesAsync()
         {
-            var criteriasCount = await criteriasRepository.GetCriteriasCountAsync();
+            var criteriasCount = await unitOfWork.CriteriaRepository.GetCriteriasCountAsync();
 
             var mentorsValuations = await GetStudentValuationsAsync(student!.UserInfoUid);
 
@@ -162,7 +154,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
             for (int i = 0; i < mentors.Count; i++)
             {
-                var mentorStudents = await studentRepository.GetAllAsync(s => s.Mentor.UserInfoUid == mentors[i].UserInfoUid);
+                var mentorStudents = await unitOfWork.StudentRepository.GetAllAsync(s => s.Mentor.UserInfoUid == mentors[i].UserInfoUid);
 
                 studentsWithWorkCount[i] = mentorStudents.IsNullOrEmpty() ? 0 : mentorStudents.Where(s => s.UserInfo.CurrentSalary is not null && s.UserInfo.CurrentSalary != 0).Count();
             }

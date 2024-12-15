@@ -2,6 +2,7 @@
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Exceptions;
 using EC.CRM.Backend.Domain.Repositories;
+using EC.CRM.Backend.Domain.Repositories.Specifications;
 using EC.CRM.Backend.Persistence.DataContext;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +59,12 @@ namespace EC.CRM.Backend.Persistence.Repositories
                .Where(predicate)
                .OrderByDescending(x => x.JoinDate)
                .ToListAsync();
+        }
+
+        public async Task<List<UserInfo>> GetAsync(Specification<UserInfo> specification)
+        {
+            return await SpecificationEvaluator.GetQuery(_dbContext.UserInfos, specification)
+                .ToListAsync();
         }
 
         public async Task<UserInfo> GetAsync(Guid uid)

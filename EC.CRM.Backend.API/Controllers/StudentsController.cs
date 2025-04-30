@@ -76,6 +76,7 @@ namespace EC.CRM.Backend.API.Controllers
         }
 
         [HttpGet("application")]
+        // TODO: Probably need to create another response DTO with less fields and Includes in EF
         public async Task<ActionResult<List<StudentResponse>>> GetStudentsApplications()
         {
             var students = await studentService.GetAllApplicationAsync();

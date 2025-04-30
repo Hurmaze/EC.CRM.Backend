@@ -6,6 +6,7 @@ using EC.CRM.Backend.Application.Services.Interfaces;
 using EC.CRM.Backend.Domain;
 using EC.CRM.Backend.Domain.Entities;
 using EC.CRM.Backend.Domain.Exceptions;
+using EC.CRM.Backend.Domain.Repositories.Specifications;
 
 namespace EC.CRM.Backend.Application.Services.Implementation
 {
@@ -98,9 +99,7 @@ namespace EC.CRM.Backend.Application.Services.Implementation
 
         public async Task<List<StudentResponse>> GetAllApplicationAsync()
         {
-            var students = await unitOfWork.UserRepository.GetAllAsync(
-                   u => u.Role.Name == Roles.Student
-                && u.StudentProperties!.State.Name == States.DoingTestTask);
+            var students = await unitOfWork.UserRepository.GetAsync(new GetAllApplicationsSpecification());
 
             var studentResponses = mapper.Map<List<StudentResponse>>(students);
 
